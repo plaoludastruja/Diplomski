@@ -32,5 +32,6 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.tint, 
         borderBottomEndRadius: SIZES.tabIcon, 
         borderBottomStartRadius: SIZES.tabIcon, 
+        
     }
 });

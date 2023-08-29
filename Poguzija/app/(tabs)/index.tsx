@@ -1,4 +1,4 @@
-import { FlatList, RefreshControl} from 'react-native';
+import { FlatList, RefreshControl, StyleSheet} from 'react-native';
 import CardFoodRecipes from '../../components/CardFoodRecipes';
 import { useState, useEffect } from 'react';
 import { FoodRecipes } from '../../model/model';
@@ -37,6 +37,7 @@ export default function IndexScreen() {
                 renderItem={({ item }) => <CardFoodRecipes data={item} />}
                 keyExtractor={(item) => item.id}
                 showsVerticalScrollIndicator={false}
+                style={styles.flex}
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -48,6 +49,12 @@ export default function IndexScreen() {
     );
 }
 
+const styles = StyleSheet.create({
+    flex: {
+        flex: 1,
+        width: '100%',
+    },
+});
 
 
 

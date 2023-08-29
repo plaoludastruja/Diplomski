@@ -5,10 +5,14 @@ export interface FoodRecipes {
     title: string;
     steps: string;
     author: string;
-    image: string;
+    images: string[];
     createdAt: string
 }
 
 export interface MyComponentProps {
     children: React.ReactNode;
+}
+
+export enum StorageFolder {
+    FoodRecipesPhotos = 'foodRecipesPhotos',
 }

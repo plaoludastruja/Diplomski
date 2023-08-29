@@ -3,6 +3,7 @@ import React, { FC, useEffect, useState } from 'react'
 import styled from 'styled-components/native';
 import { COLORS, SIZES } from '../constants/Colors';
 import { FoodRecipes } from '../model/model';
+const PlaceholderImage = require('../assets/images/icon.png');
 
 const CardFoodRecipes: FC<{ data: FoodRecipes }> = ({ data }): JSX.Element => {
     const handlePress = (data: FoodRecipes) => {
@@ -17,7 +18,7 @@ const CardFoodRecipes: FC<{ data: FoodRecipes }> = ({ data }): JSX.Element => {
         <Card>
             <View1 onPress={() => handlePress(data)} onLongPress={() => handleLongPress(data)} >
                 <Image
-                    source={{ uri: data.image }}
+                    source={ data.images ? { uri: data.images[0] } : PlaceholderImage }
                     resizeMode="cover"
                     style={{
                         width: "100%",
