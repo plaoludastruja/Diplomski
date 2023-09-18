@@ -1,4 +1,4 @@
-import { QueryDocumentSnapshot, addDoc, collection, doc, getDocs, orderBy, query, serverTimestamp, setDoc } from "firebase/firestore/lite";
+import { QueryDocumentSnapshot, addDoc, collection, doc, getDoc, getDocs, orderBy, query, serverTimestamp, setDoc } from "firebase/firestore/lite";
 import { db, storage } from "./firebase";
 import { FoodRecipes } from "../model/model";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -9,6 +9,25 @@ export async function GetAllFoodRecipes() {
     const data = await getDocs(query(collection(db, 'foodRecipes').withConverter(foodRecipesConverter), orderBy('createdAt', "desc")));
     const foodRecipesData = data.docs.map(doc => (doc.data()));
     return foodRecipesData;
+}
+
+export async function GetFoodRecipe(id: string): Promise<FoodRecipes> {
+    let foodRecipeItem: FoodRecipes = {
+        id: "",
+        title: "",
+        steps: "",
+        author: "",
+        images: [],
+        createdAt: ""
+    }
+    const data = await getDoc(doc(db, 'foodRecipes', id).withConverter(foodRecipesConverter));
+    if (data.exists()) {
+        foodRecipeItem = data.data();
+        console.log("Document data:", foodRecipeItem);
+    } else {
+        console.log("No such document!");
+    }
+    return foodRecipeItem;
 }
 
 export function AddFoodRecipe(newRecipe: Partial<FoodRecipes>) {

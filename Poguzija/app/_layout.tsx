@@ -54,6 +54,7 @@ function RootLayoutNav() {
                     navigationBarColor: COLORS.light,
                 }} />
                 <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+                <Stack.Screen name="foodRecipesItem/[foodRecipesItem]" options={{ headerShown: false, }}/>
             </Stack>
         </ThemeProvider>
     );

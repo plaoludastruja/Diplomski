@@ -3,11 +3,14 @@ import React, { FC, useEffect, useState } from 'react'
 import styled from 'styled-components/native';
 import { COLORS, SIZES } from '../constants/Colors';
 import { FoodRecipes } from '../model/model';
+import { useRouter } from 'expo-router';
 const PlaceholderImage = require('../assets/images/icon.png');
 
 const CardFoodRecipes: FC<{ data: FoodRecipes }> = ({ data }): JSX.Element => {
+    const router = useRouter();
     const handlePress = (data: FoodRecipes) => {
         console.log('View pressed on ID: ', data.id);
+        router.push(`/foodRecipesItem/${data.id}`);
     };
 
     const handleLongPress = (data: FoodRecipes) => {
