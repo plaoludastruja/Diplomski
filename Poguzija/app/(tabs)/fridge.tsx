@@ -8,13 +8,12 @@ export default function FridgeScreen() {
     const [error, setError] = useState();
     const [userInfo, setUserInfo] = useState();
 
-    useEffect(() => {
+    /*useEffect(() => {
         if(isdev){
             GoogleSignin.configure({
                 webClientId: "679997496367-v24ck2ikahtou5jd89fa870fp9s83plt.apps.googleusercontent.com"
             })
         }
-        
     }, [])
 
     const signin = async () => {
@@ -32,7 +31,7 @@ export default function FridgeScreen() {
         GoogleSignin.revokeAccess();
         GoogleSignin.signOut();
         setUserInfo();
-    }
+    }*/
 
     return (
         <BackgroundSafeAreaView>
@@ -40,10 +39,10 @@ export default function FridgeScreen() {
                 <Text>{JSON.stringify(error)}</Text>
                 {userInfo && <Text style={styles.buttonText}>{JSON.stringify(userInfo.user)}</Text>}
                 {userInfo && <Image source={{ uri: userInfo.user.photo }} style={styles.image} />}
-                { userInfo ? 
+                {/* userInfo ? 
                     (<Button title='Logout' onPress={logout} />) : 
                     (<GoogleSigninButton size={GoogleSigninButton.Size.Standard} color={GoogleSigninButton.Color.Light} onPress={signin}/>)
-                }
+            */}
             </View>}
         </BackgroundSafeAreaView>
     );

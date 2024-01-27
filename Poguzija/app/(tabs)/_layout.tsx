@@ -18,14 +18,12 @@ export default function TabLayout() {
                 tabBarInactiveTintColor: COLORS.darkLight,
                 tabBarShowLabel: false,
                 headerShown: false,
-
                 tabBarStyle: {
                     backgroundColor: COLORS.light,
                     borderTopWidth: 0,
                     height: 2.5 * SIZES.tabIcon,
                     borderTopEndRadius: SIZES.tabIcon,
                     borderTopStartRadius: SIZES.tabIcon,
-
                 }
             }}
         >
@@ -33,8 +31,8 @@ export default function TabLayout() {
                 name="index"
                 options={{
                     title: 'Hrana',
-
                     tabBarIcon: ({ color }) => <Ionicons name="fast-food" size={SIZES.tabIcon} color={color} />,
+                    headerShown: false,
                     headerRight: () => (
                         <Link href="/modal" asChild>
                             <Pressable>
@@ -72,6 +70,7 @@ export default function TabLayout() {
                 options={{
                     title: 'Plan jela',
                     tabBarIcon: ({ color }) => <Ionicons name="calendar" size={SIZES.tabIcon} color={color} />,
+                    headerShown: false
                 }}
             />
             <Tabs.Screen
@@ -79,6 +78,7 @@ export default function TabLayout() {
                 options={{
                     title: 'Moj frižider',
                     tabBarIcon: ({ color }) => <MaterialCommunityIcons name="fridge" size={SIZES.tabIcon} color={color} />,
+                    headerShown: false
                 }}
             />
         </Tabs>

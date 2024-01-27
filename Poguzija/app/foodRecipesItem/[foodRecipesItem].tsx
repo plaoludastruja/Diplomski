@@ -1,7 +1,7 @@
 import { useLocalSearchParams } from 'expo-router';
 import BackgroundSafeAreaView from '../../components/BackgroundSafeAreaView';
 import React, { useEffect, useRef, useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, Image, Platform, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { View, TextInput, Pressable, Text, StyleSheet, Image, Platform, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { FoodRecipes, StorageFolder } from '../../model/model';
 const PlaceholderImage = require('../../assets/images/icon.png');
 import Carousel from 'react-native-snap-carousel';
@@ -48,9 +48,9 @@ export default function FoodRecipesItem() {
                         />
                     </View>
                     {/*<Image source={imageSource} style={styles.image} />
-                    <TouchableOpacity style={styles.iconButton} onPress={pickImageAsync}>
+                    <Pressable style={styles.iconButton} onPress={pickImageAsync}>
                         <MaterialIcons name="add-photo-alternate" size={24} color="black" />
-                    </TouchableOpacity>*/}
+                    </Pressable>*/}
 
                     
                 </ScrollView>

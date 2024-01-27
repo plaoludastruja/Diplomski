@@ -39,7 +39,7 @@ const theme = {
     ...DefaultTheme,
     colors: {
         ...DefaultTheme.colors,
-        background: COLORS.dark
+        background: COLORS.gray
     }
 };
 

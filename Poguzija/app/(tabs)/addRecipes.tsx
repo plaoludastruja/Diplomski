@@ -1,6 +1,6 @@
 import BackgroundSafeAreaView from '../../components/BackgroundSafeAreaView';
 import React, { useRef, useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, Image, Platform, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { View, TextInput, Pressable, Text, StyleSheet, Image, Platform, ScrollView, KeyboardAvoidingView, Alert, Dimensions } from 'react-native';
 import { db, storage } from '../../service/firebase';
 import { AddFoodRecipe, UploadFoodRecipesImages } from '../../service/service';
 import { FoodRecipes, StorageFolder } from '../../model/model';
@@ -16,20 +16,21 @@ import { COLORS, SIZES } from '../../constants/Colors';
 
 
 export default function AddRecipesScreen() {
+    const screenWidth = Dimensions.get('window').width;
+
+    const [selectedImageArray, setSelectedImageArray] = useState<string[]>([PlaceholderImage])
+    const [selectedImageToUpload, setSelectedImageToUpload] = useState<string[]>([])
 
     const [author, setAuthor] = useState('');
     const [title, setTitle] = useState('');
     const [steps, setSteps] = useState('');
-
-    const [selectedImageArray, setSelectedImageArray] = useState<string[]>([PlaceholderImage])
-    const [selectedImageToUpload, setSelectedImageToUpload] = useState<string[]>([])
 
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: false,
             quality: 1,
         });
-
+        
         if (!result.canceled) {
             setSelectedImageArray([ ...selectedImageArray.slice(0, -1), result.assets[0].uri, PlaceholderImage]);
             setSelectedImageToUpload([ ...selectedImageToUpload, result.assets[0].uri]);
@@ -40,7 +41,6 @@ export default function AddRecipesScreen() {
         try {
             
             const uploadedImages = await UploadFoodRecipesImages(selectedImageToUpload, StorageFolder.FoodRecipesPhotos)
-            console.log(1)
             const newRecipe: Partial<FoodRecipes> = {
                 author: author,
                 title: title,
@@ -48,52 +48,63 @@ export default function AddRecipesScreen() {
                 images: uploadedImages
             };
             await AddFoodRecipe(newRecipe);
-            // Clear the input fields after submission
+
             setAuthor('');
             setTitle('');
             setSteps('');
             setSelectedImageToUpload([]);
             setSelectedImageArray([PlaceholderImage]);
-
             console.log('Recipe created successfully');
         } catch (error) {
             console.error('Error creating recipe:', error);
         }
     };
-    const renderItem = ( {item}: {item: string} ) => {
+
+    const handleDeleteImage = (image: string) => {
+        Alert.alert('Delete Item', 'Are you sure you want to delete this item?',
+            [
+                {text: 'Cancel', style: 'cancel'},
+                {text: 'Delete', onPress: () => {
+                        const updatedItems = selectedImageArray.filter((item) => item !== image);
+                        setSelectedImageArray([ ...updatedItems]);
+                        setSelectedImageToUpload([ ...updatedItems]);
+                    },
+                },
+            ],
+            { cancelable: false }
+        );
+    };
+
+    const renderItem = ( { item } : { item: string } ) => {
         return(
             <View>
                 {
                     item === PlaceholderImage ? (
-                        <TouchableOpacity style={styles.iconButton} onPress={pickImageAsync}>
+                        <Pressable style={[styles.images, { width: screenWidth }]} onPress={ pickImageAsync }>
                             <MaterialIcons name="add-photo-alternate" size={62} color={COLORS.darkLight} />
-                        </TouchableOpacity>
+                        </Pressable>
                     ) : (
-                    <Image source={{ uri: item }} style={styles.image} />
+                        <Pressable style={[styles.images, {width: screenWidth}]} onLongPress={() => handleDeleteImage(item)}>
+                            <Image source={{ uri: item }} style={[styles.image, { width: screenWidth }]} />
+                        </Pressable>
                     )
                 }
             </View>
-            
         );
     };
     return (
         <BackgroundSafeAreaView>
-            <KeyboardAvoidingView behavior='padding' style={styles.flex}>
-
+            <KeyboardAvoidingView behavior='padding' style={ styles.flex }>
                 <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
-                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', }}>
+                    <View style={[styles.flex, { flexDirection: 'row' }]}>
                         <Carousel
                             data={selectedImageArray}
                             renderItem={renderItem}
-                            sliderWidth={300} // Adjust the width as needed
-                            itemWidth={250}  // Adjust the item width as needed
+                            sliderWidth={screenWidth}
+                            itemWidth={screenWidth}
                             layout="default"
                         />
                     </View>
-                    {/*<Image source={imageSource} style={styles.image} />
-                    <TouchableOpacity style={styles.iconButton} onPress={pickImageAsync}>
-                        <MaterialIcons name="add-photo-alternate" size={24} color="black" />
-                    </TouchableOpacity>*/}
 
                     <TextInput
                         style={styles.input}
@@ -132,9 +143,9 @@ export default function AddRecipesScreen() {
                         value={steps}
                         onChangeText={text => setSteps(text)}
                     />
-                    <TouchableOpacity style={styles.button} onPress={handleCreateRecipe}>
+                    <Pressable style={styles.button} onPress={handleCreateRecipe}>
                         <Text style={styles.buttonText}>Submit</Text>
-                    </TouchableOpacity>
+                    </Pressable>
                 </ScrollView>
             </KeyboardAvoidingView>
         </BackgroundSafeAreaView>
@@ -142,11 +153,27 @@ export default function AddRecipesScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: {
+    flex: {
+        flex: 1,
+        width: '100%',
+        justifyContent: 'center'
+    },
+    scrollViewContent: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    images: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: 20,
+        height: 500
+    },
+    image: {
+        height: 500,
+        borderTopLeftRadius: SIZES.extraLarge,
+        borderTopRightRadius: SIZES.extraLarge,
+        marginTop: SIZES.extraLarge
     },
     input: {
         width: '100%',
@@ -169,31 +196,5 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
         textAlign: 'center',
-    },
-    image: {
-        width: 300,
-        height: 250,
-        borderRadius: 18,
-        marginTop: SIZES.extraLarge
-    },
-    iconButton: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: 300,
-        height: 250,
-    },
-    iconButtonLabel: {
-        color: '#fff',
-        marginTop: 12,
-    },
-    flex: {
-        flex: 1,
-        width: '100%',
-    },
-    scrollViewContent: {
-        flexGrow: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
     },
 });

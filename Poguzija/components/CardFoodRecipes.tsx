@@ -45,7 +45,7 @@ const Card = styled.View`
     border-radius: ${SIZES.large}px;
 `;
 
-const View1 = styled.TouchableOpacity`
+const View1 = styled.Pressable`
     width: 100%;
     height: 450px;
     overflow: hidden;
