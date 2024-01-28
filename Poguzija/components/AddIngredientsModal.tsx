@@ -1,0 +1,158 @@
+import { Text, StyleSheet, View, Modal, Pressable, TextInput } from 'react-native'
+import React, { Component, FC, useState } from 'react'
+import { Ingredient, MyComponentProps } from '../model/model'
+import { MaterialIcons } from '@expo/vector-icons'
+import { COLORS, SIZES } from '../constants/Colors'
+import SelectIngredientList from './SelectIngredientList'
+
+const AddIngredientsModal = ({ visible, onAdd, onClose }) => {
+    const [selectIngredientNameListVisible, setSelectIngredientNameListVisible] = useState(false);
+    const [selectIngredientUnitListVisible, setSelectIngredientUnitListVisible] = useState(false);
+
+    const [name, setName] = useState('');
+    const [amount, setAmount] = useState('');
+    const [unit, setUnit] = useState('');
+
+    const handleOnAdd = () => {
+        const ingredient : Ingredient = {
+            name: name,
+            amount: amount,
+            unit: unit
+        };
+        onAdd(ingredient);
+        setName('');
+        setAmount('');
+        setUnit('');
+        onClose();
+    };
+
+    return (
+        <Modal visible={visible} animationType="fade" transparent={true} onRequestClose={ onClose }>
+            <Pressable style={styles.flex} onPress={ onClose }>
+                <Pressable style={styles.modalView}>
+                    <Pressable style={styles.nameInput} onPress={() => setSelectIngredientNameListVisible(true)}>
+                        <MaterialIcons name="search" style={styles.icon} />
+                        <TextInput value={name} placeholder='Ingredient' editable={false} style={styles.textInput} />
+                    </Pressable>
+                    <View style={styles.amountAndUnitContainer}>
+                        <View style={[styles.amountAndUnitInput, styles.amountInput]}>
+                            <TextInput value={amount} placeholder="Amount" style={styles.textInput} keyboardType='numeric' onChangeText={text => setAmount(text)} />
+                        </View>
+                        <Pressable style={[styles.amountAndUnitInput, styles.unitInput]} onPress={() => setSelectIngredientUnitListVisible(true)}>
+                            <TextInput value={unit} placeholder="Unit" editable={false} style={styles.textInput} onChangeText={text => setUnit(text)} />   
+                        </Pressable>
+                    </View>
+                    <Pressable style={ styles.button } onPress={ handleOnAdd }>
+                        <Text style={ styles.buttonText }>Add</Text>
+                    </Pressable>
+                </Pressable>
+            </Pressable>
+
+            <SelectIngredientList 
+                data={[{id:'Jaje'},{id:'Brasno'}]}
+                visible={ selectIngredientNameListVisible } 
+                onAdd={ (name) => setName(name) } 
+                onClose={() => setSelectIngredientNameListVisible(false)} />
+            
+            <SelectIngredientList 
+                data={[{id:'kasika'},{id:'kilogram'}]}
+                visible={ selectIngredientUnitListVisible } 
+                onAdd={ (name) => setUnit(name) } 
+                onClose={() => setSelectIngredientUnitListVisible(false)} />
+        </Modal>
+    )
+}
+
+
+const styles = StyleSheet.create({
+    flex: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    },    
+    modalView: {
+        width: '80%',
+        backgroundColor: COLORS.dark,
+        borderRadius: SIZES.extraLarge,
+        padding: SIZES.large,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    nameInput: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '95%',
+        height: 60,
+        backgroundColor: COLORS.light,
+        borderRadius: SIZES.extraLarge,
+        marginBottom: SIZES.small,
+        paddingHorizontal: SIZES.small,
+        color: COLORS.tint,
+        fontSize: SIZES.large,
+    },
+    amountAndUnitContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '95%',
+        height: 60,
+        borderRadius: SIZES.extraLarge,
+        marginBottom: SIZES.small,
+        color: COLORS.tint,
+        fontSize: SIZES.large,
+    },
+    amountAndUnitInput: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '49%',
+        height: 60,
+        backgroundColor: COLORS.light,
+        paddingHorizontal: SIZES.small,
+        color: COLORS.tint,
+        fontSize: SIZES.large,
+    },
+    amountInput: {
+        borderTopStartRadius: SIZES.extraLarge,
+        borderBottomStartRadius: SIZES.extraLarge,
+    },
+    unitInput: {
+        borderTopEndRadius: SIZES.extraLarge,
+        borderBottomEndRadius: SIZES.extraLarge,
+    },
+    textInput: {
+        width: '100%',
+        color: COLORS.tint,
+        fontSize: SIZES.large,
+    },
+    icon: {
+        marginRight: 10,
+        color: COLORS.lightDark,
+        fontSize: SIZES.extraLarge
+    },
+    button: {
+        textAlign: 'center',
+        justifyContent: 'center',
+        width: '85%',
+        backgroundColor: COLORS.tint,
+        borderRadius: SIZES.extraLarge,
+        padding: SIZES.base,
+        marginVertical: SIZES.base,
+        elevation: 2,
+    },
+    buttonText: {
+        color: COLORS.white,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontSize: SIZES.large,
+    },
+});
+
+export default AddIngredientsModal

@@ -24,9 +24,10 @@ export const COLORS = {
 
   tint: "#DF7861",
   light: "#FCF8E8",
+  darkLight: "#faf2d2",
 
   dark: "#2B2E4A",
-  darkLight: "#5C5470",
+  lightDark: "#5C5470",
 
   white: "#FFF",
   gray: "#74858C",

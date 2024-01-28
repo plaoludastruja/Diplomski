@@ -40,7 +40,7 @@ const CardFoodRecipes: FC<{ data: FoodRecipes }> = ({ data }): JSX.Element => {
 export default CardFoodRecipes
 
 const Card = styled.View`
-    background-color: ${COLORS.darkLight} ;
+    background-color: ${COLORS.lightDark} ;
     margin: ${SIZES.base}px;
     border-radius: ${SIZES.large}px;
 `;

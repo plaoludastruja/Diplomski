@@ -16,3 +16,9 @@ export interface MyComponentProps {
 export enum StorageFolder {
     FoodRecipesPhotos = 'foodRecipesPhotos',
 }
+
+export interface Ingredient {
+    name: string;
+    amount: string;
+    unit: string;
+}

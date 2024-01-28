@@ -28,9 +28,9 @@ const styles = StyleSheet.create({
         right: 0, 
         left: 0, 
         zIndex: -1, 
-        height: 300, 
+        height: 320, 
         backgroundColor: COLORS.gray, 
-        borderBottomEndRadius: SIZES.tabIcon, 
-        borderBottomStartRadius: SIZES.tabIcon, 
+        borderBottomEndRadius: SIZES.extraLarge, 
+        borderBottomStartRadius: SIZES.extraLarge, 
     }
 });
