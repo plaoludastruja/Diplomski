@@ -13,7 +13,6 @@ import * as MediaLibrary from 'expo-media-library';
 import { ref, uploadBytes } from 'firebase/storage';
 import Carousel from 'react-native-snap-carousel';
 import { COLORS, SIZES } from '../../constants/Colors';
-import { SelectList } from 'react-native-dropdown-select-list'
 import AddIngredientsModal from '../../components/AddIngredientsModal';
 
 

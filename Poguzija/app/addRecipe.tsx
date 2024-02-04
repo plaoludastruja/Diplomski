@@ -1,5 +1,5 @@
 import BackgroundSafeAreaView from '../components/BackgroundSafeAreaView';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, TextInput, Pressable, Text, StyleSheet, Image, Platform, ScrollView, KeyboardAvoidingView, Alert, Dimensions, Modal, FlatList, Button } from 'react-native';
 import { db, storage } from '../service/firebase';
 import { AddFoodRecipe, UploadFoodRecipesImages } from '../service/service';
@@ -15,9 +15,17 @@ import Carousel from 'react-native-snap-carousel';
 import { COLORS, SIZES } from '../constants/Colors';
 import AddIngredientsModal from '../components/AddIngredientsModal';
 import BottomSheet, { BottomSheetFlatList, BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
+import * as SecureStore from 'expo-secure-store';
+import { getCurrentUser } from '../service/AuthService';
 
 
 export default function AddRecipeScreen() {
+
+    useEffect(() => {
+        getCurrentUser();
+    },[])
+
+
     const screenWidth = Dimensions.get('window').width;
     const screenHeight = Dimensions.get('window').height;
     const [ingredientsModalVisible, setIngredientsModalVisible] = useState(false);
