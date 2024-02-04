@@ -1,5 +1,5 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
+import { Link, Tabs, useRouter } from 'expo-router';
 import { Pressable, useColorScheme } from 'react-native';
 import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { COLORS, SIZES } from '../../constants/Colors';
@@ -10,7 +10,7 @@ import { COLORS, SIZES } from '../../constants/Colors';
 
 export default function TabLayout() {
     const colorScheme = useColorScheme();
-
+    const router = useRouter();
     return (
         <Tabs
             screenOptions={{
@@ -64,6 +64,12 @@ export default function TabLayout() {
                     tabBarIcon: ({ color }) => <MaterialIcons name="create" size={SIZES.tabIcon} color={color} />,
                     headerShown: false
                 }}
+                listeners={() => ({
+                    tabPress: (e) => {
+                        e.preventDefault();
+                        router.push(`/addRecipe`);
+                    },
+                })}
             />
             <Tabs.Screen
                 name="scheduler"
