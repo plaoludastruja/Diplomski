@@ -111,6 +111,7 @@ export default function AddRecipeScreen() {
     };
 
     const handleNextStep = (text: string) => {
+        if(text === '') return;
         let numberOfSteps = stepList.length
         setStepList([...stepList, {number: ++numberOfSteps, description: text}])
         setStep('');
@@ -136,7 +137,7 @@ export default function AddRecipeScreen() {
                         </Pressable>
                     ) : (
                         <Pressable style={[styles.images, { width: screenWidth, height: 2 * screenHeight / 3 }]} onLongPress={() => handleDeleteImage(item)}>
-                            <Image source={{ uri: item }} style={[styles.image, { width: screenWidth }]} />
+                            <Image source={{ uri: item }} style={[styles.image, { width: screenWidth, height: 2 * screenHeight / 3 }]} />
                         </Pressable>
                     )
                 }
@@ -170,6 +171,7 @@ export default function AddRecipeScreen() {
                                 style={styles.textInput}
                                 placeholder="Recipe name"
                                 value={title}
+                                autoComplete='off'
                                 onChangeText={text => setTitle(text)}
                             />
                         </View>
@@ -205,6 +207,7 @@ export default function AddRecipeScreen() {
                                 style={styles.input}
                                 multiline={true}
                                 value={`${step.number}. ${step.description}`}
+                                autoComplete='off'
                                 onChangeText={(text) => handleChangeText(text, index)}
                                 key={step.number}
                             />
@@ -213,6 +216,7 @@ export default function AddRecipeScreen() {
                             style={styles.input}
                             placeholder={`${stepsPlaceholder}`}
                             value={step}
+                            autoComplete='off'
                             onChangeText={(text) => setStep(text)}
                             onEndEditing={() => handleNextStep(step)}
                         />
@@ -245,11 +249,9 @@ const styles = StyleSheet.create({
     images: {
         justifyContent: 'center',
         alignItems: 'center',
-        height: 500,
         marginBottom: SIZES.extraLarge
     },
     image: {
-        height: 500,
         borderTopLeftRadius: SIZES.extraLarge,
         borderTopRightRadius: SIZES.extraLarge,
         marginTop: SIZES.extraLarge
@@ -292,54 +294,6 @@ const styles = StyleSheet.create({
         color: COLORS.tint,
         fontSize: SIZES.large,
     },
-    inputContainer2: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        width: '95%',
-        height: 60,
-        borderRadius: SIZES.extraLarge,
-        marginBottom: SIZES.small,
-        color: COLORS.tint,
-        fontSize: SIZES.large,
-    },
-    inputContainerMeasurment: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: '49%',
-        height: 60,
-        backgroundColor: COLORS.light,
-        borderTopStartRadius: SIZES.extraLarge,
-        borderBottomStartRadius: SIZES.extraLarge,
-        paddingHorizontal: SIZES.small,
-        color: COLORS.tint,
-        fontSize: SIZES.large,
-    },
-    inputContainerMeasurment2: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: '49%',
-        height: 60,
-        backgroundColor: COLORS.light,
-        borderTopEndRadius: SIZES.extraLarge,
-        borderBottomEndRadius: SIZES.extraLarge,
-        paddingHorizontal: SIZES.small,
-        color: COLORS.tint,
-        fontSize: SIZES.large,
-    },
-    inputContainer1: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: '45%',
-        height: 60,
-        backgroundColor: COLORS.light,
-        borderRadius: SIZES.extraLarge,
-        marginBottom: SIZES.small,
-        paddingHorizontal: SIZES.small,
-        color: COLORS.tint,
-        fontSize: SIZES.large,
-        margin: 10
-    },
     textInput: {
         width: '100%',
         marginRight: 10,
@@ -359,49 +313,6 @@ const styles = StyleSheet.create({
         marginBottom: SIZES.base,
         marginTop: SIZES.small
     },
-
-    centeredView: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    modalView: {
-        width: '80%',
-        backgroundColor: COLORS.dark,
-        borderRadius: SIZES.extraLarge,
-        padding: SIZES.large,
-        alignItems: 'center',
-
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-    },
-    modalView1: {
-        width: '80%',
-        height: '80%',
-        backgroundColor: COLORS.darkLight,
-        borderRadius: SIZES.extraLarge,
-        padding: 2 * SIZES.large,
-        alignItems: 'center',
-
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-    },
-    modalText: {
-        marginBottom: 15,
-        textAlign: 'center',
-    },
     ingredientItem: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -414,12 +325,5 @@ const styles = StyleSheet.create({
         paddingHorizontal: SIZES.small,
         color: COLORS.tint,
         fontSize: SIZES.large,
-    },
-    ingredientInfo: {
-        flex: 1,
-    },
-    deleteIcon: {
-        fontSize: 24,
-        color: 'red',
     },
 });

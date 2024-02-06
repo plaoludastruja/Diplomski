@@ -19,7 +19,7 @@ export default function IndexScreen() {
             const foodRecipesData = await GetAllFoodRecipes();
             setFood(foodRecipesData)
             setRefreshing(false);
-            console.log(foodRecipesData)
+            console.log(JSON.stringify(foodRecipesData))
         } catch (error) {
             console.error('Error fetching data:', error);
         }
