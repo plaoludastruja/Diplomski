@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { View, TextInput, Pressable, Text, StyleSheet, Image, Platform, ScrollView, KeyboardAvoidingView, Alert, Dimensions, Modal, FlatList, Button } from 'react-native';
 import { db, storage } from '../service/firebase';
 import { AddFoodRecipe, UploadFoodRecipesImages } from '../service/service';
-import { FoodRecipes, Ingredient, StorageFolder } from '../model/model';
+import { FoodRecipes, Ingredient, Step, StorageFolder } from '../model/model';
 import { serverTimestamp } from 'firebase/firestore/lite';
 import ImageViewer from '../components/ImageViewer';
 const PlaceholderImage = require('../assets/images/icon.png');
@@ -24,13 +24,14 @@ export default function AddRecipeScreen() {
     useEffect(() => {
         getCurrentUser();
     },[])
+    
 
 
     const screenWidth = Dimensions.get('window').width;
     const screenHeight = Dimensions.get('window').height;
     const [ingredientsModalVisible, setIngredientsModalVisible] = useState(false);
-    const [ingredientsModalVisible2, setIngredientsModalVisible2] = useState(false);
-
+    const [snapPoints, setSnapPoints] = useState(['66', '95']);
+    
     const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([]);
 
     const [selectedImageArray, setSelectedImageArray] = useState<string[]>([PlaceholderImage])
@@ -40,7 +41,9 @@ export default function AddRecipeScreen() {
     const [servingSize, setServingSize] = useState('');
 
     const [author, setAuthor] = useState('');
-    const [steps, setSteps] = useState('');
+    const [stepList, setStepList] = useState<Step[]>([]);
+    const [step, setStep] = useState('');
+    const [stepsPlaceholder, setStepsPlaceholder] = useState('Add first step');
 
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -51,6 +54,7 @@ export default function AddRecipeScreen() {
         if (!result.canceled) {
             setSelectedImageArray([...selectedImageArray.slice(0, -1), result.assets[0].uri, PlaceholderImage]);
             setSelectedImageToUpload([...selectedImageToUpload, result.assets[0].uri]);
+            setSnapPoints(['35', '65', '95'])
         }
     };
 
@@ -61,14 +65,14 @@ export default function AddRecipeScreen() {
             const newRecipe: Partial<FoodRecipes> = {
                 author: author,
                 title: title,
-                steps: steps,
+                steps: step,
                 images: uploadedImages
             };
             await AddFoodRecipe(newRecipe);
 
             setAuthor('');
             setTitle('');
-            setSteps('');
+            setStep('');
             setSelectedImageToUpload([]);
             setSelectedImageArray([PlaceholderImage]);
             console.log('Recipe created successfully');
@@ -102,16 +106,37 @@ export default function AddRecipeScreen() {
         setSelectedIngredients(updatedIngredients);
     };
 
+    const handleNextStep = (text: string) => {
+        if(text === '') return
+        console.log('End editing:');
+        console.log(text)
+        let number = stepList.length
+        setStepList([...stepList, {number: ++number, description: text}])
+        setStep('');
+        setStepsPlaceholder('Add next step')
+    };
+
+    const handleChangeText = (text: string, index: number) => {
+        setStepList(prevStepList => {
+            console.log(index)
+            const updatedStepList = [...prevStepList];
+            const updatedString = text.split('. ')[1] || '';
+            updatedStepList[index] = { ...updatedStepList[index], description: updatedString };
+            console.log(updatedStepList)
+            return updatedStepList;
+        });
+    };
+
     const renderItem = ({ item }: { item: string }) => {
         return (
             <View>
                 {
                     item === PlaceholderImage ? (
-                        <Pressable style={[styles.images, { width: screenWidth, height: screenHeight/3, }]} onPress={pickImageAsync}>
+                        <Pressable style={[styles.images, { width: screenWidth, height: screenHeight / 3, }]} onPress={pickImageAsync}>
                             <MaterialIcons name="add-photo-alternate" size={128} color={COLORS.lightDark} />
                         </Pressable>
                     ) : (
-                        <Pressable style={[styles.images, { width: screenWidth, height: 2 * screenHeight/3 }]} onLongPress={() => handleDeleteImage(item)}>
+                        <Pressable style={[styles.images, { width: screenWidth, height: 2 * screenHeight / 3 }]} onLongPress={() => handleDeleteImage(item)}>
                             <Image source={{ uri: item }} style={[styles.image, { width: screenWidth }]} />
                         </Pressable>
                     )
@@ -124,7 +149,7 @@ export default function AddRecipeScreen() {
     // hooks
     const sheetRef = useRef<BottomSheet>(null);
 
-    const snapPoints = useMemo(() => ["25%", "50%", "90%"], []);
+    // const snapPoints = useMemo(() => ["25%", "50%", "90%"], []);
 
     // callbacks
     const handleSheetChange = useCallback((index) => {
@@ -153,7 +178,7 @@ export default function AddRecipeScreen() {
 
                 
                 <BottomSheet
-                    snapPoints={useMemo(() => [ screenHeight / 3, screenHeight / 2, 2 * screenHeight / 3, 3 * screenHeight / 4], [])}
+                    snapPoints={useMemo(() => snapPoints, [snapPoints])}
                     backgroundStyle={{ backgroundColor: COLORS.dark }}
                     keyboardBehavior='extend'
                 >
@@ -184,7 +209,7 @@ export default function AddRecipeScreen() {
                         <Text style={styles.subtitleText}>Ingredients</Text>
                         {selectedIngredients?.map((ingredient, index) => (
                             <View key={index} style={styles.ingredientItem}>
-                                <Text style={[styles.textInput, { width: "auto" }]}>    {ingredient.name}    -    {ingredient.amount} {ingredient.unit}</Text>
+                                <Text style={[styles.textInput, { width: "auto" }]}>   {ingredient.name}   -   {ingredient.amount} {ingredient.unit}</Text>
                                 <Pressable onPress={() => handleDeleteIngredient(index)}>
                                     <MaterialIcons name="delete" style={styles.icon} />
                                 </Pressable>
@@ -195,12 +220,30 @@ export default function AddRecipeScreen() {
                         </Pressable>
 
                         <Text style={styles.subtitleText}>Cooking instructions</Text>
-                        <BottomSheetTextInput
+                        {/*<BottomSheetTextInput
                             style={styles.input}
                             placeholder="Steps"
-                            value={steps}
-                            onChangeText={text => setSteps(text)}
-                        />
+                            value={step}
+                            onChangeText={text => setStep(text)}
+                            onEndEditing={handleNextStep}
+                        />*/}
+
+                        {stepList?.map((step, index) => (
+                            <BottomSheetTextInput
+                                style={styles.input}
+                                multiline={true}
+                                value={`${step.number}. ${step.description}`}
+                                onChangeText={(text) => handleChangeText(text, index)}
+                                key={step.number}
+                            />
+                        ))}
+                        <BottomSheetTextInput
+                                style={styles.input}
+                                placeholder={`${stepsPlaceholder}`}
+                                value={step}
+                                onChangeText={(text) => setStep(text)}
+                                onEndEditing={() => handleNextStep(step)}
+                            />
                         <Pressable style={styles.button} onPress={handleCreateRecipe}>
                             <Text style={styles.buttonText}>Submit</Text>
                         </Pressable>
@@ -240,11 +283,11 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '95%',
-        height: 60,
+        minHeight: 60,
         backgroundColor: COLORS.light,
         borderRadius: SIZES.extraLarge,
         marginBottom: SIZES.small,
-        paddingHorizontal: SIZES.small,
+        padding: SIZES.small,
         color: COLORS.tint,
         fontSize: SIZES.large
     },
@@ -326,6 +369,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         width: '100%',
+        marginRight: 10,
         color: COLORS.tint,
         fontSize: SIZES.large,
     },

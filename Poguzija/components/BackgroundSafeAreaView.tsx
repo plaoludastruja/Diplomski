@@ -28,8 +28,8 @@ const styles = StyleSheet.create({
         right: 0, 
         left: 0, 
         zIndex: -1, 
-        height: 320, 
-        backgroundColor: COLORS.dark, 
+        height: 700, 
+        backgroundColor: COLORS.light, 
         borderBottomEndRadius: SIZES.extraLarge, 
         borderBottomStartRadius: SIZES.extraLarge, 
     }

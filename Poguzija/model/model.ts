@@ -22,3 +22,8 @@ export interface Ingredient {
     amount: string;
     unit: string;
 }
+
+export interface Step {
+    number: number;
+    description: string;
+}
