@@ -15,10 +15,12 @@ export async function GetFoodRecipe(id: string): Promise<FoodRecipes> {
     let foodRecipeItem: FoodRecipes = {
         id: "",
         title: "",
-        steps: "",
         author: "",
+        servingSize: "",
+        ingredients: [],
+        steps: [],
         images: [],
-        createdAt: ""
+        createdAt: "",
     }
     const data = await getDoc(doc(db, 'foodRecipes', id).withConverter(foodRecipesConverter));
     if (data.exists()) {
@@ -40,8 +42,10 @@ const foodRecipesConverter = {
     toFirestore: (foodRecipes: FoodRecipes) => {
         return {
             title: foodRecipes.title,
-            steps: foodRecipes.steps,
             author: foodRecipes.author,
+            servingSize: foodRecipes.servingSize,
+            ingredients: foodRecipes.ingredients,
+            steps: foodRecipes.steps,
             images: foodRecipes.images || null,
             createdAt: serverTimestamp()
         };

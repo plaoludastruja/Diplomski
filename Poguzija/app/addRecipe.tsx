@@ -29,9 +29,9 @@ export default function AddRecipeScreen() {
 
     const screenWidth = Dimensions.get('window').width;
     const screenHeight = Dimensions.get('window').height;
-    const [ingredientsModalVisible, setIngredientsModalVisible] = useState(false);
     const [snapPoints, setSnapPoints] = useState(['66', '95']);
-    
+
+    const [ingredientsModalVisible, setIngredientsModalVisible] = useState(false);
     const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([]);
 
     const [selectedImageArray, setSelectedImageArray] = useState<string[]>([PlaceholderImage])
@@ -39,8 +39,8 @@ export default function AddRecipeScreen() {
 
     const [title, setTitle] = useState('');
     const [servingSize, setServingSize] = useState('');
-
     const [author, setAuthor] = useState('');
+
     const [stepList, setStepList] = useState<Step[]>([]);
     const [step, setStep] = useState('');
     const [stepsPlaceholder, setStepsPlaceholder] = useState('Add first step');
@@ -59,20 +59,24 @@ export default function AddRecipeScreen() {
     };
 
     const handleCreateRecipe = async () => {
+        const updatedStepList = step !== '' ? [...stepList, { number: stepList.length + 1, description: step }] : stepList;
         try {
-
             const uploadedImages = await UploadFoodRecipesImages(selectedImageToUpload, StorageFolder.FoodRecipesPhotos)
             const newRecipe: Partial<FoodRecipes> = {
-                author: author,
                 title: title,
-                steps: step,
-                images: uploadedImages
+                author: author,
+                servingSize: servingSize,
+                images: uploadedImages,
+                ingredients: selectedIngredients,
+                steps: updatedStepList
             };
-            await AddFoodRecipe(newRecipe);
+            AddFoodRecipe(newRecipe);
 
-            setAuthor('');
             setTitle('');
-            setStep('');
+            setAuthor('');
+            setStepList([]);
+            setServingSize('');
+            setSelectedIngredients([]);
             setSelectedImageToUpload([]);
             setSelectedImageArray([PlaceholderImage]);
             console.log('Recipe created successfully');
@@ -107,22 +111,17 @@ export default function AddRecipeScreen() {
     };
 
     const handleNextStep = (text: string) => {
-        if(text === '') return
-        console.log('End editing:');
-        console.log(text)
-        let number = stepList.length
-        setStepList([...stepList, {number: ++number, description: text}])
+        let numberOfSteps = stepList.length
+        setStepList([...stepList, {number: ++numberOfSteps, description: text}])
         setStep('');
         setStepsPlaceholder('Add next step')
     };
 
     const handleChangeText = (text: string, index: number) => {
         setStepList(prevStepList => {
-            console.log(index)
             const updatedStepList = [...prevStepList];
             const updatedString = text.split('. ')[1] || '';
             updatedStepList[index] = { ...updatedStepList[index], description: updatedString };
-            console.log(updatedStepList)
             return updatedStepList;
         });
     };
@@ -145,23 +144,6 @@ export default function AddRecipeScreen() {
         );
     };
 
-
-    // hooks
-    const sheetRef = useRef<BottomSheet>(null);
-
-    // const snapPoints = useMemo(() => ["25%", "50%", "90%"], []);
-
-    // callbacks
-    const handleSheetChange = useCallback((index) => {
-        console.log("handleSheetChange", index);
-    }, []);
-    const handleSnapPress = useCallback((index) => {
-        sheetRef.current?.snapToIndex(index);
-    }, []);
-    const handleClosePress = useCallback(() => {
-        sheetRef.current?.close();
-    }, []);
-
     return (
         <BackgroundSafeAreaView>
             <View style={styles.scrollViewContent}>
@@ -174,9 +156,7 @@ export default function AddRecipeScreen() {
                         layout="default"
                     />
                 </View>
-                
 
-                
                 <BottomSheet
                     snapPoints={useMemo(() => snapPoints, [snapPoints])}
                     backgroundStyle={{ backgroundColor: COLORS.dark }}
@@ -220,14 +200,6 @@ export default function AddRecipeScreen() {
                         </Pressable>
 
                         <Text style={styles.subtitleText}>Cooking instructions</Text>
-                        {/*<BottomSheetTextInput
-                            style={styles.input}
-                            placeholder="Steps"
-                            value={step}
-                            onChangeText={text => setStep(text)}
-                            onEndEditing={handleNextStep}
-                        />*/}
-
                         {stepList?.map((step, index) => (
                             <BottomSheetTextInput
                                 style={styles.input}
@@ -238,12 +210,13 @@ export default function AddRecipeScreen() {
                             />
                         ))}
                         <BottomSheetTextInput
-                                style={styles.input}
-                                placeholder={`${stepsPlaceholder}`}
-                                value={step}
-                                onChangeText={(text) => setStep(text)}
-                                onEndEditing={() => handleNextStep(step)}
-                            />
+                            style={styles.input}
+                            placeholder={`${stepsPlaceholder}`}
+                            value={step}
+                            onChangeText={(text) => setStep(text)}
+                            onEndEditing={() => handleNextStep(step)}
+                        />
+
                         <Pressable style={styles.button} onPress={handleCreateRecipe}>
                             <Text style={styles.buttonText}>Submit</Text>
                         </Pressable>

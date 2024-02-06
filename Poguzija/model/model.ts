@@ -3,8 +3,10 @@ import { FieldValue } from "firebase/firestore/lite";
 export interface FoodRecipes {
     id: string;
     title: string;
-    steps: string;
     author: string;
+    servingSize: string;
+    ingredients: Ingredient[];
+    steps: Step[];
     images: string[];
     createdAt: string
 }

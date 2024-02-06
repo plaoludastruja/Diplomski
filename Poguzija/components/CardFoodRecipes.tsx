@@ -30,7 +30,6 @@ const CardFoodRecipes: FC<{ data: FoodRecipes }> = ({ data }): JSX.Element => {
 
                     }} />
                 <Text>{data.title}</Text>
-                <Text>{data.steps}</Text>
                 <Text>{data.author}</Text>
             </View1>
         </Card>
