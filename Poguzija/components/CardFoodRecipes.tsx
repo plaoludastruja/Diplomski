@@ -1,9 +1,11 @@
-import { View, Image } from 'react-native'
+import { View, Image, StyleSheet, Pressable, Text } from 'react-native'
 import React, { FC, useEffect, useState } from 'react'
 import styled from 'styled-components/native';
-import { COLORS, SIZES } from '../constants/Colors';
+import Colors, { COLORS, SIZES } from '../constants/Colors';
 import { FoodRecipes } from '../model/model';
 import { useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
+
 const PlaceholderImage = require('../assets/images/icon.png');
 
 const CardFoodRecipes: FC<{ data: FoodRecipes }> = ({ data }): JSX.Element => {
@@ -18,43 +20,58 @@ const CardFoodRecipes: FC<{ data: FoodRecipes }> = ({ data }): JSX.Element => {
     };
 
     return (
-        <Card>
-            <View1 onPress={() => handlePress(data)} onLongPress={() => handleLongPress(data)} >
-                <Image
-                    source={ data.images ? { uri: data.images[0] } : PlaceholderImage }
-                    resizeMode="cover"
-                    style={{
-                        width: "100%",
-                        height: "50%",
-                        borderRadius: SIZES.large
-
-                    }} />
-                <Text>{data.title}</Text>
-                <Text>{data.author}</Text>
-            </View1>
-        </Card>
-    )
+        <View style={styles.cardContainer}>
+            <Pressable style={styles.pressable} onPress={() => handlePress(data)} onLongPress={() => handleLongPress(data)} >
+                <Image source={data.images ? { uri: data.images[0] } : PlaceholderImage} style={[styles.image]} />
+                <LinearGradient 
+                    colors={['rgba(255, 255, 255, 0)', 'rgba(0, 0, 0, 0.8)']} 
+                    start={{ x: 0.5, y: 0.65 }}
+                    end={{ x: 0.5, y: 0.9 }}
+                    style={[styles.image, { ...StyleSheet.absoluteFillObject }]} />
+                <View style={styles.textContainer}>
+                    <Text style={styles.text}>{data.title}</Text>
+                </View>
+            </Pressable>
+        </View>
+    );
 }
 
 export default CardFoodRecipes
 
-const Card = styled.View`
-    background-color: ${COLORS.lightDark} ;
-    margin: ${SIZES.base}px;
-    border-radius: ${SIZES.large}px;
-`;
-
-const View1 = styled.Pressable`
-    width: 100%;
-    height: 450px;
-    overflow: hidden;
-
-`;
-
-const Text = styled.Text`
-    font-size: 18px;
-    color: ${COLORS.light};
-    font-weight: 500;
-    padding-right: ${SIZES.base}px;
-    padding-left: ${SIZES.base}px;
-`;
+const styles = StyleSheet.create({
+    flex: {
+        flex: 1,
+        width: '100%',
+        justifyContent: 'center',
+    },
+    cardContainer: {
+        backgroundColor: COLORS.lightDark,
+        margin: SIZES.base,
+        borderRadius: SIZES.large,
+    },
+    pressable: {
+        width: '100%',
+        height: 450,
+        overflow: 'hidden',
+    },
+    image: {
+        position: 'absolute',
+        top: 0,
+        left: 0, 
+        width: '100%',
+        height: '100%',
+        borderRadius: SIZES.large,
+    },
+    textContainer: {
+        flex: 1, // Ensure text container takes up remaining space
+        justifyContent: 'flex-end', // Align text to bottom
+        alignItems: 'flex-start', // Center text horizontally
+        padding: SIZES.base, // Add padding for visual breathing space
+        margin: SIZES.base
+    },
+    text: {
+        fontSize: SIZES.large,
+        color: COLORS.light,
+        fontWeight: 'bold',
+    },
+});

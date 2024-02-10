@@ -79,6 +79,7 @@ export default function AddRecipeScreen() {
             setSelectedIngredients([]);
             setSelectedImageToUpload([]);
             setSelectedImageArray([PlaceholderImage]);
+            setSnapPoints(['66', '95'])
             console.log('Recipe created successfully');
         } catch (error) {
             console.error('Error creating recipe:', error);

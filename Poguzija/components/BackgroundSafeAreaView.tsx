@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
         right: 0, 
         left: 0, 
         zIndex: -1, 
-        height: 700, 
+        height: 600, 
         backgroundColor: COLORS.light, 
         borderBottomEndRadius: SIZES.extraLarge, 
         borderBottomStartRadius: SIZES.extraLarge, 
