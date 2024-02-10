@@ -20,8 +20,6 @@ export default function TabLayout() {
                 headerShown: false,
                 tabBarStyle: {
                     backgroundColor: COLORS.light,
-                    borderTopWidth: 0,
-                    height: 2.5 * SIZES.tabIcon,
                     borderTopEndRadius: SIZES.tabIcon,
                     borderTopStartRadius: SIZES.tabIcon,
                 }
