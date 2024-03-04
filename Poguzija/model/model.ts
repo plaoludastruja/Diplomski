@@ -33,9 +33,11 @@ export enum StorageFolder {
 }
 
 export enum DatabaseCollection {
+    users = 'users',
     recipes = 'foodRecipes',
     recipeSchedulers = 'recipeSchedulers',
-    users = 'users',
+    ingredients = 'ingredients',
+    units = 'units',
 }
 
 export interface Ingredient {

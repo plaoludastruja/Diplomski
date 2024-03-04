@@ -23,8 +23,8 @@ const SelectIngredientList = ({ data, visible, onAdd, onClose }) => {
                         renderItem={({ item }) =>
                             <Pressable
                                 style={styles.buttonModal}
-                                onPress={ () => handlePress(item.id) }>
-                                <Text style={styles.textStyle}>{item.id}</Text>
+                                onPress={ () => handlePress(item) }>
+                                <Text style={styles.textStyle}>{item.name}</Text>
                             </Pressable>}
                         keyExtractor={item => item.id}
                     />

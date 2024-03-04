@@ -1,17 +1,36 @@
 import { Text, StyleSheet, View, Modal, Pressable, TextInput } from 'react-native'
-import React, { Component, FC, useState } from 'react'
+import React, { Component, FC, useEffect, useState } from 'react'
 import { Ingredient, MyComponentProps } from '../model/model'
 import { MaterialIcons } from '@expo/vector-icons'
 import { COLORS, SIZES } from '../constants/Colors'
 import SelectIngredientList from './SelectIngredientList'
+import { GetIngredients, GetUnits } from '../service/IngredientService'
 
 const AddIngredientsModal = ({ visible, onAdd, onClose }) => {
     const [selectIngredientNameListVisible, setSelectIngredientNameListVisible] = useState(false);
     const [selectIngredientUnitListVisible, setSelectIngredientUnitListVisible] = useState(false);
 
+    const [ingredientData, setIngredientData] = useState([]);
+    const [unitData, setUnitData] = useState([]);
+
     const [name, setName] = useState('');
     const [amount, setAmount] = useState('');
     const [unit, setUnit] = useState('');
+
+    useEffect(() => {
+        GetIngredientsList()
+        GetUnitsList()
+    }, [])
+
+    const GetIngredientsList = async () => {
+        const ingredients = await GetIngredients()
+        setIngredientData(ingredients)
+    }
+
+    const GetUnitsList = async () => {
+        const units = await GetUnits()
+        setUnitData(units)
+    }
 
     const handleOnAdd = () => {
         const ingredient : Ingredient = {
@@ -49,15 +68,15 @@ const AddIngredientsModal = ({ visible, onAdd, onClose }) => {
             </Pressable>
 
             <SelectIngredientList 
-                data={[{id:'Jaje'},{id:'Brasno'}]}
+                data={ingredientData}
                 visible={ selectIngredientNameListVisible } 
-                onAdd={ (name) => setName(name) } 
+                onAdd={ (name) => setName(name.name) } 
                 onClose={() => setSelectIngredientNameListVisible(false)} />
             
             <SelectIngredientList 
-                data={[{id:'kasika'},{id:'kilogram'}]}
+                data={unitData}
                 visible={ selectIngredientUnitListVisible } 
-                onAdd={ (name) => setUnit(name) } 
+                onAdd={ (name) => setUnit(name.name) } 
                 onClose={() => setSelectIngredientUnitListVisible(false)} />
         </Modal>
     )
