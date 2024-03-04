@@ -15,8 +15,7 @@ import Carousel from 'react-native-snap-carousel';
 import { COLORS, SIZES } from '../constants/Colors';
 import AddIngredientsModal from '../components/AddIngredientsModal';
 import BottomSheet, { BottomSheetFlatList, BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
-import * as SecureStore from 'expo-secure-store';
-import { getCurrentUser } from '../service/AuthService';
+import { getCurrentUser } from '../service/UserService';
 
 
 export default function AddRecipeScreen() {
@@ -39,6 +38,7 @@ export default function AddRecipeScreen() {
 
     const [title, setTitle] = useState('');
     const [servingSize, setServingSize] = useState('');
+    const [cookingTime, setCookingTime] = useState('');
     const [author, setAuthor] = useState('');
 
     const [stepList, setStepList] = useState<Step[]>([]);
@@ -48,7 +48,8 @@ export default function AddRecipeScreen() {
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: false,
-            quality: 1,
+            quality: 0.4,
+            
         });
 
         if (!result.canceled) {
@@ -61,28 +62,33 @@ export default function AddRecipeScreen() {
     const handleCreateRecipe = async () => {
         const updatedStepList = step !== '' ? [...stepList, { number: stepList.length + 1, description: step }] : stepList;
         try {
-            const uploadedImages = await UploadFoodRecipesImages(selectedImageToUpload, StorageFolder.FoodRecipesPhotos)
             const newRecipe: Partial<FoodRecipes> = {
                 title: title,
                 author: author,
                 servingSize: servingSize,
-                images: uploadedImages,
                 ingredients: selectedIngredients,
                 steps: updatedStepList
             };
-            AddFoodRecipe(newRecipe);
-
             setTitle('');
             setAuthor('');
             setStepList([]);
             setServingSize('');
+            setCookingTime('');
             setSelectedIngredients([]);
-            setSelectedImageToUpload([]);
             setSelectedImageArray([PlaceholderImage]);
             setSnapPoints(['66', '95'])
+
+            const uploadedImages = await UploadFoodRecipesImages(selectedImageToUpload, StorageFolder.FoodRecipesPhotos)
+            setSelectedImageToUpload([]);
+            newRecipe.images = uploadedImages;
+
+            AddFoodRecipe(newRecipe);
+            
             console.log('Recipe created successfully');
+            alert('Recipe created successfully');
         } catch (error) {
             console.error('Error creating recipe:', error);
+            alert(`Error creating recipe:' ${error}`);
         }
     };
 
@@ -164,7 +170,11 @@ export default function AddRecipeScreen() {
                     backgroundStyle={{ backgroundColor: COLORS.dark }}
                     keyboardBehavior='extend'
                 >
-                    <BottomSheetScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
+                    <BottomSheetScrollView 
+                        showsVerticalScrollIndicator={false} 
+                        contentContainerStyle={styles.scrollViewContent}
+                        keyboardShouldPersistTaps={'handled'}
+                        >
                         <Text style={styles.subtitleText}>Recipe name</Text>
                         <View style={styles.inputContainer}>
                             <MaterialIcons name="receipt" style={styles.icon} />
@@ -185,6 +195,18 @@ export default function AddRecipeScreen() {
                                 placeholder="Serving size"
                                 value={servingSize}
                                 onChangeText={text => setServingSize(text)}
+                                keyboardType='numeric'
+                            />
+                        </View>
+
+                        <Text style={styles.subtitleText}>Time to prepare</Text>
+                        <View style={styles.inputContainer}>
+                            <MaterialIcons name="timelapse" style={styles.icon} />
+                            <BottomSheetTextInput
+                                style={styles.textInput}
+                                placeholder="Time to prepare"
+                                value={cookingTime}
+                                onChangeText={text => setCookingTime(text)}
                                 keyboardType='numeric'
                             />
                         </View>
@@ -311,7 +333,7 @@ const styles = StyleSheet.create({
         color: COLORS.tint,
         fontSize: SIZES.extraLarge,
         fontWeight: 'bold',
-        marginBottom: SIZES.base,
+        marginBottom: 0.5 * SIZES.base,
         marginTop: SIZES.small
     },
     ingredientItem: {

@@ -1,4 +1,17 @@
-import { FieldValue } from "firebase/firestore/lite";
+export interface MyUser {
+    id: string;
+    email: string;
+    name: string;
+    surname: string;
+    fullName: string;
+    profilePhoto: string;
+    aditionalUserData: AdditionalUserData;
+    createdAt: string
+}
+
+export interface AdditionalUserData {
+    recipeSchedulerId: string;
+}
 
 export interface FoodRecipes {
     id: string;
@@ -19,6 +32,12 @@ export enum StorageFolder {
     FoodRecipesPhotos = 'foodRecipesPhotos',
 }
 
+export enum DatabaseCollection {
+    recipes = 'foodRecipes',
+    recipeSchedulers = 'recipeSchedulers',
+    users = 'users',
+}
+
 export interface Ingredient {
     name: string;
     amount: string;
@@ -28,4 +47,32 @@ export interface Ingredient {
 export interface Step {
     number: number;
     description: string;
+}
+
+export interface RecipeScheduler {
+    id: string;
+    user: string;
+    recipeByDay: RecipesByDay[];
+}
+
+export interface RecipesByDay {
+    day: Day;
+    recipes: RecipeByDay[];
+}
+
+export enum Day {
+    MONDAY = 'Monday',
+    TUESDAY = 'Tuesday',
+    WEDNESDAY = 'Wednesday',
+    THURSDAY = 'Thursday',
+    FRIDAY = 'Friday',
+    SATURDAY = 'Saturday',
+    SUNDAY = 'Sunday'
+}
+
+export interface RecipeByDay {
+    id: string;
+    title: string;
+    author: string;
+    images: string[];
 }

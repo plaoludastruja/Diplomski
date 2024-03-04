@@ -2,10 +2,12 @@ import { Button, View, Text, StyleSheet, Image } from 'react-native';
 import { useEffect, useState } from 'react';
 import BackgroundSafeAreaView from '../../components/BackgroundSafeAreaView';
 import { GoogleSignin, GoogleSigninButton, User } from '@react-native-google-signin/google-signin';
-import { getCurrentUser, signIn, signOut } from '../../service/AuthService';
+import { signIn, signOut } from '../../service/AuthService';
+import { getCurrentUser } from '../../service/UserService';
+import { MyUser } from '../../model/model';
 
 export default function FridgeScreen() {
-    const [user, setUser] = useState<User>();
+    const [user, setUser] = useState<MyUser>();
 
     useEffect(() => {
         GoogleSignin.configure({
@@ -32,8 +34,8 @@ export default function FridgeScreen() {
     return (
         <BackgroundSafeAreaView>
             <View>
-                {user && <Text style={styles.buttonText}>{JSON.stringify(user.user)}</Text>}
-                {user && <Image source={{ uri: user.user.photo }} style={styles.image} />}
+                {user && <Text style={styles.buttonText}>{JSON.stringify(user)}</Text>}
+                {user && <Image source={{ uri: user.profilePhoto }} style={styles.image} />}
                 {user ?
                     (<Button title='Logout' onPress={signOutFn} />) :
                     (<GoogleSigninButton size={GoogleSigninButton.Size.Standard} color={GoogleSigninButton.Color.Light} onPress={signInFn} />)

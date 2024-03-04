@@ -1,7 +1,7 @@
 import { useLocalSearchParams } from 'expo-router';
 import BackgroundSafeAreaView from '../../components/BackgroundSafeAreaView';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { View, TextInput, Pressable, Text, StyleSheet, Image, Platform, ScrollView, KeyboardAvoidingView, Alert, Dimensions } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { View, TextInput, Pressable, Text, StyleSheet, Image, Platform, ScrollView, KeyboardAvoidingView, Alert, Dimensions, ActivityIndicator } from 'react-native';
 import { FoodRecipes, Ingredient, Step, StorageFolder } from '../../model/model';
 const PlaceholderImage = require('../../assets/images/icon.png');
 import Carousel from 'react-native-snap-carousel';
@@ -10,11 +10,13 @@ import {  GetFoodRecipe } from '../../service/service';
 import { MaterialIcons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import AddIngredientsModal from '../../components/AddIngredientsModal';
+import LoadingScreen from '../../components/LoadingScreen';
 
 
 export default function FoodRecipesItem() {
     const { foodRecipesItem } = useLocalSearchParams<{ foodRecipesItem: string }>();
     const [food, setFood] = useState<FoodRecipes>();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchData();
@@ -24,6 +26,7 @@ export default function FoodRecipesItem() {
         try {
             const foodRecipesData = await GetFoodRecipe(foodRecipesItem);
             setFood(foodRecipesData)
+            setLoading(false)
             console.log('Data fetched: ', foodRecipesData)
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -42,6 +45,8 @@ export default function FoodRecipesItem() {
         );
     };
 
+    if (loading) return <LoadingScreen />
+    
     return (
         <BackgroundSafeAreaView>
             <View style={styles.scrollViewContent}>
@@ -56,7 +61,7 @@ export default function FoodRecipesItem() {
                 </View>
 
                 <BottomSheet
-                    snapPoints={useMemo(() => ['35', '65', '95'], [])}
+                    snapPoints={['35', '65', '95']}
                     backgroundStyle={{ backgroundColor: COLORS.dark }}
                 >
                     <BottomSheetScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>

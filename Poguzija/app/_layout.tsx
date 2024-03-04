@@ -40,7 +40,7 @@ const theme = {
     ...DefaultTheme,
     colors: {
         ...DefaultTheme.colors,
-        background: COLORS.tint
+        background: COLORS.dark
     }
 };
 
