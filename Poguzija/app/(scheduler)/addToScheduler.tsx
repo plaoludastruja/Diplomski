@@ -1,14 +1,13 @@
-import { ActivityIndicator, FlatList, RefreshControl, StyleSheet} from 'react-native';
-import CardFoodRecipes from '../../components/CardFoodRecipes';
-import { useState, useEffect } from 'react';
+import { Text, StyleSheet, View, FlatList, RefreshControl } from 'react-native'
+import React, { Component, useEffect, useState } from 'react'
 import { FoodRecipes } from '../../model/model';
-import { GetAllFoodRecipes } from '../../service/service';
 import BackgroundSafeAreaView from '../../components/BackgroundSafeAreaView';
-import { COLORS } from '../../constants/Colors';
+import CardFoodRecipes from '../../components/CardFoodRecipes';
 import LoadingScreen from '../../components/LoadingScreen';
+import { GetAllFoodRecipes } from '../../service/service';
 
+export default function addToScheduler() {
 
-export default function IndexScreen() {
     const [food, setFood] = useState<FoodRecipes[]>([]);
     const [refreshing, setRefreshing] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -40,7 +39,7 @@ export default function IndexScreen() {
         <BackgroundSafeAreaView>
             <FlatList
                 data={food}
-                renderItem={({ item }) => <CardFoodRecipes data={item} />}
+                renderItem={({ item }) => <CardFoodRecipes data={item} route={'scheduler'}/>}
                 keyExtractor={(item) => item.id}
                 showsVerticalScrollIndicator={false}
                 style={styles.flex}
@@ -61,6 +60,3 @@ const styles = StyleSheet.create({
         width: '100%',
     },
 });
-
-
-

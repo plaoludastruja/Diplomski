@@ -3,17 +3,25 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { SIZES, COLORS } from '../constants/Colors';
 import { FoodRecipes, RecipeByDay } from '../model/model';
 import CardFoodRecipes from './CardFoodRecipes';
+import { useRouter } from 'expo-router';
 
 
 
 export default function SchedulerRecipe( { recipesWeek, day }: { recipesWeek: RecipeByDay[], day: string } ) {
     const screenWidth = Dimensions.get('window').width;
+    const router = useRouter();
+    
+    const onAddToScheduler = () => {
+        console.log(day)
+        router.push(`/addToScheduler`);
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.addContainer}>
                 <Text style={styles.subtitleText}>{day}</Text>
                 <Pressable style={styles.addButton} >
-                    <MaterialIcons name="add" style={styles.icon} />
+                    <MaterialIcons name="add" style={styles.icon} onPress={ onAddToScheduler } />
                 </Pressable>
             </View>
             <View style={styles.line} />

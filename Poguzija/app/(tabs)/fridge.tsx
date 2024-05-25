@@ -5,6 +5,7 @@ import { GoogleSignin, GoogleSigninButton, User } from '@react-native-google-sig
 import { signIn, signOut } from '../../service/AuthService';
 import { getCurrentUser } from '../../service/UserService';
 import { MyUser } from '../../model/model';
+import { AddIngredientsData } from '../../service/HelperService';
 
 export default function FridgeScreen() {
     const [user, setUser] = useState<MyUser>();
@@ -31,9 +32,15 @@ export default function FridgeScreen() {
         signOut();
     }
 
+    const addData = () => {
+        AddIngredientsData()
+    }
+
     return (
         <BackgroundSafeAreaView>
+
             <View>
+            <Button title='Add ingredients data' onPress={addData} />
                 {user && <Text style={styles.buttonText}>{JSON.stringify(user)}</Text>}
                 {user && <Image source={{ uri: user.profilePhoto }} style={styles.image} />}
                 {user ?

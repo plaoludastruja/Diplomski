@@ -5,14 +5,22 @@ import Colors, { COLORS, SIZES } from '../constants/Colors';
 import { FoodRecipes } from '../model/model';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import { AddToScheduler } from '../service/SchedulerService';
 
 const PlaceholderImage = require('../assets/images/icon.png');
 
-const CardFoodRecipes: FC<{ data: FoodRecipes }> = ({ data }): JSX.Element => {
+const CardFoodRecipes: FC<{ data: FoodRecipes, route: string }> = ({ data, route }): JSX.Element => {
     const router = useRouter();
-    const handlePress = (data: FoodRecipes) => {
-        console.log('View pressed on ID: ', data.id);
-        router.push(`/foodRecipesItem/${data.id}`);
+    const handlePress = async (data: FoodRecipes) => {
+        if(!route){
+            console.log('View pressed on ID: ', data.id);
+            router.push(`/foodRecipesItem/${data.id}`);
+        }else if (route === 'scheduler'){
+            console.log('View pressed on ID: ', data.id);
+            await AddToScheduler(data, 'Monday')
+            router.back()
+        }
+        
     };
 
     const handleLongPress = (data: FoodRecipes) => {

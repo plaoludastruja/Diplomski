@@ -27,8 +27,6 @@ export async function GetFoodRecipe(id: string): Promise<FoodRecipes> {
     if (data.exists()) {
         foodRecipeItem = data.data();
         console.log("Document data:", foodRecipeItem);
-    } else {
-        console.log("No such document1!");
     }
     return foodRecipeItem;
 }
@@ -75,9 +73,6 @@ export async function GetRecipesSchedulerByUser(id: string) {
     if (data.exists()) {
         recipeScheduler = data.data();
         console.log("Document data:", recipeScheduler);
-    } else {
-        console.log("No such document!");
-        return;
     }
     return recipeScheduler
 }

@@ -12,10 +12,12 @@ export default function SchedulerScreen() {
     const [loading, setLoading] = useState(true);
     const [recipesWeek, setRecipesWeek] = useState<RecipeScheduler>();
     const isFocused = useIsFocused();
-    
+
     useEffect(() => {
-        setLoading(true);
-        fetchData();
+        if(isFocused){
+            setLoading(true);
+            fetchData();
+        }
     }, [isFocused]);
 
     const fetchData = async () => {
@@ -23,7 +25,6 @@ export default function SchedulerScreen() {
             const recipesWeekData = await GetRecipesScheduler();
             setRecipesWeek(recipesWeekData)
             setLoading(false)
-            console.log(JSON.stringify(recipesWeekData))
         } catch (error) {
             console.error('Error fetching data:', error);
         }

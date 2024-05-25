@@ -14,7 +14,7 @@ async function setUserMandatoryData(user: User) {
         userAdded = await AddNewUser(user, recipeSchedulerId)
     }    
     const userValue = JSON.stringify(userAdded);
-    console.log(userValue)
+    console.log('USER:', userValue)
     SecureStore.setItemAsync('signedUser', userValue);
     return userAdded
 }
@@ -47,13 +47,9 @@ async function GetUser(id: string): Promise<MyUser> {
     const data = await getDoc(doc(db, DatabaseCollection.users, id));
     if (data.exists()) {
         const user = data.data();
-        console.log("Document data:", user);
         return user;
-    } else {
-        console.log("Nema usera toga");
-        return;
     }
-    
+    return;
 }
 
 export {
