@@ -16,21 +16,46 @@ export async function AddToScheduler(recipe: FoodRecipes, day: string) {
         scheduler = data.data()
         console.log("Document data:", scheduler);
     }
-    // Find the index of the day in the recipeByDay array
     const dayIndex = scheduler.recipeByDay.findIndex(item => item.day === day);
 
     if (dayIndex !== -1) {
-      // Push the new recipe item into the recipes array for the specific day
     scheduler.recipeByDay[dayIndex].recipes.push({id: recipe.id, images: recipe.images, author: recipe.author, title: recipe.title});
-
-
+    await updateDoc(doc(db, DatabaseCollection.recipeSchedulers, user.aditionalUserData.recipeSchedulerId), {
+        recipeByDay: scheduler.recipeByDay
+    });
     console.log('Recipe added successfully.');
     } else {
         console.log('Day not found.');
     }
-    await updateDoc(doc(db, DatabaseCollection.recipeSchedulers, user.aditionalUserData.recipeSchedulerId), {
-        recipeByDay: scheduler.recipeByDay
-    });
+    
+}
+
+export async function RemoveFromScheduler(recipeToRemove: FoodRecipes, day: string) {
+
+    const user = await getCurrentUser();
+    const data = await getDoc(doc(db, DatabaseCollection.recipeSchedulers, user.aditionalUserData.recipeSchedulerId).withConverter(recipesSchedulerConverter));
+    let scheduler: RecipeScheduler = {
+        id: "",
+        user: "",
+        recipeByDay: [],
+    }
+    if (data.exists()) {
+        scheduler = data.data()
+        console.log("Document data:", scheduler);
+    }
+    // Find the index of the day in the recipeByDay array
+    const dayIndex = scheduler.recipeByDay.findIndex(item => item.day === day);
+
+    if (dayIndex !== -1) {
+        scheduler.recipeByDay[dayIndex].recipes = scheduler.recipeByDay[dayIndex].recipes.filter(recipe => recipe.id !== recipeToRemove.id );
+        console.log("scheduler.recipeByDay[dayIndex]:", scheduler.recipeByDay[dayIndex]);
+        await updateDoc(doc(db, DatabaseCollection.recipeSchedulers, user.aditionalUserData.recipeSchedulerId), {
+            recipeByDay: scheduler.recipeByDay
+        });
+        console.log('Recipe removed successfully.');
+    } else {
+        console.log('Day not found.');
+    }
 }
 
 const recipesSchedulerConverter = {

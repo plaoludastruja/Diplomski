@@ -13,7 +13,7 @@ export default function SchedulerRecipe( { recipesWeek, day }: { recipesWeek: Re
     
     const onAddToScheduler = () => {
         console.log(day)
-        router.push(`/addToScheduler`);
+        router.push(`/addToScheduler/${day}`);
     }
 
     return (
@@ -28,7 +28,7 @@ export default function SchedulerRecipe( { recipesWeek, day }: { recipesWeek: Re
             <ScrollView horizontal={true} style={styles.flex}>
                 { recipesWeek.map((recipe, index) => 
                     <View key={index} style={{ width: 0.8 * screenWidth }}>
-                        <CardFoodRecipes data={recipe} />
+                        <CardFoodRecipes data={recipe} route={'schedulerRemove/' + day }/>
                     </View>
                 )}
             </ScrollView>

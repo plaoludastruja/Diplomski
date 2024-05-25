@@ -1,30 +1,45 @@
-import { View, Image, StyleSheet, Pressable, Text } from 'react-native'
+import { View, Image, StyleSheet, Pressable, Text, Alert } from 'react-native'
 import React, { FC, useEffect, useState } from 'react'
 import styled from 'styled-components/native';
 import Colors, { COLORS, SIZES } from '../constants/Colors';
 import { FoodRecipes } from '../model/model';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import { AddToScheduler } from '../service/SchedulerService';
+import { AddToScheduler, RemoveFromScheduler } from '../service/SchedulerService';
 
 const PlaceholderImage = require('../assets/images/icon.png');
 
 const CardFoodRecipes: FC<{ data: FoodRecipes, route: string }> = ({ data, route }): JSX.Element => {
     const router = useRouter();
     const handlePress = async (data: FoodRecipes) => {
+        console.log(route)
         if(!route){
             console.log('View pressed on ID: ', data.id);
             router.push(`/foodRecipesItem/${data.id}`);
-        }else if (route === 'scheduler'){
+        }else if (route.split('/')[0] === 'schedulerAdd'){
             console.log('View pressed on ID: ', data.id);
-            await AddToScheduler(data, 'Monday')
+            await AddToScheduler(data, route.split('/')[1])
             router.back()
         }
-        
     };
 
-    const handleLongPress = (data: FoodRecipes) => {
-        console.log('View held down on ID: ', data.id);
+    const handleLongPress = async (data: FoodRecipes) => {
+        console.log(route)
+        if(!route){
+            console.log('View held down on ID: ', data.id);
+        }else if (route.split('/')[0] === 'schedulerRemove'){
+            Alert.alert('Delete Item', 'Are you sure you want to remove this item from scheduler?',
+            [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                    text: 'Remove', onPress: async () => {
+                    await RemoveFromScheduler(data, route.split('/')[1])
+                    },
+                },
+            ],
+            { cancelable: false }
+        );
+        }
     };
 
     return (
