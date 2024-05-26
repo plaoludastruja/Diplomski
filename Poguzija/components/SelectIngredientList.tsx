@@ -1,15 +1,47 @@
 import { Text, StyleSheet, View, Modal, Pressable, TextInput, FlatList } from 'react-native'
-import React, { Component, FC, useState } from 'react'
+import React, { Component, FC, useEffect, useState } from 'react'
 import { MyComponentProps } from '../model/model'
 import { MaterialIcons } from '@expo/vector-icons'
 import { COLORS, SIZES } from '../constants/Colors'
+import { GetIngredients, GetUnits } from '../service/IngredientService'
 
-const SelectIngredientList = ({ data, visible, onAdd, onClose }) => {
+const SelectIngredientList = ({ modalDataType, visible, onAdd, onClose }) => {
     const [search, setSearch] = useState('')
-    const [dataFilter, setDataFilter] = useState(data);
+    const [data, setData] = useState([]);
+    const [dataFilter, setDataFilter] = useState([]);
+
+    useEffect(() => {
+        if(visible)
+            fetchData()
+    }, [visible])
+
+    const fetchData = () => {
+        if(modalDataType === 'ingredient'){
+            GetIngredientsList()
+        }else if(modalDataType === 'unit'){
+            GetUnitsList()
+        }
+    }
+
+    const GetIngredientsList = async () => {
+        const ingredients = await GetIngredients()
+        setData(ingredients)
+        setDataFilter(ingredients)
+    }
+
+    const GetUnitsList = async () => {
+        const units = await GetUnits()
+        setData(units)
+        setDataFilter(units)
+    }
 
     const handlePress = (ingredient) => {
-        onAdd(ingredient);
+        onAdd(ingredient)
+        handleClose()
+    };
+    const handleClose = () => {
+        setData([])
+        setDataFilter([])
         onClose();
     };
 
@@ -25,8 +57,8 @@ const SelectIngredientList = ({ data, visible, onAdd, onClose }) => {
             animationType="fade"
             transparent={true}
             visible={visible}
-            onRequestClose={ onClose }>
-            <Pressable style={styles.centeredView} onPress={ onClose }>
+            onRequestClose={ () => handleClose() }>
+            <Pressable style={styles.centeredView} onPress={ () => handleClose() }>
                 <View style={styles.modalView}>
                     <View style={styles.inputContainer}>
                         <MaterialIcons name="search" style={styles.icon} />

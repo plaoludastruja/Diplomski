@@ -3,19 +3,19 @@ import { DatabaseCollection } from "../model/model";
 import { db } from "./firebase";
 
 async function GetIngredients() {
-    const data = await getDocs(query(collection(db, DatabaseCollection.ingredients), orderBy('name', "asc")));
-    const ingredients = data.docs.map(doc => {
-        return { id: doc.id, name: doc.data().name }
-    });
-    return ingredients;
+    const data = await getDocs(query(collection(db, DatabaseCollection.ingredients)));
+    const ingredientsData = data.docs.map(doc => {
+        return { ingredients: doc.data().ingredients }
+    })[0].ingredients.sort((a, b) => a.name.localeCompare(b.name));
+    return ingredientsData;
 }
 
 async function GetUnits() {
-    const data = await getDocs(query(collection(db, DatabaseCollection.units), orderBy('name', "asc")));
-    const units = data.docs.map(doc => {
-        return { id: doc.id, name: doc.data().name }
-    });
-    return units;
+    const data = await getDocs(query(collection(db, DatabaseCollection.units)));
+    const unitsData = data.docs.map(doc => {
+        return { units: doc.data().units }
+    })[0].units.sort((a, b) => a.name.localeCompare(b.name));
+    return unitsData;
 }
 
 export {

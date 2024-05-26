@@ -40,7 +40,7 @@ export default function IndexScreen() {
         <BackgroundSafeAreaView>
             <FlatList
                 data={food}
-                renderItem={({ item }) => <CardFoodRecipes data={item} />}
+                renderItem={({ item }) => <CardFoodRecipes data={item} route={''} />}
                 keyExtractor={(item) => item.id}
                 showsVerticalScrollIndicator={false}
                 style={styles.flex}

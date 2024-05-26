@@ -178,7 +178,7 @@ export default function AddRecipeScreen() {
                         <Text style={styles.subtitleText}>Recipe name</Text>
                         <View style={styles.inputContainer}>
                             <MaterialIcons name="receipt" style={styles.icon} />
-                            <BottomSheetTextInput
+                            <TextInput
                                 style={styles.textInput}
                                 placeholder="Recipe name"
                                 value={title}
@@ -190,7 +190,7 @@ export default function AddRecipeScreen() {
                         <Text style={styles.subtitleText}>Serving size</Text>
                         <View style={styles.inputContainer}>
                             <MaterialIcons name="people" style={styles.icon} />
-                            <BottomSheetTextInput
+                            <TextInput
                                 style={styles.textInput}
                                 placeholder="Serving size"
                                 value={servingSize}
@@ -202,7 +202,7 @@ export default function AddRecipeScreen() {
                         <Text style={styles.subtitleText}>Time to prepare</Text>
                         <View style={styles.inputContainer}>
                             <MaterialIcons name="timelapse" style={styles.icon} />
-                            <BottomSheetTextInput
+                            <TextInput
                                 style={styles.textInput}
                                 placeholder="Time to prepare"
                                 value={cookingTime}
@@ -226,7 +226,7 @@ export default function AddRecipeScreen() {
 
                         <Text style={styles.subtitleText}>Cooking instructions</Text>
                         {stepList?.map((step, index) => (
-                            <BottomSheetTextInput
+                            <TextInput
                                 style={styles.input}
                                 multiline={true}
                                 value={`${step.number}. ${step.description}`}
@@ -235,7 +235,7 @@ export default function AddRecipeScreen() {
                                 key={step.number}
                             />
                         ))}
-                        <BottomSheetTextInput
+                        <TextInput
                             style={styles.input}
                             placeholder={`${stepsPlaceholder}`}
                             value={step}

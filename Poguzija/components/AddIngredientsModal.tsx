@@ -7,29 +7,21 @@ import SelectIngredientList from './SelectIngredientList'
 import { GetIngredients, GetUnits } from '../service/IngredientService'
 
 const AddIngredientsModal = ({ visible, onAdd, onClose }) => {
-    const [selectIngredientNameListVisible, setSelectIngredientNameListVisible] = useState(false);
-    const [selectIngredientUnitListVisible, setSelectIngredientUnitListVisible] = useState(false);
-
-    const [ingredientData, setIngredientData] = useState([]);
-    const [unitData, setUnitData] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalDataType, setModalDataType] = useState('');
 
     const [name, setName] = useState('');
     const [amount, setAmount] = useState('');
     const [unit, setUnit] = useState('');
 
-    useEffect(() => {
-        GetIngredientsList()
-        GetUnitsList()
-    }, [])
-
-    const GetIngredientsList = async () => {
-        const ingredients = await GetIngredients()
-        setIngredientData(ingredients)
+    const openModal = (dataType) => {
+        setModalDataType(dataType)
+        setModalVisible(true)
     }
 
-    const GetUnitsList = async () => {
-        const units = await GetUnits()
-        setUnitData(units)
+    const closeModal = () => {
+        setModalDataType('')
+        setModalVisible(false)
     }
 
     const handleOnAdd = () => {
@@ -49,7 +41,7 @@ const AddIngredientsModal = ({ visible, onAdd, onClose }) => {
         <Modal visible={visible} animationType="fade" transparent={true} onRequestClose={ onClose }>
             <Pressable style={styles.flex} onPress={ onClose }>
                 <Pressable style={styles.modalView}>
-                    <Pressable style={styles.nameInput} onPress={() => setSelectIngredientNameListVisible(true)}>
+                    <Pressable style={styles.nameInput} onPress={() => openModal('ingredient')}>
                         <MaterialIcons name="search" style={styles.icon} />
                         <TextInput value={name} placeholder='Ingredient' editable={false} style={styles.textInput} />
                     </Pressable>
@@ -57,7 +49,7 @@ const AddIngredientsModal = ({ visible, onAdd, onClose }) => {
                         <View style={[styles.amountAndUnitInput, styles.amountInput]}>
                             <TextInput value={amount} placeholder="Amount" style={styles.textInput} keyboardType='numeric' onChangeText={text => setAmount(text)} />
                         </View>
-                        <Pressable style={[styles.amountAndUnitInput, styles.unitInput]} onPress={() => setSelectIngredientUnitListVisible(true)}>
+                        <Pressable style={[styles.amountAndUnitInput, styles.unitInput]} onPress={() => openModal('unit')}>
                             <TextInput value={unit} placeholder="Unit" editable={false} style={styles.textInput} onChangeText={text => setUnit(text)} />   
                         </Pressable>
                     </View>
@@ -68,16 +60,12 @@ const AddIngredientsModal = ({ visible, onAdd, onClose }) => {
             </Pressable>
 
             <SelectIngredientList 
-                data={ingredientData}
-                visible={ selectIngredientNameListVisible } 
-                onAdd={ (name) => setName(name.name) } 
-                onClose={() => setSelectIngredientNameListVisible(false)} />
+                modalDataType={ modalDataType }
+                visible={ modalVisible } 
+                onAdd={ (item) => { if(modalDataType === 'ingredient'){setName(item.name)} else if(modalDataType === 'unit'){setUnit(item.name)} }} 
+                onClose={() => closeModal()} />
             
-            <SelectIngredientList 
-                data={unitData}
-                visible={ selectIngredientUnitListVisible } 
-                onAdd={ (name) => setUnit(name.name) } 
-                onClose={() => setSelectIngredientUnitListVisible(false)} />
+            
         </Modal>
     )
 }

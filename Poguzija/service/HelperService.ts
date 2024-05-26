@@ -1,4 +1,4 @@
-import { writeBatch, doc } from "firebase/firestore/lite"; 
+import { writeBatch, doc, setDoc, addDoc, collection } from "firebase/firestore/lite"; 
 import { db } from "./firebase";
 import { DatabaseCollection } from "../model/model";
 
@@ -19,10 +19,16 @@ async function AddIngredientsData() {
         'Oats', 'Brown Rice', 'White Rice'
     ];
 
-    const ingredientsTest = [
-        'Water', 'Salt', 'Sugar', 'Flour', 'Eggs', 'Butter', 'Milk', 'Rice', 'Chicken', 'Tomato', 'Onion'
-    ];
-    try{
+    const newIngredientsArray = ingredients.map((ingredient, index) => ({
+        id: index + 1,
+        name: ingredient
+    }));
+
+    const newIngredients= {ingredients: newIngredientsArray}
+
+    addDoc(collection(db, DatabaseCollection.ingredients), newIngredients)
+    
+    /*try{
         console.log('Insert ingredients started')
         const batch = writeBatch(db);
         ingredients.forEach((ingredient, index) => {
@@ -33,7 +39,7 @@ async function AddIngredientsData() {
         console.log('Insert ingredients finished succesfully')
     }catch(e){
         console.log('Insert ingredients failed', e)
-    }
+    }*/
 }
 
 async function AddMeasurementUnitsData() {
@@ -44,18 +50,14 @@ async function AddMeasurementUnitsData() {
         'leaf', 'sprig', 'chop'
     ];
 
-    try{
-        console.log('Insert measurement units started')
-        const batch = writeBatch(db);
-        measurementUnits.forEach((measurementUnit, index) => {
-            const ingredientRef = doc(db, DatabaseCollection.ingredients, (index + 1).toString());
-            batch.set(ingredientRef, { name: measurementUnit });
-        });
-        await batch.commit();
-        console.log('Insert measurement units finished succesfully')
-    }catch(e){
-        console.log('Insert measurement units failed', e)
-    }
+    const newMeasurementUnitsArray = measurementUnits.map((unit, index) => ({
+        id: index + 1,
+        name: unit
+    }));
+
+    const newMeasurementUnits= {units: newMeasurementUnitsArray}
+
+    addDoc(collection(db, DatabaseCollection.units), newMeasurementUnits)
 }
 
 export {
