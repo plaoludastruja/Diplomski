@@ -1,42 +1,42 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { SplashScreen, Stack } from 'expo-router';
-import { Dispatch, SetStateAction, createContext, useEffect, useState } from 'react';
-import { useColorScheme } from 'react-native';
-import { COLORS } from '../constants/Colors';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { MyUser } from '../model/model';
-import { signIn, signOut } from '../service/AuthService';
-import { getCurrentUser } from '../service/UserService';
+import FontAwesome from '@expo/vector-icons/FontAwesome'
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
+import { useFonts } from 'expo-font'
+import { SplashScreen, Stack } from 'expo-router'
+import { Dispatch, SetStateAction, createContext, useEffect, useState } from 'react'
+import { useColorScheme } from 'react-native'
+import { COLORS } from '../constants/Colors'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { MyUser } from '../model/model'
+import { signIn, signOut } from '../service/AuthService'
+import { getCurrentUser } from '../service/UserService'
 
-export { ErrorBoundary, } from 'expo-router';
+export { ErrorBoundary, } from 'expo-router'
 
-export const unstable_settings = { initialRouteName: '(tabs)', };
+export const unstable_settings = { initialRouteName: '(tabs)', }
 
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
     const [loaded, error] = useFonts({
         SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
         ...FontAwesome.font,
-    });
+    })
 
     useEffect(() => {
-        if (error) throw error;
-    }, [error]);
+        if (error) throw error
+    }, [error])
 
     useEffect(() => {
         if (loaded) {
-            SplashScreen.hideAsync();
+            SplashScreen.hideAsync()
         }
-    }, [loaded]);
+    }, [loaded])
 
     if (!loaded) {
-        return null;
+        return null
     }
 
-    return <RootLayoutNav />;
+    return <RootLayoutNav />
 }
 
 const theme = {
@@ -45,7 +45,7 @@ const theme = {
         ...DefaultTheme.colors,
         background: COLORS.dark
     }
-};
+}
 
 interface UserContextType {
     user: MyUser | undefined
@@ -58,29 +58,29 @@ interface SchedulerContextType {
     setRefreshScheduler: Dispatch<SetStateAction<boolean>>
 }
 
-export const UserContext = createContext<UserContextType>({ user: undefined, signInFn: async () => {}, signOutFn: () => {} });
-export const SchedulerContext = createContext<SchedulerContextType>({refreshScheduler: false,setRefreshScheduler: () => {}});
+export const UserContext = createContext<UserContextType>({ user: undefined, signInFn: async () => {}, signOutFn: () => {} })
+export const SchedulerContext = createContext<SchedulerContextType>({refreshScheduler: false,setRefreshScheduler: () => {}})
 
 function RootLayoutNav() {
-    const colorScheme = useColorScheme();
-    const [user, setUser] = useState<MyUser>();
-    const [refreshScheduler, setRefreshScheduler] = useState(true);
+    const colorScheme = useColorScheme()
+    const [user, setUser] = useState<MyUser>()
+    const [refreshScheduler, setRefreshScheduler] = useState(true)
     useEffect(() => {
-        getCurrentUserFn();
+        getCurrentUserFn()
     }, [])
     const getCurrentUserFn = async () => {
-        const user = await getCurrentUser();
-        setUser(user);
+        const user = await getCurrentUser()
+        setUser(user)
     }
 
     const signInFn = async () => {
-        const user = await signIn();
-        setUser(user);
+        const user = await signIn()
+        setUser(user)
     }
 
     const signOutFn = () => {
-        setUser(undefined);
-        signOut();
+        setUser(undefined)
+        signOut()
     }
 
     
@@ -104,5 +104,5 @@ function RootLayoutNav() {
             </ThemeProvider>
         </GestureHandlerRootView>
                 
-    );
+    )
 }

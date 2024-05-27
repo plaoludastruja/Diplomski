@@ -1,40 +1,40 @@
-import { useLocalSearchParams } from 'expo-router';
-import BackgroundSafeAreaView from '../../components/BackgroundSafeAreaView';
-import React, { useEffect, useMemo, useState } from 'react';
-import { View, TextInput, Pressable, Text, StyleSheet, Image, Platform, ScrollView, KeyboardAvoidingView, Alert, Dimensions, ActivityIndicator } from 'react-native';
-import { FoodRecipes, Ingredient, Step, StorageFolder } from '../../model/model';
-const PlaceholderImage = require('../../assets/images/icon.png');
-import Carousel from 'react-native-snap-carousel';
-import { COLORS, SIZES } from '../../constants/Colors';
-import { MaterialIcons } from '@expo/vector-icons';
-import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
-import AddIngredientsModal from '../../components/AddIngredientsModal';
-import LoadingScreen from '../../components/LoadingScreen';
-import { GetFoodRecipe } from '../../service/RecipesService';
+import { useLocalSearchParams } from 'expo-router'
+import BackgroundSafeAreaView from '../../components/BackgroundSafeAreaView'
+import React, { useEffect, useMemo, useState } from 'react'
+import { View, TextInput, Pressable, Text, StyleSheet, Image, Platform, ScrollView, KeyboardAvoidingView, Alert, Dimensions, ActivityIndicator } from 'react-native'
+import { FoodRecipes, Ingredient, Step, StorageFolder } from '../../model/model'
+const PlaceholderImage = require('../../assets/images/icon.png')
+import Carousel from 'react-native-snap-carousel'
+import { COLORS, SIZES } from '../../constants/Colors'
+import { MaterialIcons } from '@expo/vector-icons'
+import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
+import AddIngredientsModal from '../../components/AddIngredientsModal'
+import LoadingScreen from '../../components/LoadingScreen'
+import { GetFoodRecipe } from '../../service/RecipesService'
 
 
 export default function FoodRecipesItem() {
-    const { foodRecipesItem } = useLocalSearchParams<{ foodRecipesItem: string }>();
-    const [food, setFood] = useState<FoodRecipes>();
-    const [loading, setLoading] = useState(true);
+    const { foodRecipesItem } = useLocalSearchParams<{ foodRecipesItem: string }>()
+    const [food, setFood] = useState<FoodRecipes>()
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        fetchData();
-    }, []);
+        fetchData()
+    }, [])
 
     const fetchData = async () => {
+        
         try {
-            const foodRecipesData = await GetFoodRecipe(foodRecipesItem);
+            const foodRecipesData = await GetFoodRecipe(foodRecipesItem)
             setFood(foodRecipesData)
             setLoading(false)
-            console.log('Data fetched: ', foodRecipesData)
         } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error('Error fetching data:', error)
         }
     }
     
-    const screenWidth = Dimensions.get('window').width;
-    const screenHeight = Dimensions.get('window').height;
+    const screenWidth = Dimensions.get('window').width
+    const screenHeight = Dimensions.get('window').height
 
 
     const renderItem = ({ item }: { item: string }) => {
@@ -42,8 +42,8 @@ export default function FoodRecipesItem() {
             <View style={[styles.images, { width: screenWidth, height: 2 * screenHeight / 3 }]} >
                 <Image source={{ uri: item }} style={[styles.image, { width: screenWidth, height: 2 * screenHeight / 3 }]} />
             </View>
-        );
-    };
+        )
+    }
 
     if (loading) return <LoadingScreen />
     
@@ -110,7 +110,7 @@ export default function FoodRecipesItem() {
 
             </View>
         </BackgroundSafeAreaView>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -203,4 +203,4 @@ const styles = StyleSheet.create({
         color: COLORS.tint,
         fontSize: SIZES.large,
     },
-});
+})

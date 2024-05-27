@@ -1,4 +1,4 @@
-import BackgroundSafeAreaView from '../../components/BackgroundSafeAreaView';
+import BackgroundSafeAreaView from '../../components/BackgroundSafeAreaView'
 
 
 export default function SearchScreen() {
@@ -6,5 +6,5 @@ export default function SearchScreen() {
         <BackgroundSafeAreaView>
 
         </BackgroundSafeAreaView>
-    );
+    )
 }

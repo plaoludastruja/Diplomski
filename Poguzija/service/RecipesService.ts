@@ -1,13 +1,16 @@
-import { getDocs, query, collection, orderBy, getDoc, doc, addDoc, QueryDocumentSnapshot, serverTimestamp, where } from "firebase/firestore/lite";
-import { DatabaseCollection, FoodRecipes } from "../model/model";
-import { db, storage } from "./firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { getCurrentUser } from "./UserService";
+import { getDocs, query, collection, orderBy, getDoc, doc, addDoc, QueryDocumentSnapshot, serverTimestamp, where } from "firebase/firestore/lite"
+import { DatabaseCollection, FoodRecipes } from "../model/model"
+import { db, storage } from "./firebase"
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
+import { getCurrentUser } from "./UserService"
+import 'react-native-get-random-values'
+import { v4 as uuidv4 } from 'uuid'
 
 export async function GetAllFoodRecipes() {
-    const data = await getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), orderBy('createdAt', "desc")));
-    const foodRecipesData = data.docs.map(doc => (doc.data()));
-    return foodRecipesData;
+    const data = await getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), orderBy('createdAt', "desc")))
+    console.log('Data fetched at GetAllFoodRecipes()')
+    const foodRecipesData = data.docs.map(doc => (doc.data()))
+    return foodRecipesData
 }
 
 export async function GetFoodRecipe(id: string): Promise<FoodRecipes> {
@@ -21,70 +24,72 @@ export async function GetFoodRecipe(id: string): Promise<FoodRecipes> {
         images: [],
         createdAt: "",
     }
-    const data = await getDoc(doc(db, DatabaseCollection.recipes, id).withConverter(foodRecipesConverter));
+    const data = await getDoc(doc(db, DatabaseCollection.recipes, id).withConverter(foodRecipesConverter))
+    console.log('Data fetched at GetFoodRecipe()')
     if (data.exists()) {
-        foodRecipeItem = data.data();
-        console.log("Document data:", foodRecipeItem);
+        foodRecipeItem = data.data()
     }
-    return foodRecipeItem;
+    return foodRecipeItem
 }
 
 export function AddFoodRecipe(newRecipe: Partial<FoodRecipes>) {
-    //return getDocs(query(collection(db, 'DatabaseCollection.recipes'), orderBy('createdAt', "desc")));
-    addDoc(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), newRecipe);
+    addDoc(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), newRecipe)
+    console.log('Data added at AddFoodRecipe()')
 }
-
-/*export function EditFoodRecipe(id:string) {
-    //return getDocs(query(collection(db, DatabaseCollection.recipes), orderBy('createdAt', "desc")));
-    setDoc(doc(db, DatabaseCollection.recipes, id), {
-        name: "Los NJUJORKdas",
-        state: "CA",
-        country: "USA"
-    });
-}*/
 
 export async function GetMyFoodRecipes() {
     const user = await getCurrentUser()
-    if(!user) return [];
-    console.log(user.id)
-    const data = await getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), where("author", "==", user.id)));
-    const foodRecipesData = data.docs.map(doc => (doc.data()));
-    return foodRecipesData;
+    if(!user) return []
+    const data = await getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), where("author", "==", user.id), orderBy('createdAt', "desc")))
+    console.log('Data fetched at GetMyFoodRecipes()')
+    const foodRecipesData = data.docs.map(doc => (doc.data()))
+    return foodRecipesData
 }
 
 export async function UploadFoodRecipesImages(selectedImages: string[], folder: string): Promise<string[]> {
-    const urls = [];
+    const urls = []
     for (var selectedImage of selectedImages) {
-        const url = await uploadImage(selectedImage, folder);
-        urls.push(url);
+        const url = await uploadImage(selectedImage, folder)
+        urls.push(url)
     }
-    return urls;
+    return urls
 }
 
 async function uploadImage(selectedImage: string, folder: string): Promise<string> {
-    const imageName = generateUniqueName();
-    const imageRef = ref(storage, `${folder}/${imageName}`);
+    const imageName = generateUniqueName()
+    const imageRef = ref(storage, `${folder}/${imageName}`)
     const blob: Blob = await new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
+        const xhr = new XMLHttpRequest()
         xhr.onload = function () {
-            resolve(xhr.response);
-        };
+            resolve(xhr.response)
+        }
         xhr.onerror = function () {
-            reject(new TypeError('Network request failed'));
-        };
-        xhr.responseType = 'blob';
-        xhr.open('GET', selectedImage, true);
-        xhr.send(null);
+            reject(new TypeError('Network request failed'))
+        }
+        xhr.responseType = 'blob'
+        xhr.open('GET', selectedImage, true)
+        xhr.send(null)
     })
-
-    await uploadBytes(imageRef, blob);
+    await uploadBytes(imageRef, blob)
     const url = await getDownloadURL(imageRef)
-    console.log('Image uploaded: ', url);
-
-    return url;
+    console.log('Image uploaded at uploadImage()')
+    return url
 }
 
-// Firestore data converter
+function generateUniqueName() {
+    const guid = uuidv4()
+    const now = new Date()
+    const year = now.getFullYear()
+    const month = (now.getMonth() + 1).toString().padStart(2, '0')
+    const day = now.getDate().toString().padStart(2, '0')
+    const hours = now.getHours().toString().padStart(2, '0')
+    const minutes = now.getMinutes().toString().padStart(2, '0')
+    const seconds = now.getSeconds().toString().padStart(2, '0')
+    const formattedDate = `${year}${month}${day}_${hours}${minutes}${seconds}`
+    const uniqueName = `${guid}_${formattedDate}`
+    return uniqueName
+}
+
 export const foodRecipesConverter = {
     toFirestore: (foodRecipes: FoodRecipes) => {
         return {
@@ -95,14 +100,11 @@ export const foodRecipesConverter = {
             steps: foodRecipes.steps,
             images: foodRecipes.images || null,
             createdAt: serverTimestamp()
-        };
+        }
     },
     fromFirestore: (snapshot: QueryDocumentSnapshot) => {
-        const data = snapshot.data() as FoodRecipes;
-        return { ...data, id: snapshot.id };
+        const data = snapshot.data() as FoodRecipes
+        return { ...data, id: snapshot.id }
     }
-};
-
-function generateUniqueName() {
-    throw new Error("Function not implemented.");
 }
+

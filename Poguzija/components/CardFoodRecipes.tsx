@@ -1,41 +1,36 @@
 import { View, Image, StyleSheet, Pressable, Text, Alert } from 'react-native'
 import React, { FC, useContext, useEffect, useState } from 'react'
-import styled from 'styled-components/native';
-import Colors, { COLORS, SIZES } from '../constants/Colors';
-import { FoodRecipes } from '../model/model';
-import { useRouter } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
-import { AddToScheduler, RemoveFromScheduler } from '../service/SchedulerService';
-import { SchedulerContext, UserContext } from '../app/_layout';
+import styled from 'styled-components/native'
+import Colors, { COLORS, SIZES } from '../constants/Colors'
+import { FoodRecipes } from '../model/model'
+import { useRouter } from 'expo-router'
+import { LinearGradient } from 'expo-linear-gradient'
+import { AddToScheduler, RemoveFromScheduler } from '../service/SchedulerService'
+import { SchedulerContext, UserContext } from '../app/_layout'
 
-const PlaceholderImage = require('../assets/images/icon.png');
+const PlaceholderImage = require('../assets/images/icon.png')
 
 const CardFoodRecipes: FC<{ data: FoodRecipes, route: string }> = ({ data, route }): JSX.Element => {
-    const router = useRouter();
+    const router = useRouter()
     const { setRefreshScheduler } = useContext(SchedulerContext)
     const { user } = useContext(UserContext)
     
     
     const handlePress = async (data: FoodRecipes) => {
-        console.log(route)
         if(!route){
-            console.log('View pressed on ID: ', data.id);
-            router.push(`/foodRecipesItem/${data.id}`);
+            router.push(`/foodRecipesItem/${data.id}`)
         }else if (route.split('/')[0] === 'schedulerAdd'){
-            console.log('View pressed on ID: ', data.id);
             await AddToScheduler(data, route.split('/')[1])
-            console.log('false')
             setRefreshScheduler(true)
             router.back()
         }else{
-            router.push(`/foodRecipesItem/${data.id}`);
+            router.push(`/foodRecipesItem/${data.id}`)
         }
-    };
+    }
 
     const handleLongPress = async (data: FoodRecipes) => {
-        console.log(route)
         if(!route){
-            console.log('View held down on ID: ', data.id);
+            return
         }else if (route.split('/')[0] === 'schedulerRemove'){
             user && Alert.alert('Remove Item', 'Are you sure you want to remove this item from scheduler?',
             [
@@ -43,15 +38,14 @@ const CardFoodRecipes: FC<{ data: FoodRecipes, route: string }> = ({ data, route
                 {
                     text: 'Remove', onPress: async () => {
                     await RemoveFromScheduler(data, route.split('/')[1])
-                    console.log('false')
                     setRefreshScheduler(true)
                     },
                 },
             ],
             { cancelable: false }
-        );
+        )
         }
-    };
+    }
 
     return (
         <View style={styles.cardContainer}>
@@ -67,7 +61,7 @@ const CardFoodRecipes: FC<{ data: FoodRecipes, route: string }> = ({ data, route
                 </View>
             </Pressable>
         </View>
-    );
+    )
 }
 
 export default CardFoodRecipes
@@ -108,4 +102,4 @@ const styles = StyleSheet.create({
         color: COLORS.light,
         fontWeight: 'bold',
     },
-});
+})

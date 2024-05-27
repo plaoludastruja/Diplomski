@@ -1,38 +1,38 @@
 import { Text, StyleSheet, View, FlatList, RefreshControl } from 'react-native'
 import React, { Component, useEffect, useState } from 'react'
-import { FoodRecipes } from '../../../model/model';
-import BackgroundSafeAreaView from '../../../components/BackgroundSafeAreaView';
-import CardFoodRecipes from '../../../components/CardFoodRecipes';
-import LoadingScreen from '../../../components/LoadingScreen';
-import { useLocalSearchParams } from 'expo-router';
-import { GetAllFoodRecipes } from '../../../service/RecipesService';
+import { FoodRecipes } from '../../../model/model'
+import BackgroundSafeAreaView from '../../../components/BackgroundSafeAreaView'
+import CardFoodRecipes from '../../../components/CardFoodRecipes'
+import LoadingScreen from '../../../components/LoadingScreen'
+import { useLocalSearchParams } from 'expo-router'
+import { GetAllFoodRecipes } from '../../../service/RecipesService'
 
 export default function addToSchedulerByDay() {
-    const { addToSchedulerByDay } = useLocalSearchParams<{ addToSchedulerByDay: string }>();
-    const [food, setFood] = useState<FoodRecipes[]>([]);
-    const [refreshing, setRefreshing] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const { addToSchedulerByDay } = useLocalSearchParams<{ addToSchedulerByDay: string }>()
+    const [food, setFood] = useState<FoodRecipes[]>([])
+    const [refreshing, setRefreshing] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        setLoading(true);
-        fetchData();
-    }, []);
+        setLoading(true)
+        fetchData()
+    }, [])
 
     const fetchData = async () => {
         try {
-            const foodRecipesData = await GetAllFoodRecipes();
+            const foodRecipesData = await GetAllFoodRecipes()
             setFood(foodRecipesData)
             setRefreshing(false)
             setLoading(false)
         } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error('Error fetching data:', error)
         }
-    };
+    }
 
     const handleRefresh = () => {
-        setRefreshing(true);
-        fetchData();
-    };
+        setRefreshing(true)
+        fetchData()
+    }
 
     if (loading) return <LoadingScreen />
 
@@ -52,7 +52,7 @@ export default function addToSchedulerByDay() {
                 }
             />           
         </BackgroundSafeAreaView>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -60,4 +60,4 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '100%',
     },
-});
+})

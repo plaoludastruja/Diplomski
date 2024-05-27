@@ -1,6 +1,6 @@
-import { writeBatch, doc, setDoc, addDoc, collection } from "firebase/firestore/lite"; 
-import { db } from "./firebase";
-import { DatabaseCollection } from "../model/model";
+import { addDoc, collection } from "firebase/firestore/lite"
+import { db } from "./firebase"
+import { DatabaseCollection } from "../model/model"
 
 async function AddIngredientsData() {
     const ingredients = [
@@ -17,29 +17,17 @@ async function AddIngredientsData() {
         'Italian Dressing', 'Sesame Seeds', 'Pine Nuts', 'Almonds', 'Walnuts', 'Pecans', 'Cashews', 'Pistachios',
         'Sunflower Seeds', 'Pumpkin Seeds', 'Chia Seeds', 'Flaxseeds', 'Quinoa', 'Bulgur', 'Couscous', 'Barley',
         'Oats', 'Brown Rice', 'White Rice'
-    ];
+    ]
 
     const newIngredientsArray = ingredients.map((ingredient, index) => ({
         id: index + 1,
         name: ingredient
-    }));
+    }))
 
     const newIngredients= {ingredients: newIngredientsArray}
 
     addDoc(collection(db, DatabaseCollection.ingredients), newIngredients)
-    
-    /*try{
-        console.log('Insert ingredients started')
-        const batch = writeBatch(db);
-        ingredients.forEach((ingredient, index) => {
-            const ingredientRef = doc(db, DatabaseCollection.ingredients, (index + 1).toString());
-            batch.set(ingredientRef, { name: ingredient });
-        });
-        await batch.commit();
-        console.log('Insert ingredients finished succesfully')
-    }catch(e){
-        console.log('Insert ingredients failed', e)
-    }*/
+    console.log('Data added at AddIngredientsData()')
 }
 
 async function AddMeasurementUnitsData() {
@@ -48,16 +36,17 @@ async function AddMeasurementUnitsData() {
         'dash', 'pinch', 'drop', 'pint', 'quart', 'gallon', 'fluid ounce', 'shot', 'jigger', 'can',
         'bottle', 'package', 'slice', 'piece', 'stick', 'bunch', 'stalk', 'head', 'bulb', 'clove',
         'leaf', 'sprig', 'chop'
-    ];
+    ]
 
     const newMeasurementUnitsArray = measurementUnits.map((unit, index) => ({
         id: index + 1,
         name: unit
-    }));
+    }))
 
     const newMeasurementUnits= {units: newMeasurementUnitsArray}
 
     addDoc(collection(db, DatabaseCollection.units), newMeasurementUnits)
+    console.log('Data added at AddMeasurementUnitsData()')
 }
 
 export {

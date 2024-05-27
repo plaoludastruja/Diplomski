@@ -1,5 +1,5 @@
-const tintColorLight = '#F7A539';
-const tintColorDark = '#fff';
+const tintColorLight = '#F7A539'
+const tintColorDark = '#fff'
 
 export default {
   light: {
@@ -16,7 +16,7 @@ export default {
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorDark,
   },
-};
+}
 
 export const COLORS = {
   primary: "#2B2E4A",
@@ -31,7 +31,7 @@ export const COLORS = {
 
   white: "#FFF",
   gray: "#74858C",
-};
+}
 
 export const SIZES = {
   base: 8,
@@ -41,7 +41,7 @@ export const SIZES = {
   large: 18,
   extraLarge: 24,
   tabIcon: 28
-};
+}
 
 export const FONTS = {
   bold: "InterBold",
@@ -49,4 +49,4 @@ export const FONTS = {
   medium: "InterMedium",
   regular: "InterRegular",
   light: "InterLight",
-};
+}

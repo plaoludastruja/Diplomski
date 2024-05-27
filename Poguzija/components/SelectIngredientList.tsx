@@ -7,8 +7,8 @@ import { GetIngredients, GetUnits } from '../service/IngredientService'
 
 const SelectIngredientList = ({ modalDataType, visible, onAdd, onClose }) => {
     const [search, setSearch] = useState('')
-    const [data, setData] = useState([]);
-    const [dataFilter, setDataFilter] = useState([]);
+    const [data, setData] = useState([])
+    const [dataFilter, setDataFilter] = useState([])
 
     useEffect(() => {
         if(visible)
@@ -38,17 +38,18 @@ const SelectIngredientList = ({ modalDataType, visible, onAdd, onClose }) => {
     const handlePress = (ingredient) => {
         onAdd(ingredient)
         handleClose()
-    };
+    }
     const handleClose = () => {
+        setSearch('')
         setData([])
         setDataFilter([])
-        onClose();
-    };
+        onClose()
+    }
 
     const filterData = (search: string) => {
         const filteredData = search ==='' ? data : data.filter(item =>
             item.name.toLowerCase().includes(search.toLowerCase())
-        );
+        )
         setDataFilter(filteredData)
     }
 
@@ -68,8 +69,8 @@ const SelectIngredientList = ({ modalDataType, visible, onAdd, onClose }) => {
                             value={search}
                             autoComplete='off'
                             onChangeText={text => {
-                                setSearch(text);
-                                filterData(text);
+                                setSearch(text)
+                                filterData(text)
                             }}
                         />
                     </View>
@@ -156,6 +157,6 @@ const styles = StyleSheet.create({
         color: COLORS.lightDark,
         fontSize: SIZES.extraLarge
     },
-});
+})
 
 export default SelectIngredientList

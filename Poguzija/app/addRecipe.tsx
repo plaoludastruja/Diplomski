@@ -1,17 +1,17 @@
-import BackgroundSafeAreaView from '../components/BackgroundSafeAreaView';
-import {  useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { View, TextInput, Pressable, Text, StyleSheet, Image, Platform, ScrollView, KeyboardAvoidingView, Alert, Dimensions, Modal, FlatList, Button } from 'react-native';
-import { FoodRecipes, Ingredient, Step, StorageFolder } from '../model/model';
-const PlaceholderImage = require('../assets/images/icon.png');
-import { MaterialIcons, Entypo } from '@expo/vector-icons';
-import * as ImagePicker from 'expo-image-picker';
-import Carousel from 'react-native-snap-carousel';
-import { COLORS, SIZES } from '../constants/Colors';
-import AddIngredientsModal from '../components/AddIngredientsModal';
-import BottomSheet, { BottomSheetFlatList, BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
-import { getCurrentUser } from '../service/UserService';
-import { UploadFoodRecipesImages, AddFoodRecipe } from '../service/RecipesService';
-import { UserContext } from './_layout';
+import BackgroundSafeAreaView from '../components/BackgroundSafeAreaView'
+import {  useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { View, TextInput, Pressable, Text, StyleSheet, Image, Platform, ScrollView, KeyboardAvoidingView, Alert, Dimensions, Modal, FlatList, Button } from 'react-native'
+import { FoodRecipes, Ingredient, Step, StorageFolder } from '../model/model'
+const PlaceholderImage = require('../assets/images/icon.png')
+import { MaterialIcons, Entypo } from '@expo/vector-icons'
+import * as ImagePicker from 'expo-image-picker'
+import Carousel from 'react-native-snap-carousel'
+import { COLORS, SIZES } from '../constants/Colors'
+import AddIngredientsModal from '../components/AddIngredientsModal'
+import BottomSheet, { BottomSheetFlatList, BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
+import { getCurrentUser } from '../service/UserService'
+import { UploadFoodRecipesImages, AddFoodRecipe } from '../service/RecipesService'
+import { UserContext } from './_layout'
 
 
 export default function AddRecipeScreen() {
@@ -19,41 +19,41 @@ export default function AddRecipeScreen() {
    
 
 
-    const screenWidth = Dimensions.get('window').width;
-    const screenHeight = Dimensions.get('window').height;
-    const [snapPoints, setSnapPoints] = useState(['66', '95']);
+    const screenWidth = Dimensions.get('window').width
+    const screenHeight = Dimensions.get('window').height
+    const [snapPoints, setSnapPoints] = useState(['66', '95'])
 
-    const [ingredientsModalVisible, setIngredientsModalVisible] = useState(false);
-    const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([]);
+    const [ingredientsModalVisible, setIngredientsModalVisible] = useState(false)
+    const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([])
 
     const [selectedImageArray, setSelectedImageArray] = useState<string[]>([PlaceholderImage])
     const [selectedImageToUpload, setSelectedImageToUpload] = useState<string[]>([])
 
-    const [title, setTitle] = useState('');
-    const [servingSize, setServingSize] = useState('');
-    const [cookingTime, setCookingTime] = useState('');
-    const [author, setAuthor] = useState('');
+    const [title, setTitle] = useState('')
+    const [servingSize, setServingSize] = useState('')
+    const [cookingTime, setCookingTime] = useState('')
+    const [author, setAuthor] = useState('')
 
-    const [stepList, setStepList] = useState<Step[]>([]);
-    const [step, setStep] = useState('');
-    const [stepsPlaceholder, setStepsPlaceholder] = useState('Add first step');
+    const [stepList, setStepList] = useState<Step[]>([])
+    const [step, setStep] = useState('')
+    const [stepsPlaceholder, setStepsPlaceholder] = useState('Add first step')
 
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: false,
             quality: 0.4,
             
-        });
+        })
 
         if (!result.canceled) {
-            setSelectedImageArray([...selectedImageArray.slice(0, -1), result.assets[0].uri, PlaceholderImage]);
-            setSelectedImageToUpload([...selectedImageToUpload, result.assets[0].uri]);
+            setSelectedImageArray([...selectedImageArray.slice(0, -1), result.assets[0].uri, PlaceholderImage])
+            setSelectedImageToUpload([...selectedImageToUpload, result.assets[0].uri])
             setSnapPoints(['35', '65', '95'])
         }
-    };
+    }
 
     const handleCreateRecipe = async () => {
-        const updatedStepList = step !== '' ? [...stepList, { number: stepList.length + 1, description: step }] : stepList;
+        const updatedStepList = step !== '' ? [...stepList, { number: stepList.length + 1, description: step }] : stepList
         try {
             const newRecipe: Partial<FoodRecipes> = {
                 title: title,
@@ -61,29 +61,26 @@ export default function AddRecipeScreen() {
                 servingSize: servingSize,
                 ingredients: selectedIngredients,
                 steps: updatedStepList
-            };
-            setTitle('');
-            setAuthor('');
-            setStepList([]);
-            setServingSize('');
-            setCookingTime('');
-            setSelectedIngredients([]);
-            setSelectedImageArray([PlaceholderImage]);
+            }
+            setTitle('')
+            setAuthor('')
+            setStepList([])
+            setServingSize('')
+            setCookingTime('')
+            setSelectedIngredients([])
+            setSelectedImageArray([PlaceholderImage])
             setSnapPoints(['66', '95'])
 
             const uploadedImages = await UploadFoodRecipesImages(selectedImageToUpload, StorageFolder.FoodRecipesPhotos)
-            setSelectedImageToUpload([]);
-            newRecipe.images = uploadedImages;
+            setSelectedImageToUpload([])
+            newRecipe.images = uploadedImages
 
-            AddFoodRecipe(newRecipe);
-            
-            console.log('Recipe created successfully');
-            alert('Recipe created successfully');
+            AddFoodRecipe(newRecipe)
+            alert('Recipe created successfully')
         } catch (error) {
-            console.error('Error creating recipe:', error);
-            alert(`Error creating recipe:' ${error}`);
+            alert(`Error creating recipe:' ${error}`)
         }
-    };
+    }
 
     const handleDeleteImage = (image: string) => {
         Alert.alert('Delete Item', 'Are you sure you want to delete this item?',
@@ -91,41 +88,41 @@ export default function AddRecipeScreen() {
                 { text: 'Cancel', style: 'cancel' },
                 {
                     text: 'Delete', onPress: () => {
-                        const updatedItems = selectedImageArray.filter((item) => item !== image);
-                        setSelectedImageArray([...updatedItems]);
-                        setSelectedImageToUpload([...updatedItems]);
+                        const updatedItems = selectedImageArray.filter((item) => item !== image)
+                        setSelectedImageArray([...updatedItems])
+                        setSelectedImageToUpload([...updatedItems])
                     },
                 },
             ],
             { cancelable: false }
-        );
-    };
+        )
+    }
 
     const handleAddIngredient = (ingredient: Ingredient) => {
-        setSelectedIngredients([...selectedIngredients, ingredient]);
-    };
+        setSelectedIngredients([...selectedIngredients, ingredient])
+    }
 
     const handleDeleteIngredient = (index: number) => {
-        const updatedIngredients = selectedIngredients.filter((_, i) => i !== index);
-        setSelectedIngredients(updatedIngredients);
-    };
+        const updatedIngredients = selectedIngredients.filter((_, i) => i !== index)
+        setSelectedIngredients(updatedIngredients)
+    }
 
     const handleNextStep = (text: string) => {
-        if(text === '') return;
+        if(text === '') return
         let numberOfSteps = stepList.length
         setStepList([...stepList, {number: ++numberOfSteps, description: text}])
-        setStep('');
+        setStep('')
         setStepsPlaceholder('Add next step')
-    };
+    }
 
     const handleChangeText = (text: string, index: number) => {
         setStepList(prevStepList => {
-            const updatedStepList = [...prevStepList];
-            const updatedString = text.split('. ')[1] || '';
-            updatedStepList[index] = { ...updatedStepList[index], description: updatedString };
-            return updatedStepList;
-        });
-    };
+            const updatedStepList = [...prevStepList]
+            const updatedString = text.split('. ')[1] || ''
+            updatedStepList[index] = { ...updatedStepList[index], description: updatedString }
+            return updatedStepList
+        })
+    }
 
     const renderItem = ({ item }: { item: string }) => {
         return (
@@ -142,8 +139,8 @@ export default function AddRecipeScreen() {
                     )
                 }
             </View>
-        );
-    };
+        )
+    }
 
     return (
         <BackgroundSafeAreaView>
@@ -249,7 +246,7 @@ export default function AddRecipeScreen() {
                     onClose={() => setIngredientsModalVisible(false)} />
             </View>
         </BackgroundSafeAreaView>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -342,4 +339,4 @@ const styles = StyleSheet.create({
         color: COLORS.tint,
         fontSize: SIZES.large,
     },
-});
+})

@@ -1,16 +1,16 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs, useRouter } from 'expo-router';
-import { Pressable, useColorScheme } from 'react-native';
-import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import { COLORS, SIZES } from '../../constants/Colors';
+import FontAwesome from '@expo/vector-icons/FontAwesome'
+import { Link, Tabs, useRouter } from 'expo-router'
+import { Pressable, useColorScheme } from 'react-native'
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
+import { COLORS, SIZES } from '../../constants/Colors'
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
 
 export default function TabLayout() {
-    const colorScheme = useColorScheme();
-    const router = useRouter();
+    const colorScheme = useColorScheme()
+    const router = useRouter()
     return (
         <Tabs
             screenOptions={{
@@ -64,8 +64,8 @@ export default function TabLayout() {
                 }}
                 listeners={() => ({
                     tabPress: (e) => {
-                        e.preventDefault();
-                        router.push(`/addRecipe`);
+                        e.preventDefault()
+                        router.push(`/addRecipe`)
                     },
                 })}
             />
@@ -86,5 +86,5 @@ export default function TabLayout() {
                 }}
             />
         </Tabs>
-    );
+    )
 }

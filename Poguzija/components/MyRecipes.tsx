@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, Image, Pressable, TextInput, FlatList } from 'react-native'
+import { Text, StyleSheet, View, Image, Pressable, TextInput, FlatList, RefreshControl } from 'react-native'
 import React, { Component, FC, useContext, useEffect, useState } from 'react'
 import { FoodRecipes, Ingredient, MyComponentProps, MyUser } from '../model/model'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
@@ -12,21 +12,41 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import AddIngredientsModal from './AddIngredientsModal'
 import CardFoodRecipes from './CardFoodRecipes'
 import { GetMyFoodRecipes } from '../service/RecipesService'
+import LoadingScreen from './LoadingScreen'
 
 export default function MyRecipes() {
-    const { user, signInFn, signOutFn } = useContext(UserContext)
-    const [food, setFood] = useState<FoodRecipes[]>([]);
+    const { user } = useContext(UserContext)
+    const [food, setFood] = useState<FoodRecipes[]>([])
+    const [refreshing, setRefreshing] = useState(false)
+    const [loading, setLoading] = useState(true)
+    
     useEffect(() => {
-        fetchData();
-    },[])
+        if(user){
+            setLoading(true)
+            fetchData()
+        }else{
+            setFood([])
+        }
+    },[user])
+    
     const fetchData = async () => {
         try {
-            const foodRecipesData = await GetMyFoodRecipes();
+            const foodRecipesData = await GetMyFoodRecipes()
             setFood(foodRecipesData)
+            setRefreshing(false)
+            setLoading(false)
         } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error('Error fetching data:', error)
         }
-    };
+    }
+    
+    const handleRefresh = () => {
+        setRefreshing(true)
+        fetchData()
+    }
+    
+    if (loading) return <LoadingScreen />
+
     return (
         <FlatList
             data={food}
@@ -34,6 +54,12 @@ export default function MyRecipes() {
             keyExtractor={(item) => item.id}
             showsVerticalScrollIndicator={false}
             style={styles.flex}
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={handleRefresh}
+                />
+            }
         />
     )
 }
@@ -158,4 +184,4 @@ const styles = StyleSheet.create({
         color: COLORS.lightDark,
         fontSize: SIZES.extraLarge
     },
-});
+})

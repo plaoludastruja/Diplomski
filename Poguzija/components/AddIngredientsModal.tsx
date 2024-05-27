@@ -7,12 +7,12 @@ import SelectIngredientList from './SelectIngredientList'
 import { GetIngredients, GetUnits } from '../service/IngredientService'
 
 const AddIngredientsModal = ({ visible, onAdd, onClose }) => {
-    const [modalVisible, setModalVisible] = useState(false);
-    const [modalDataType, setModalDataType] = useState('');
+    const [modalVisible, setModalVisible] = useState(false)
+    const [modalDataType, setModalDataType] = useState('')
 
-    const [name, setName] = useState('');
-    const [amount, setAmount] = useState('');
-    const [unit, setUnit] = useState('');
+    const [name, setName] = useState('')
+    const [amount, setAmount] = useState('')
+    const [unit, setUnit] = useState('')
 
     const openModal = (dataType) => {
         setModalDataType(dataType)
@@ -29,13 +29,13 @@ const AddIngredientsModal = ({ visible, onAdd, onClose }) => {
             name: name,
             amount: amount,
             unit: unit
-        };
-        onAdd(ingredient);
-        setName('');
-        setAmount('');
-        setUnit('');
-        onClose();
-    };
+        }
+        onAdd(ingredient)
+        setName('')
+        setAmount('')
+        setUnit('')
+        onClose()
+    }
 
     return (
         <Modal visible={visible} animationType="fade" transparent={true} onRequestClose={ onClose }>
@@ -160,6 +160,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: SIZES.large,
     },
-});
+})
 
 export default AddIngredientsModal

@@ -1,12 +1,13 @@
-import { setDoc, doc, updateDoc, getDoc, QueryDocumentSnapshot } from "firebase/firestore/lite";
-import { RecipeScheduler, Day, DatabaseCollection, FoodRecipes } from "../model/model";
-import { db } from "./firebase";
-import { getCurrentUser } from "./UserService";
+import { doc, updateDoc, getDoc, QueryDocumentSnapshot, collection, getDocs, query, setDoc } from "firebase/firestore/lite"
+import { RecipeScheduler, DatabaseCollection, FoodRecipes, Day } from "../model/model"
+import { db } from "./firebase"
+import { getCurrentUser } from "./UserService"
+import { foodRecipesConverter } from "./RecipesService"
 
 export async function AddToScheduler(recipe: FoodRecipes, day: string) {
-    const user = await getCurrentUser();
-    // Retrieve the current array of recipes for the specific da
-    const data = await getDoc(doc(db, DatabaseCollection.recipeSchedulers, user.aditionalUserData.recipeSchedulerId).withConverter(recipesSchedulerConverter));
+    const user = await getCurrentUser()
+    const data = await getDoc(doc(db, DatabaseCollection.recipeSchedulers, user.aditionalUserData.recipeSchedulerId).withConverter(recipesSchedulerConverter))
+    console.log('Data fetched at AddToScheduler()')
     let scheduler: RecipeScheduler = {
         id: "",
         user: "",
@@ -14,26 +15,20 @@ export async function AddToScheduler(recipe: FoodRecipes, day: string) {
     }
     if (data.exists()) {
         scheduler = data.data()
-        console.log("Document data:", scheduler);
     }
-    const dayIndex = scheduler.recipeByDay.findIndex(item => item.day === day);
+    const dayIndex = scheduler.recipeByDay.findIndex(item => item.day === day)
 
-    if (dayIndex !== -1) {
-    scheduler.recipeByDay[dayIndex].recipes.push({id: recipe.id, images: recipe.images, author: recipe.author, title: recipe.title});
+    scheduler.recipeByDay[dayIndex].recipes.push({id: recipe.id, images: recipe.images, author: recipe.author, title: recipe.title})
     await updateDoc(doc(db, DatabaseCollection.recipeSchedulers, user.aditionalUserData.recipeSchedulerId), {
         recipeByDay: scheduler.recipeByDay
-    });
-    console.log('Recipe added successfully.');
-    } else {
-        console.log('Day not found.');
-    }
-    
+    })
+    console.log('Data updated at AddToScheduler()')
 }
 
 export async function RemoveFromScheduler(recipeToRemove: FoodRecipes, day: string) {
-
-    const user = await getCurrentUser();
-    const data = await getDoc(doc(db, DatabaseCollection.recipeSchedulers, user.aditionalUserData.recipeSchedulerId).withConverter(recipesSchedulerConverter));
+    const user = await getCurrentUser()
+    const data = await getDoc(doc(db, DatabaseCollection.recipeSchedulers, user.aditionalUserData.recipeSchedulerId).withConverter(recipesSchedulerConverter))
+    console.log('Data fetched at RemoveFromScheduler()')
     let scheduler: RecipeScheduler = {
         id: "",
         user: "",
@@ -41,21 +36,86 @@ export async function RemoveFromScheduler(recipeToRemove: FoodRecipes, day: stri
     }
     if (data.exists()) {
         scheduler = data.data()
-        console.log("Document data:", scheduler);
     }
-    // Find the index of the day in the recipeByDay array
-    const dayIndex = scheduler.recipeByDay.findIndex(item => item.day === day);
+    const dayIndex = scheduler.recipeByDay.findIndex(item => item.day === day)
 
-    if (dayIndex !== -1) {
-        scheduler.recipeByDay[dayIndex].recipes = scheduler.recipeByDay[dayIndex].recipes.filter(recipe => recipe.id !== recipeToRemove.id );
-        console.log("scheduler.recipeByDay[dayIndex]:", scheduler.recipeByDay[dayIndex]);
-        await updateDoc(doc(db, DatabaseCollection.recipeSchedulers, user.aditionalUserData.recipeSchedulerId), {
-            recipeByDay: scheduler.recipeByDay
-        });
-        console.log('Recipe removed successfully.');
-    } else {
-        console.log('Day not found.');
+    scheduler.recipeByDay[dayIndex].recipes = scheduler.recipeByDay[dayIndex].recipes.filter(recipe => recipe.id !== recipeToRemove.id )
+    await updateDoc(doc(db, DatabaseCollection.recipeSchedulers, user.aditionalUserData.recipeSchedulerId), {
+        recipeByDay: scheduler.recipeByDay
+    })
+    console.log('Data updated at RemoveFromScheduler()')
+}
+
+export function AddRecipesScheduler(id: string, user: string) {
+    const recipeScheduler: RecipeScheduler = {
+        id: id,
+        user: user,
+        recipeByDay: [
+            { day: Day.MONDAY, recipes: [] },
+            { day: Day.TUESDAY, recipes: [] },
+            { day: Day.WEDNESDAY, recipes: [] },
+            { day: Day.THURSDAY, recipes: [] },
+            { day: Day.FRIDAY, recipes: [] },
+            { day: Day.SATURDAY, recipes: [] },
+            { day: Day.SUNDAY, recipes: [] }
+        ]
     }
+    setDoc(doc(db, DatabaseCollection.recipeSchedulers, id).withConverter(recipesSchedulerConverter), recipeScheduler)
+    console.log('Data added at AddRecipesScheduler()')
+}
+
+export async function GetRecipesScheduler() {
+    const user = await getCurrentUser()
+    if(user){
+        return GetRecipesSchedulerByUser(user.aditionalUserData.recipeSchedulerId)
+    }else{
+        return GetRecipesSchedulerRandom()
+    }
+}
+export async function GetRecipesSchedulerByUser(id: string) {
+    let recipeScheduler: RecipeScheduler = {
+        id: "",
+        user: "",
+        recipeByDay: [],
+    }
+    const data = await getDoc(doc(db, DatabaseCollection.recipeSchedulers, id).withConverter(recipesSchedulerConverter))
+    console.log('Data fetched at GetRecipesSchedulerByUser()')
+    if (data.exists()) {
+        recipeScheduler = data.data()
+    }
+    return recipeScheduler
+}
+
+
+export async function GetRecipesSchedulerRandom() {
+    const data = await getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter)))
+    console.log('Data fetched at GetRecipesSchedulerRandom()')
+    const foodRecipesData = data.docs.map(doc => (doc.data()))
+
+    const daysOfWeek = Object.values(Day)
+    let randomItemsByDay: RecipeScheduler = {
+        user: "",
+        recipeByDay: [],
+        id: ""
+    }
+
+    daysOfWeek.forEach(day => {
+        const randomIndexes = getRandomIndexes(foodRecipesData.length)
+        const randomItems = randomIndexes.map(index => foodRecipesData[index])
+        randomItemsByDay.recipeByDay.push({day: day, recipes: randomItems})
+    })
+    return randomItemsByDay
+}
+
+const getRandomIndexes = (length: number) => {
+    const indexes: Array<number> = []
+    while (indexes.length < 3) {
+        const randomIndex = Math.floor(Math.random() * length)
+        if (!indexes.includes(randomIndex)) {
+            indexes.push(randomIndex)
+        }
+    }
+    return indexes
 }
 
 const recipesSchedulerConverter = {
@@ -63,10 +123,10 @@ const recipesSchedulerConverter = {
         return {
             user: recipeScheduler.user,
             recipeByDay: recipeScheduler.recipeByDay
-        };
+        }
     },
     fromFirestore: (snapshot: QueryDocumentSnapshot) => {
-        const data = snapshot.data() as RecipeScheduler;
-        return { ...data, id: snapshot.id };
+        const data = snapshot.data() as RecipeScheduler
+        return { ...data, id: snapshot.id }
     }
-};
+}

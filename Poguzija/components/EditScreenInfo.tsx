@@ -1,10 +1,10 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import React from 'react'
+import { StyleSheet } from 'react-native'
 
-import { ExternalLink } from './ExternalLink';
-import { MonoText } from './StyledText';
-import { Text, View } from './Themed';
-import { COLORS } from '../constants/Colors';
+import { ExternalLink } from './ExternalLink'
+import { MonoText } from './StyledText'
+import { Text, View } from './Themed'
+import { COLORS } from '../constants/Colors'
 
 
 export default function EditScreenInfo({ path }: { path: string }) {
@@ -43,7 +43,7 @@ export default function EditScreenInfo({ path }: { path: string }) {
         </ExternalLink>
       </View>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -74,4 +74,4 @@ const styles = StyleSheet.create({
   helpLinkText: {
     textAlign: 'center',
   },
-});
+})

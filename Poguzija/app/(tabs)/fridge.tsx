@@ -1,35 +1,35 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { useCallback, useContext, useState } from 'react';
-import BackgroundSafeAreaView from '../../components/BackgroundSafeAreaView';
-import { COLORS, SIZES } from '../../constants/Colors';
-import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
-import ProfileInfo from '../../components/ProfileInfo';
-import { UserContext } from '../_layout';
-import MyRecipes from '../../components/MyRecipes';
-import MyFridge from '../../components/MyFridge';
+import { View, Text, StyleSheet, Pressable } from 'react-native'
+import { useCallback, useContext, useState } from 'react'
+import BackgroundSafeAreaView from '../../components/BackgroundSafeAreaView'
+import { COLORS, SIZES } from '../../constants/Colors'
+import { SceneMap, TabBar, TabView } from 'react-native-tab-view'
+import ProfileInfo from '../../components/ProfileInfo'
+import { UserContext } from '../_layout'
+import MyRecipes from '../../components/MyRecipes'
+import MyFridge from '../../components/MyFridge'
 
-const renderMyRecipes = () => <MyRecipes />;
-const renderMyFridge = () => <MyFridge />;
+const renderMyRecipes = () => <MyRecipes />
+const renderMyFridge = () => <MyFridge />
 
 export default function FridgeScreen() {
     const { user } = useContext(UserContext)
-    const [index, setIndex] = useState(0);
+    const [index, setIndex] = useState(0)
 
     const [routes] = useState([
         { key: 'myRecipes', title: 'My Recipes' },
         { key: 'myFridge', title: 'My Fridge' },
-    ]);
+    ])
 
     const renderScene = SceneMap({
         myRecipes: renderMyRecipes,
         myFridge: renderMyFridge,
-    });
+    })
 
     const renderLabel = (props:any) => (
         <Text
             style={{ backgroundColor: COLORS.light, color: COLORS.tint, }}
         />
-    );
+    )
     const renderTabBar = useCallback((props:any) => (
         <TabBar
             {...props}
@@ -37,7 +37,7 @@ export default function FridgeScreen() {
             style={{ backgroundColor: COLORS.light, color: COLORS.tint, }}
             labelStyle={{ color: COLORS.tint,  }}
         />
-    ), []);
+    ), [])
     
     return (
         <BackgroundSafeAreaView>
@@ -58,7 +58,7 @@ export default function FridgeScreen() {
                 <Text style={styles.buttonText}>Find my random recipe</Text>
             </Pressable>
         </BackgroundSafeAreaView>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -90,4 +90,4 @@ const styles = StyleSheet.create({
         marginVertical: SIZES.base,
         elevation: 2,
     },
-});
+})

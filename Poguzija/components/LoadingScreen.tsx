@@ -1,6 +1,6 @@
-import { ActivityIndicator } from 'react-native';
-import BackgroundSafeAreaView from './BackgroundSafeAreaView';
-import { COLORS } from '../constants/Colors';
+import { ActivityIndicator } from 'react-native'
+import BackgroundSafeAreaView from './BackgroundSafeAreaView'
+import { COLORS } from '../constants/Colors'
 
 export default function LoadingScreen() {
     return (

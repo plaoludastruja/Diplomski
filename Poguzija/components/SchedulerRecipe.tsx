@@ -1,22 +1,21 @@
 import { Dimensions, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons';
-import { SIZES, COLORS } from '../constants/Colors';
-import { FoodRecipes, RecipeByDay } from '../model/model';
-import CardFoodRecipes from './CardFoodRecipes';
-import { useRouter } from 'expo-router';
-import { useContext } from 'react';
-import { UserContext } from '../app/_layout';
+import { MaterialIcons } from '@expo/vector-icons'
+import { SIZES, COLORS } from '../constants/Colors'
+import { FoodRecipes, RecipeByDay } from '../model/model'
+import CardFoodRecipes from './CardFoodRecipes'
+import { useRouter } from 'expo-router'
+import { useContext } from 'react'
+import { UserContext } from '../app/_layout'
 
 
 
 export default function SchedulerRecipe( { recipesWeek, day }: { recipesWeek: RecipeByDay[], day: string } ) {
-    const screenWidth = Dimensions.get('window').width;
-    const router = useRouter();
+    const screenWidth = Dimensions.get('window').width
+    const router = useRouter()
     const { user } = useContext(UserContext)
     
     const onAddToScheduler = () => {
-        console.log(day)
-        router.push(`/addToScheduler/${day}`);
+        router.push(`/addToScheduler/${day}`)
     }
 
     return (
@@ -31,7 +30,7 @@ export default function SchedulerRecipe( { recipesWeek, day }: { recipesWeek: Re
             <ScrollView horizontal={true} style={styles.flex}>
                 { recipesWeek.map((recipe, index) => 
                     <View key={index} style={{ width: 0.8 * screenWidth }}>
-                        <CardFoodRecipes data={recipe} route={'scheduler/' + day }/>
+                        <CardFoodRecipes data={recipe} route={'schedulerRemove/' + day }/>
                     </View>
                 )}
             </ScrollView>

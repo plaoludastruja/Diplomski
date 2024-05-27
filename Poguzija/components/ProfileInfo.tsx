@@ -45,14 +45,14 @@ const ProfileInfo = () => {
                                 <Image source={{ uri: user.profilePhoto }} style={styles.image} /> : 
                                 <MaterialCommunityIcons name="dots-vertical" color={COLORS.lightDark} style={styles.image} size={1.2 * SIZES.tabIcon} />}
                         </View>
-                    );
+                    )
                 }}
                 renderItem={(item, index, isSelected) => {
                     return (
                         <View style={{ ...styles.dropdownItemStyle }}>
                             <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
                         </View>
-                    );
+                    )
                 }}
                 showsVerticalScrollIndicator={false}
                 dropdownStyle={styles.dropdownMenuStyle}
@@ -102,6 +102,6 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         color: COLORS.lightDark,
     },
-});
+})
 
 export default ProfileInfo

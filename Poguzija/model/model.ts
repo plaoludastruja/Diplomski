@@ -1,31 +1,31 @@
 export interface MyUser {
-    id: string;
-    email: string;
-    name: string;
-    surname: string;
-    fullName: string;
-    profilePhoto: string;
-    aditionalUserData: AdditionalUserData;
+    id: string
+    email: string
+    name: string
+    surname: string
+    fullName: string
+    profilePhoto: string
+    aditionalUserData: AdditionalUserData
     createdAt: string
 }
 
 export interface AdditionalUserData {
-    recipeSchedulerId: string;
+    recipeSchedulerId: string
 }
 
 export interface FoodRecipes {
-    id: string;
-    title: string;
-    author: string;
-    servingSize: string;
-    ingredients: Ingredient[];
-    steps: Step[];
-    images: string[];
+    id: string
+    title: string
+    author: string
+    servingSize: string
+    ingredients: Ingredient[]
+    steps: Step[]
+    images: string[]
     createdAt: string
 }
 
 export interface MyComponentProps {
-    children: React.ReactNode;
+    children: React.ReactNode
 }
 
 export enum StorageFolder {
@@ -41,25 +41,25 @@ export enum DatabaseCollection {
 }
 
 export interface Ingredient {
-    name: string;
-    amount: string;
-    unit: string;
+    name: string
+    amount: string
+    unit: string
 }
 
 export interface Step {
-    number: number;
-    description: string;
+    number: number
+    description: string
 }
 
 export interface RecipeScheduler {
-    id: string;
-    user: string;
-    recipeByDay: RecipesByDay[];
+    id: string
+    user: string
+    recipeByDay: RecipesByDay[]
 }
 
 export interface RecipesByDay {
-    day: Day;
-    recipes: RecipeByDay[];
+    day: Day
+    recipes: RecipeByDay[]
 }
 
 export enum Day {
@@ -73,8 +73,8 @@ export enum Day {
 }
 
 export interface RecipeByDay {
-    id: string;
-    title: string;
-    author: string;
-    images: string[];
+    id: string
+    title: string
+    author: string
+    images: string[]
 }

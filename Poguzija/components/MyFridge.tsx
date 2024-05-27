@@ -13,16 +13,16 @@ import AddIngredientsModal from './AddIngredientsModal'
 
 export default function MyFridge() {
     const { user, signInFn, signOutFn } = useContext(UserContext)
-    const [ingredientsModalVisible, setIngredientsModalVisible] = useState(false);
-    const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([]);
+    const [ingredientsModalVisible, setIngredientsModalVisible] = useState(false)
+    const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([])
 
     const handleAddIngredient = (ingredient: Ingredient) => {
-        setSelectedIngredients([...selectedIngredients, ingredient]);
-    };
+        setSelectedIngredients([...selectedIngredients, ingredient])
+    }
     const handleDeleteIngredient = (index: number) => {
-        const updatedIngredients = selectedIngredients.filter((_, i) => i !== index);
-        setSelectedIngredients(updatedIngredients);
-    };
+        const updatedIngredients = selectedIngredients.filter((_, i) => i !== index)
+        setSelectedIngredients(updatedIngredients)
+    }
 
     return (
         <View style={styles.container}>
@@ -168,5 +168,5 @@ const styles = StyleSheet.create({
         color: COLORS.lightDark,
         fontSize: SIZES.extraLarge
     },
-});
+})
 
