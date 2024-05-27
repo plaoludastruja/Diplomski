@@ -4,8 +4,8 @@ import { FoodRecipes } from '../../../model/model';
 import BackgroundSafeAreaView from '../../../components/BackgroundSafeAreaView';
 import CardFoodRecipes from '../../../components/CardFoodRecipes';
 import LoadingScreen from '../../../components/LoadingScreen';
-import { GetAllFoodRecipes } from '../../../service/service';
 import { useLocalSearchParams } from 'expo-router';
+import { GetAllFoodRecipes } from '../../../service/RecipesService';
 
 export default function addToSchedulerByDay() {
     const { addToSchedulerByDay } = useLocalSearchParams<{ addToSchedulerByDay: string }>();

@@ -2,10 +2,10 @@ import { ActivityIndicator, FlatList, RefreshControl, StyleSheet} from 'react-na
 import CardFoodRecipes from '../../components/CardFoodRecipes';
 import { useState, useEffect } from 'react';
 import { FoodRecipes } from '../../model/model';
-import { GetAllFoodRecipes } from '../../service/service';
 import BackgroundSafeAreaView from '../../components/BackgroundSafeAreaView';
 import { COLORS } from '../../constants/Colors';
 import LoadingScreen from '../../components/LoadingScreen';
+import { GetAllFoodRecipes } from '../../service/RecipesService';
 
 
 export default function IndexScreen() {

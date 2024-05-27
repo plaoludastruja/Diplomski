@@ -6,11 +6,11 @@ import { FoodRecipes, Ingredient, Step, StorageFolder } from '../../model/model'
 const PlaceholderImage = require('../../assets/images/icon.png');
 import Carousel from 'react-native-snap-carousel';
 import { COLORS, SIZES } from '../../constants/Colors';
-import {  GetFoodRecipe } from '../../service/service';
 import { MaterialIcons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import AddIngredientsModal from '../../components/AddIngredientsModal';
 import LoadingScreen from '../../components/LoadingScreen';
+import { GetFoodRecipe } from '../../service/RecipesService';
 
 
 export default function FoodRecipesItem() {

@@ -1,7 +1,7 @@
 import { User } from "@react-native-google-signin/google-signin";
 import * as SecureStore from 'expo-secure-store';
 import { db } from "./firebase";
-import { addDoc, collection, getDoc, doc, serverTimestamp, setDoc } from "firebase/firestore/lite";
+import { addDoc, collection, getDoc, doc, serverTimestamp, setDoc, QueryDocumentSnapshot } from "firebase/firestore/lite";
 import { Day, DatabaseCollection, MyUser } from "../model/model";
 import { AddRecipesScheduler } from "./service";
 import { v4 as uuidv4 } from 'uuid';
@@ -44,13 +44,34 @@ async function AddNewUser(user: User, recipeSchedulerId: string) : Promise<MyUse
 }
 
 async function GetUser(id: string): Promise<MyUser> {
-    const data = await getDoc(doc(db, DatabaseCollection.users, id));
+    const data = await getDoc(doc(db, DatabaseCollection.users, id).withConverter(userConverter));
     if (data.exists()) {
         const user = data.data();
         return user;
     }
     return;
 }
+
+export const userConverter = {
+    toFirestore: (user: MyUser) => {
+        return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            surname: user.surname,
+            fullName: user.fullName,
+            profilePhoto: user.profilePhoto,
+            aditionalUserData: {
+                recipeSchedulerId: user.aditionalUserData.recipeSchedulerId
+            },
+            createdAt: serverTimestamp()
+        };
+    },
+    fromFirestore: (snapshot: QueryDocumentSnapshot) => {
+        const data = snapshot.data() as MyUser;
+        return { ...data, id: snapshot.id };
+    }
+};
 
 export {
     setUserMandatoryData

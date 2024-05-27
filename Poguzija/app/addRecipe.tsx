@@ -1,29 +1,22 @@
 import BackgroundSafeAreaView from '../components/BackgroundSafeAreaView';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {  useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { View, TextInput, Pressable, Text, StyleSheet, Image, Platform, ScrollView, KeyboardAvoidingView, Alert, Dimensions, Modal, FlatList, Button } from 'react-native';
-import { db, storage } from '../service/firebase';
-import { AddFoodRecipe, UploadFoodRecipesImages } from '../service/service';
 import { FoodRecipes, Ingredient, Step, StorageFolder } from '../model/model';
-import { serverTimestamp } from 'firebase/firestore/lite';
-import ImageViewer from '../components/ImageViewer';
 const PlaceholderImage = require('../assets/images/icon.png');
 import { MaterialIcons, Entypo } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import * as MediaLibrary from 'expo-media-library';
-import { ref, uploadBytes } from 'firebase/storage';
 import Carousel from 'react-native-snap-carousel';
 import { COLORS, SIZES } from '../constants/Colors';
 import AddIngredientsModal from '../components/AddIngredientsModal';
 import BottomSheet, { BottomSheetFlatList, BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { getCurrentUser } from '../service/UserService';
+import { UploadFoodRecipesImages, AddFoodRecipe } from '../service/RecipesService';
+import { UserContext } from './_layout';
 
 
 export default function AddRecipeScreen() {
-
-    useEffect(() => {
-        getCurrentUser();
-    },[])
-    
+    const { user } = useContext(UserContext)
+   
 
 
     const screenWidth = Dimensions.get('window').width;
@@ -64,7 +57,7 @@ export default function AddRecipeScreen() {
         try {
             const newRecipe: Partial<FoodRecipes> = {
                 title: title,
-                author: author,
+                author: user ? user.id : '',
                 servingSize: servingSize,
                 ingredients: selectedIngredients,
                 steps: updatedStepList

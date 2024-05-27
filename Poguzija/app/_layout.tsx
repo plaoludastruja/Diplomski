@@ -2,10 +2,13 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
-import { useEffect } from 'react';
+import { Dispatch, SetStateAction, createContext, useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
 import { COLORS } from '../constants/Colors';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { MyUser } from '../model/model';
+import { signIn, signOut } from '../service/AuthService';
+import { getCurrentUser } from '../service/UserService';
 
 export { ErrorBoundary, } from 'expo-router';
 
@@ -44,12 +47,48 @@ const theme = {
     }
 };
 
+interface UserContextType {
+    user: MyUser | undefined
+    signInFn: () => Promise<void>
+    signOutFn: () => void
+}
+
+interface SchedulerContextType {
+    refreshScheduler: boolean,
+    setRefreshScheduler: Dispatch<SetStateAction<boolean>>
+}
+
+export const UserContext = createContext<UserContextType>({ user: undefined, signInFn: async () => {}, signOutFn: () => {} });
+export const SchedulerContext = createContext<SchedulerContextType>({refreshScheduler: false,setRefreshScheduler: () => {}});
+
 function RootLayoutNav() {
     const colorScheme = useColorScheme();
+    const [user, setUser] = useState<MyUser>();
+    const [refreshScheduler, setRefreshScheduler] = useState(true);
+    useEffect(() => {
+        getCurrentUserFn();
+    }, [])
+    const getCurrentUserFn = async () => {
+        const user = await getCurrentUser();
+        setUser(user);
+    }
 
+    const signInFn = async () => {
+        const user = await signIn();
+        setUser(user);
+    }
+
+    const signOutFn = () => {
+        setUser(undefined);
+        signOut();
+    }
+
+    
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <ThemeProvider value={theme}>
+                <UserContext.Provider value={{ user, signInFn, signOutFn }}>
+                <SchedulerContext.Provider value={{ refreshScheduler, setRefreshScheduler }}>
                     <Stack >
                         <Stack.Screen name="(tabs)" options={{
                             headerShown: false,
@@ -60,8 +99,10 @@ function RootLayoutNav() {
                         <Stack.Screen name="addRecipe" options={{ headerShown: false, }}/>
                         <Stack.Screen name="(scheduler)/addToScheduler/[addToSchedulerByDay]" options={{ headerShown: true, headerTitle: 'Choose recipe' }}/>
                     </Stack>
-                </ThemeProvider>
-            </GestureHandlerRootView>
+                </SchedulerContext.Provider>
+                </UserContext.Provider>
+            </ThemeProvider>
+        </GestureHandlerRootView>
                 
     );
 }

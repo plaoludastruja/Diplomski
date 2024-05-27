@@ -1,16 +1,21 @@
 import { View, Image, StyleSheet, Pressable, Text, Alert } from 'react-native'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useContext, useEffect, useState } from 'react'
 import styled from 'styled-components/native';
 import Colors, { COLORS, SIZES } from '../constants/Colors';
 import { FoodRecipes } from '../model/model';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AddToScheduler, RemoveFromScheduler } from '../service/SchedulerService';
+import { SchedulerContext, UserContext } from '../app/_layout';
 
 const PlaceholderImage = require('../assets/images/icon.png');
 
 const CardFoodRecipes: FC<{ data: FoodRecipes, route: string }> = ({ data, route }): JSX.Element => {
     const router = useRouter();
+    const { setRefreshScheduler } = useContext(SchedulerContext)
+    const { user } = useContext(UserContext)
+    
+    
     const handlePress = async (data: FoodRecipes) => {
         console.log(route)
         if(!route){
@@ -19,7 +24,11 @@ const CardFoodRecipes: FC<{ data: FoodRecipes, route: string }> = ({ data, route
         }else if (route.split('/')[0] === 'schedulerAdd'){
             console.log('View pressed on ID: ', data.id);
             await AddToScheduler(data, route.split('/')[1])
+            console.log('false')
+            setRefreshScheduler(true)
             router.back()
+        }else{
+            router.push(`/foodRecipesItem/${data.id}`);
         }
     };
 
@@ -28,12 +37,14 @@ const CardFoodRecipes: FC<{ data: FoodRecipes, route: string }> = ({ data, route
         if(!route){
             console.log('View held down on ID: ', data.id);
         }else if (route.split('/')[0] === 'schedulerRemove'){
-            Alert.alert('Delete Item', 'Are you sure you want to remove this item from scheduler?',
+            user && Alert.alert('Remove Item', 'Are you sure you want to remove this item from scheduler?',
             [
                 { text: 'Cancel', style: 'cancel' },
                 {
                     text: 'Remove', onPress: async () => {
                     await RemoveFromScheduler(data, route.split('/')[1])
+                    console.log('false')
+                    setRefreshScheduler(true)
                     },
                 },
             ],
