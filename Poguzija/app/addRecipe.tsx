@@ -16,8 +16,6 @@ import { UserContext } from './_layout'
 
 export default function AddRecipeScreen() {
     const { user } = useContext(UserContext)
-   
-
 
     const screenWidth = Dimensions.get('window').width
     const screenHeight = Dimensions.get('window').height
@@ -25,6 +23,7 @@ export default function AddRecipeScreen() {
 
     const [ingredientsModalVisible, setIngredientsModalVisible] = useState(false)
     const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([])
+    const [ingredientEdit, setIngredientEdit] = useState<Ingredient>()
 
     const [selectedImageArray, setSelectedImageArray] = useState<string[]>([PlaceholderImage])
     const [selectedImageToUpload, setSelectedImageToUpload] = useState<string[]>([])
@@ -98,13 +97,29 @@ export default function AddRecipeScreen() {
         )
     }
 
-    const handleAddIngredient = (ingredient: Ingredient) => {
-        setSelectedIngredients([...selectedIngredients, ingredient])
+    const handleAddIngredient = (newIngredient: Ingredient) => {
+        const updatedIngredients = selectedIngredients.map(ingredient =>
+            ingredient.name === newIngredient.name ? newIngredient : ingredient
+        )
+        if (!updatedIngredients.some(ingredient => ingredient.name === newIngredient.name)) {
+            updatedIngredients.push(newIngredient)
+        }
+        setSelectedIngredients(updatedIngredients)
     }
 
     const handleDeleteIngredient = (index: number) => {
         const updatedIngredients = selectedIngredients.filter((_, i) => i !== index)
         setSelectedIngredients(updatedIngredients)
+    }
+
+    const handlePressToEdit = (ingredient: Ingredient) => {
+        setIngredientEdit(ingredient)
+        setIngredientsModalVisible(true)
+    }
+
+    const handleClose = () => {
+        setIngredientsModalVisible(false)
+        setIngredientEdit({})
     }
 
     const handleNextStep = (text: string) => {
@@ -203,12 +218,12 @@ export default function AddRecipeScreen() {
 
                         <Text style={styles.subtitleText}>Ingredients</Text>
                         {selectedIngredients?.map((ingredient, index) => (
-                            <View key={index} style={styles.ingredientItem}>
+                            <Pressable key={index} style={styles.ingredientItem} onPress={() => handlePressToEdit(ingredient)}>
                                 <Text style={[styles.textInput, { width: "auto" }]}>   {ingredient.name}   -   {ingredient.amount} {ingredient.unit}</Text>
                                 <Pressable onPress={() => handleDeleteIngredient(index)}>
                                     <MaterialIcons name="delete" style={styles.icon} />
                                 </Pressable>
-                            </View>
+                            </Pressable>
                         ))}
                         <Pressable style={styles.button} onPress={() => setIngredientsModalVisible(true)}>
                             <Text style={styles.buttonText}>Add ingredients</Text>
@@ -242,8 +257,9 @@ export default function AddRecipeScreen() {
 
                 <AddIngredientsModal
                     visible={ingredientsModalVisible}
+                    dataEdit={ingredientEdit}
                     onAdd={handleAddIngredient}
-                    onClose={() => setIngredientsModalVisible(false)} />
+                    onClose={handleClose} />
             </View>
         </BackgroundSafeAreaView>
     )

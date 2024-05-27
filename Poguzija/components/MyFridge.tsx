@@ -1,6 +1,6 @@
 import { Text, StyleSheet, View, Image, Pressable, TextInput } from 'react-native'
 import React, { Component, FC, useContext, useEffect, useState } from 'react'
-import { Ingredient, MyComponentProps, MyUser } from '../model/model'
+import { Fridge, Ingredient, MyComponentProps, MyUser } from '../model/model'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { COLORS, SIZES } from '../constants/Colors'
@@ -10,18 +10,63 @@ import { signIn, signOut } from '../service/AuthService'
 import { UserContext } from '../app/_layout'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import AddIngredientsModal from './AddIngredientsModal'
+import { AddToMyFridge, GetFridge } from '../service/FridgeService'
+import LoadingScreen from './LoadingScreen'
+import { ScrollView } from 'react-native-gesture-handler'
 
 export default function MyFridge() {
-    const { user, signInFn, signOutFn } = useContext(UserContext)
+    const { user } = useContext(UserContext)
+    const [loading, setLoading] = useState(true)
+    const [fridge, setFridge] = useState<Fridge[]>([])
     const [ingredientsModalVisible, setIngredientsModalVisible] = useState(false)
     const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([])
+    const [ingredientEdit, setIngredientEdit] = useState<Ingredient>()
 
-    const handleAddIngredient = (ingredient: Ingredient) => {
-        setSelectedIngredients([...selectedIngredients, ingredient])
+    const handleAddIngredient = (newIngredient: Ingredient) => {
+        const updatedIngredients = selectedIngredients.map(ingredient =>
+            ingredient.name === newIngredient.name ? newIngredient : ingredient
+        )
+        if (!updatedIngredients.some(ingredient => ingredient.name === newIngredient.name)) {
+            updatedIngredients.push(newIngredient)
+        }
+        setSelectedIngredients(updatedIngredients)
+        AddToMyFridge(updatedIngredients)
     }
     const handleDeleteIngredient = (index: number) => {
         const updatedIngredients = selectedIngredients.filter((_, i) => i !== index)
         setSelectedIngredients(updatedIngredients)
+        AddToMyFridge(updatedIngredients)
+    }
+
+    const handlePressToEdit = (ingredient: Ingredient) => {
+        setIngredientEdit(ingredient)
+        setIngredientsModalVisible(true)
+    }
+
+    const handleClose = () => {
+        setIngredientsModalVisible(false)
+        setIngredientEdit({})
+    }
+
+    useEffect(() => {
+        if(user){
+            setLoading(true)
+            fetchData()
+        }else{
+            setSelectedIngredients([])
+            setLoading(false)
+        }
+    },[user])
+    
+    const fetchData = async () => {
+        try {
+            const fridgeData = await GetFridge()
+            setFridge(fridgeData)
+            setSelectedIngredients(fridgeData?.ingredients)
+            setLoading(false)
+        } catch (error) {
+            console.error('Error fetching data:', error)
+        }
     }
 
     return (
@@ -29,18 +74,22 @@ export default function MyFridge() {
             <Pressable style={styles.button} onPress={() => setIngredientsModalVisible(true)}>
                 <Text style={styles.buttonText}>Add ingredients</Text>
             </Pressable>
+            <ScrollView style={styles.flex} horizontal={false} showsVerticalScrollIndicator={false}>
             {selectedIngredients?.map((ingredient, index) => (
-                <View key={index} style={styles.ingredientItem}>
+                <Pressable key={index} style={styles.ingredientItem} onPress={() => handlePressToEdit(ingredient)}>
                     <Text style={[styles.textInput, { width: "auto" }]}>   {ingredient.name}   -   {ingredient.amount} {ingredient.unit}</Text>
                     <Pressable onPress={() => handleDeleteIngredient(index)}>
                         <MaterialIcons name="delete" style={styles.icon} />
                     </Pressable>
-                </View>
+                </Pressable>
             ))}
+            </ScrollView>
+            
             <AddIngredientsModal
                 visible={ingredientsModalVisible}
+                dataEdit={ingredientEdit}
                 onAdd={handleAddIngredient}
-                onClose={() => setIngredientsModalVisible(false)} />
+                onClose={handleClose} />
         </View>
         
     )
@@ -146,7 +195,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        width: '95%',
         height: 60,
         backgroundColor: COLORS.dark,
         borderRadius: SIZES.extraLarge,

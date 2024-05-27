@@ -2,16 +2,21 @@ import { User } from "@react-native-google-signin/google-signin"
 import * as SecureStore from 'expo-secure-store'
 import { db } from "./firebase"
 import { getDoc, doc, serverTimestamp, setDoc, QueryDocumentSnapshot } from "firebase/firestore/lite"
-import { DatabaseCollection, MyUser } from "../model/model"
+import { AdditionalUserData, DatabaseCollection, MyUser } from "../model/model"
 import { v4 as uuidv4 } from 'uuid'
 import { AddRecipesScheduler } from "./SchedulerService"
+import { AddFridge } from "./FridgeService"
 
 async function setUserMandatoryData(user: User) {
     let userAdded = await GetUser(user.user.id)
     if(!userAdded) {
-        const recipeSchedulerId = uuidv4()
-        AddRecipesScheduler(recipeSchedulerId, user.user.id)
-        userAdded = await AddNewUser(user, recipeSchedulerId)
+        const aditionalUserData : AdditionalUserData = {
+            recipeSchedulerId: uuidv4(),
+            fridgeId: uuidv4()
+        }
+        AddRecipesScheduler(aditionalUserData.recipeSchedulerId, user.user.id)
+        AddFridge(aditionalUserData.fridgeId, user.user.id)
+        userAdded = await AddNewUser(user, aditionalUserData)
     }    
     const userValue = JSON.stringify(userAdded)
     SecureStore.setItemAsync('signedUser', userValue)
@@ -19,13 +24,13 @@ async function setUserMandatoryData(user: User) {
 }
 
 
-export async function getCurrentUser() : Promise<MyUser> {
+async function getCurrentUser() : Promise<MyUser> {
     let userValue = await SecureStore.getItemAsync('signedUser')
     console.log("Current user: " + userValue)
     return userValue != null ? JSON.parse(userValue) : null
 }
 
-async function AddNewUser(user: User, recipeSchedulerId: string) : Promise<MyUser> {
+async function AddNewUser(user: User, aditionalUserData: AdditionalUserData) : Promise<MyUser> {
     const myUser: MyUser = {
         id: user.user.id,
         email: user.user.email,
@@ -34,7 +39,8 @@ async function AddNewUser(user: User, recipeSchedulerId: string) : Promise<MyUse
         fullName: user.user.name || '',
         profilePhoto: user.user.photo || '',
         aditionalUserData: {
-            recipeSchedulerId: recipeSchedulerId
+            recipeSchedulerId: aditionalUserData.recipeSchedulerId,
+            fridgeId: aditionalUserData.fridgeId
         },
         createdAt: serverTimestamp()
     }
@@ -53,7 +59,7 @@ async function GetUser(id: string): Promise<MyUser> {
     return
 }
 
-export const userConverter = {
+const userConverter = {
     toFirestore: (user: MyUser) => {
         return {
             id: user.id,
@@ -75,5 +81,7 @@ export const userConverter = {
 }
 
 export {
-    setUserMandatoryData
+    setUserMandatoryData,
+    getCurrentUser,
+    userConverter
 }

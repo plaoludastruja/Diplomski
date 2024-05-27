@@ -4,7 +4,7 @@ import { db } from "./firebase"
 import { getCurrentUser } from "./UserService"
 import { foodRecipesConverter } from "./RecipesService"
 
-export async function AddToScheduler(recipe: FoodRecipes, day: string) {
+async function AddToScheduler(recipe: FoodRecipes, day: string) {
     const user = await getCurrentUser()
     const data = await getDoc(doc(db, DatabaseCollection.recipeSchedulers, user.aditionalUserData.recipeSchedulerId).withConverter(recipesSchedulerConverter))
     console.log('Data fetched at AddToScheduler()')
@@ -25,7 +25,7 @@ export async function AddToScheduler(recipe: FoodRecipes, day: string) {
     console.log('Data updated at AddToScheduler()')
 }
 
-export async function RemoveFromScheduler(recipeToRemove: FoodRecipes, day: string) {
+async function RemoveFromScheduler(recipeToRemove: FoodRecipes, day: string) {
     const user = await getCurrentUser()
     const data = await getDoc(doc(db, DatabaseCollection.recipeSchedulers, user.aditionalUserData.recipeSchedulerId).withConverter(recipesSchedulerConverter))
     console.log('Data fetched at RemoveFromScheduler()')
@@ -46,7 +46,7 @@ export async function RemoveFromScheduler(recipeToRemove: FoodRecipes, day: stri
     console.log('Data updated at RemoveFromScheduler()')
 }
 
-export function AddRecipesScheduler(id: string, user: string) {
+function AddRecipesScheduler(id: string, user: string) {
     const recipeScheduler: RecipeScheduler = {
         id: id,
         user: user,
@@ -64,7 +64,7 @@ export function AddRecipesScheduler(id: string, user: string) {
     console.log('Data added at AddRecipesScheduler()')
 }
 
-export async function GetRecipesScheduler() {
+async function GetRecipesScheduler() {
     const user = await getCurrentUser()
     if(user){
         return GetRecipesSchedulerByUser(user.aditionalUserData.recipeSchedulerId)
@@ -72,7 +72,7 @@ export async function GetRecipesScheduler() {
         return GetRecipesSchedulerRandom()
     }
 }
-export async function GetRecipesSchedulerByUser(id: string) {
+async function GetRecipesSchedulerByUser(id: string) {
     let recipeScheduler: RecipeScheduler = {
         id: "",
         user: "",
@@ -87,7 +87,7 @@ export async function GetRecipesSchedulerByUser(id: string) {
 }
 
 
-export async function GetRecipesSchedulerRandom() {
+async function GetRecipesSchedulerRandom() {
     const data = await getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter)))
     console.log('Data fetched at GetRecipesSchedulerRandom()')
     const foodRecipesData = data.docs.map(doc => (doc.data()))
@@ -129,4 +129,11 @@ const recipesSchedulerConverter = {
         const data = snapshot.data() as RecipeScheduler
         return { ...data, id: snapshot.id }
     }
+}
+
+export {
+    AddToScheduler,
+    RemoveFromScheduler,
+    AddRecipesScheduler,
+    GetRecipesScheduler,
 }

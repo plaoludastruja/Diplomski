@@ -6,14 +6,14 @@ import { getCurrentUser } from "./UserService"
 import 'react-native-get-random-values'
 import { v4 as uuidv4 } from 'uuid'
 
-export async function GetAllFoodRecipes() {
+async function GetAllFoodRecipes() {
     const data = await getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), orderBy('createdAt', "desc")))
     console.log('Data fetched at GetAllFoodRecipes()')
     const foodRecipesData = data.docs.map(doc => (doc.data()))
     return foodRecipesData
 }
 
-export async function GetFoodRecipe(id: string): Promise<FoodRecipes> {
+async function GetFoodRecipe(id: string): Promise<FoodRecipes> {
     let foodRecipeItem: FoodRecipes = {
         id: "",
         title: "",
@@ -32,12 +32,12 @@ export async function GetFoodRecipe(id: string): Promise<FoodRecipes> {
     return foodRecipeItem
 }
 
-export function AddFoodRecipe(newRecipe: Partial<FoodRecipes>) {
+function AddFoodRecipe(newRecipe: Partial<FoodRecipes>) {
     addDoc(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), newRecipe)
     console.log('Data added at AddFoodRecipe()')
 }
 
-export async function GetMyFoodRecipes() {
+async function GetMyFoodRecipes() {
     const user = await getCurrentUser()
     if(!user) return []
     const data = await getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), where("author", "==", user.id), orderBy('createdAt', "desc")))
@@ -46,7 +46,7 @@ export async function GetMyFoodRecipes() {
     return foodRecipesData
 }
 
-export async function UploadFoodRecipesImages(selectedImages: string[], folder: string): Promise<string[]> {
+async function UploadFoodRecipesImages(selectedImages: string[], folder: string): Promise<string[]> {
     const urls = []
     for (var selectedImage of selectedImages) {
         const url = await uploadImage(selectedImage, folder)
@@ -90,7 +90,7 @@ function generateUniqueName() {
     return uniqueName
 }
 
-export const foodRecipesConverter = {
+const foodRecipesConverter = {
     toFirestore: (foodRecipes: FoodRecipes) => {
         return {
             title: foodRecipes.title,
@@ -108,3 +108,11 @@ export const foodRecipesConverter = {
     }
 }
 
+export {
+    GetAllFoodRecipes,
+    GetFoodRecipe,
+    AddFoodRecipe,
+    GetMyFoodRecipes,
+    foodRecipesConverter,
+    UploadFoodRecipesImages
+}

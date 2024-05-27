@@ -26,6 +26,7 @@ export default function MyRecipes() {
             fetchData()
         }else{
             setFood([])
+            setLoading(false)
         }
     },[user])
     

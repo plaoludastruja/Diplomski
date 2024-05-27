@@ -6,7 +6,7 @@ import { COLORS, SIZES } from '../constants/Colors'
 import SelectIngredientList from './SelectIngredientList'
 import { GetIngredients, GetUnits } from '../service/IngredientService'
 
-const AddIngredientsModal = ({ visible, onAdd, onClose }) => {
+const AddIngredientsModal = ({ visible, dataEdit, onAdd, onClose }) => {
     const [modalVisible, setModalVisible] = useState(false)
     const [modalDataType, setModalDataType] = useState('')
 
@@ -23,6 +23,12 @@ const AddIngredientsModal = ({ visible, onAdd, onClose }) => {
         setModalDataType('')
         setModalVisible(false)
     }
+
+    useEffect(() => {
+        setName(dataEdit?.name)
+        setAmount(dataEdit?.amount)
+        setUnit(dataEdit?.unit)
+    },[dataEdit])
 
     const handleOnAdd = () => {
         const ingredient : Ingredient = {
@@ -41,7 +47,7 @@ const AddIngredientsModal = ({ visible, onAdd, onClose }) => {
         <Modal visible={visible} animationType="fade" transparent={true} onRequestClose={ onClose }>
             <Pressable style={styles.flex} onPress={ onClose }>
                 <Pressable style={styles.modalView}>
-                    <Pressable style={styles.nameInput} onPress={() => openModal('ingredient')}>
+                    <Pressable style={styles.nameInput} onPress={() => {if(!dataEdit?.name) openModal('ingredient')}}>
                         <MaterialIcons name="search" style={styles.icon} />
                         <TextInput value={name} placeholder='Ingredient' editable={false} style={styles.textInput} />
                     </Pressable>
