@@ -9,9 +9,11 @@ import { getCurrentUser } from '../service/UserService'
 import { signIn, signOut } from '../service/AuthService'
 import { UserContext } from '../app/_layout'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
+import { useRouter } from 'expo-router'
 
 const ProfileInfo = () => {
     const { user, signInFn, signOutFn } = useContext(UserContext)
+    const router = useRouter()
     useEffect(() => {
         GoogleSignin.configure({
             webClientId: "679997496367-v24ck2ikahtou5jd89fa870fp9s83plt.apps.googleusercontent.com"
@@ -26,9 +28,13 @@ const ProfileInfo = () => {
             { title: 'Sign In', code: 'signIn' }
         ]
     
+    const handleOpenBookmarks = () => {
+        router.push(`/bookmark`)
+    }
+    
     return (
         <View style={styles.header}>
-            {user && <FontAwesome name="bookmark-o" color={COLORS.lightDark} style={styles.image} size={1.2 * SIZES.tabIcon} />}
+            {user && <FontAwesome name="bookmark-o" color={COLORS.lightDark} style={styles.image} size={1.2 * SIZES.tabIcon} onPress={handleOpenBookmarks}/>}
             <SelectDropdown
                 data={emojisWithIcons}
                 onSelect={(selectedItem, index) => {

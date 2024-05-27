@@ -114,5 +114,5 @@ export {
     AddFoodRecipe,
     GetMyFoodRecipes,
     foodRecipesConverter,
-    UploadFoodRecipesImages
+    UploadFoodRecipesImages,
 }

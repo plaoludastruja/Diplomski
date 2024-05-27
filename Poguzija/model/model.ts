@@ -12,6 +12,7 @@ export interface MyUser {
 export interface AdditionalUserData {
     recipeSchedulerId: string,
     fridgeId: string,
+    bookmarkId: string
 }
 
 export interface FoodRecipes {
@@ -39,7 +40,8 @@ export enum DatabaseCollection {
     recipeSchedulers = 'recipeSchedulers',
     ingredients = 'ingredients',
     units = 'units',
-    fridges = 'fridges'
+    fridges = 'fridges',
+    bookmarks = 'bookmarks',
 }
 
 export interface Ingredient {
@@ -68,6 +70,12 @@ export interface Fridge {
     id: string
     user: string
     ingredients: Ingredient[]
+}
+
+export interface Bookmark {
+    id: string
+    user: string
+    savedFoodRecipesIds: string[]
 }
 
 export enum Day {

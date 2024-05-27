@@ -96,8 +96,10 @@ function RootLayoutNav() {
                         }} />
                         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
                         <Stack.Screen name="foodRecipesItem/[foodRecipesItem]" options={{ headerShown: false, }}/>
-                        <Stack.Screen name="addRecipe" options={{ headerShown: false, }}/>
+                        <Stack.Screen name="(addRecipe)/addRecipe" options={{ headerShown: false, }}/>
                         <Stack.Screen name="(scheduler)/addToScheduler/[addToSchedulerByDay]" options={{ headerShown: true, headerTitle: 'Choose recipe' }}/>
+                        <Stack.Screen name="(bookmark)/bookmark" options={{ headerShown: false, }}/>
+                    
                     </Stack>
                 </SchedulerContext.Provider>
                 </UserContext.Provider>

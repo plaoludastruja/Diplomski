@@ -6,16 +6,19 @@ import { AdditionalUserData, DatabaseCollection, MyUser } from "../model/model"
 import { v4 as uuidv4 } from 'uuid'
 import { AddRecipesScheduler } from "./SchedulerService"
 import { AddFridge } from "./FridgeService"
+import { AddBookmark } from "./BookmarkService"
 
 async function setUserMandatoryData(user: User) {
     let userAdded = await GetUser(user.user.id)
     if(!userAdded) {
         const aditionalUserData : AdditionalUserData = {
             recipeSchedulerId: uuidv4(),
-            fridgeId: uuidv4()
+            fridgeId: uuidv4(),
+            bookmarkId: uuidv4(),
         }
         AddRecipesScheduler(aditionalUserData.recipeSchedulerId, user.user.id)
         AddFridge(aditionalUserData.fridgeId, user.user.id)
+        AddBookmark(aditionalUserData.bookmarkId, user.user.id)
         userAdded = await AddNewUser(user, aditionalUserData)
     }    
     const userValue = JSON.stringify(userAdded)
@@ -40,7 +43,8 @@ async function AddNewUser(user: User, aditionalUserData: AdditionalUserData) : P
         profilePhoto: user.user.photo || '',
         aditionalUserData: {
             recipeSchedulerId: aditionalUserData.recipeSchedulerId,
-            fridgeId: aditionalUserData.fridgeId
+            fridgeId: aditionalUserData.fridgeId,
+            bookmarkId: aditionalUserData.bookmarkId,
         },
         createdAt: serverTimestamp()
     }
