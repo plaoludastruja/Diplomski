@@ -59,8 +59,12 @@ export default function AddRecipeScreen() {
                 author: user ? user.id : '',
                 servingSize: servingSize,
                 ingredients: selectedIngredients,
-                steps: updatedStepList
+                steps: updatedStepList,
             }
+
+            const uploadedImages = await UploadFoodRecipesImages(selectedImageToUpload, StorageFolder.FoodRecipesPhotos)
+            newRecipe.images = uploadedImages
+
             setTitle('')
             setAuthor('')
             setStepList([])
@@ -68,11 +72,8 @@ export default function AddRecipeScreen() {
             setCookingTime('')
             setSelectedIngredients([])
             setSelectedImageArray([PlaceholderImage])
-            setSnapPoints(['66', '95'])
-
-            const uploadedImages = await UploadFoodRecipesImages(selectedImageToUpload, StorageFolder.FoodRecipesPhotos)
             setSelectedImageToUpload([])
-            newRecipe.images = uploadedImages
+            setSnapPoints(['66', '95'])
 
             AddFoodRecipe(newRecipe)
             alert('Recipe created successfully')
@@ -107,8 +108,8 @@ export default function AddRecipeScreen() {
         setSelectedIngredients(updatedIngredients)
     }
 
-    const handleDeleteIngredient = (index: number) => {
-        const updatedIngredients = selectedIngredients.filter((_, i) => i !== index)
+    const handleDeleteIngredient = (newIngredient: Ingredient) => {
+        const updatedIngredients = selectedIngredients.filter((ingredient) => ingredient.name !== newIngredient.name)
         setSelectedIngredients(updatedIngredients)
     }
 
@@ -220,7 +221,7 @@ export default function AddRecipeScreen() {
                         {selectedIngredients?.map((ingredient, index) => (
                             <Pressable key={index} style={styles.ingredientItem} onPress={() => handlePressToEdit(ingredient)}>
                                 <Text style={[styles.textInput, { width: "auto" }]}>   {ingredient.name}   -   {ingredient.amount} {ingredient.unit}</Text>
-                                <Pressable onPress={() => handleDeleteIngredient(index)}>
+                                <Pressable onPress={() => handleDeleteIngredient(ingredient)}>
                                     <MaterialIcons name="delete" style={styles.icon} />
                                 </Pressable>
                             </Pressable>

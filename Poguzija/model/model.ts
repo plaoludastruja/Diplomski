@@ -23,6 +23,7 @@ export interface FoodRecipes {
     ingredients: Ingredient[]
     steps: Step[]
     images: string[]
+    searchFields: string[]
     createdAt: string
 }
 

@@ -22,6 +22,7 @@ async function GetFoodRecipe(id: string): Promise<FoodRecipes> {
         ingredients: [],
         steps: [],
         images: [],
+        searchFields: [],
         createdAt: "",
     }
     const data = await getDoc(doc(db, DatabaseCollection.recipes, id).withConverter(foodRecipesConverter))
@@ -92,6 +93,8 @@ function generateUniqueName() {
 
 const foodRecipesConverter = {
     toFirestore: (foodRecipes: FoodRecipes) => {
+        const ingredientNames = foodRecipes.ingredients.map(ingredient => ingredient.name.toLowerCase())
+        const searchFields = [...ingredientNames]
         return {
             title: foodRecipes.title,
             author: foodRecipes.author,
@@ -99,6 +102,7 @@ const foodRecipesConverter = {
             ingredients: foodRecipes.ingredients,
             steps: foodRecipes.steps,
             images: foodRecipes.images || null,
+            searchFields: searchFields,
             createdAt: serverTimestamp()
         }
     },
