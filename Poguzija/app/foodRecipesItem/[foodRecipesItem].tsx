@@ -1,32 +1,45 @@
 import { useLocalSearchParams } from 'expo-router'
 import BackgroundSafeAreaView from '../../components/BackgroundSafeAreaView'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { View, TextInput, Pressable, Text, StyleSheet, Image, Platform, ScrollView, KeyboardAvoidingView, Alert, Dimensions, ActivityIndicator } from 'react-native'
 import { FoodRecipes, Ingredient, Step, StorageFolder } from '../../model/model'
 const PlaceholderImage = require('../../assets/images/icon.png')
 import Carousel from 'react-native-snap-carousel'
 import { COLORS, SIZES } from '../../constants/Colors'
-import { MaterialIcons } from '@expo/vector-icons'
+import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import AddIngredientsModal from '../../components/AddIngredientsModal'
 import LoadingScreen from '../../components/LoadingScreen'
 import { GetFoodRecipe } from '../../service/RecipesService'
+import { UserContext } from '../_layout'
+import { LinearGradient } from 'expo-linear-gradient'
+import { AddToMyBookmark, IsRecipeBookmarked, RemoveFromMyBookmark } from '../../service/BookmarkService'
 
 
 export default function FoodRecipesItem() {
     const { foodRecipesItem } = useLocalSearchParams<{ foodRecipesItem: string }>()
+    const { user } = useContext(UserContext)
     const [food, setFood] = useState<FoodRecipes>()
     const [loading, setLoading] = useState(true)
+    const [bookmarkIconType, setBookmarkIconType] = useState('bookmark-o')
+    const [isRecipeBookmarked, setIsRecipeBookmarked] = useState(false)
 
     useEffect(() => {
         fetchData()
     }, [])
 
     const fetchData = async () => {
-        
         try {
             const foodRecipesData = await GetFoodRecipe(foodRecipesItem)
+            const isRecipeBookmarkedData = await IsRecipeBookmarked(foodRecipesItem)
             setFood(foodRecipesData)
+            if(isRecipeBookmarkedData){
+                setBookmarkIconType('bookmark')
+                setIsRecipeBookmarked(true)
+            }else{
+                setBookmarkIconType('bookmark-o')
+                setIsRecipeBookmarked(false)
+            }
             setLoading(false)
         } catch (error) {
             console.error('Error fetching data:', error)
@@ -36,11 +49,33 @@ export default function FoodRecipesItem() {
     const screenWidth = Dimensions.get('window').width
     const screenHeight = Dimensions.get('window').height
 
+    const handleAddToBookmarks = () => {
+        if(isRecipeBookmarked){
+            RemoveFromMyBookmark(foodRecipesItem)
+            setBookmarkIconType('bookmark-o')
+            setIsRecipeBookmarked(false)
+        }else{
+            AddToMyBookmark(foodRecipesItem)
+            setBookmarkIconType('bookmark')
+            setIsRecipeBookmarked(true)
+        }
+    }
 
+    
     const renderItem = ({ item }: { item: string }) => {
         return (
             <View style={[styles.images, { width: screenWidth, height: 2 * screenHeight / 3 }]} >
                 <Image source={{ uri: item }} style={[styles.image, { width: screenWidth, height: 2 * screenHeight / 3 }]} />
+                <LinearGradient 
+                    colors={['rgba(0, 0, 0, 0.8)', 'rgba(255, 255, 255, 0)' ]} 
+                    start={{ x: 0.5, y: - 0.2 }}
+                    end={{ x: 0.5, y: 0.1 }}
+                    style={[styles.gradientTop, { ...StyleSheet.absoluteFillObject }]} />
+                <LinearGradient 
+                    colors={['rgba(255, 255, 255, 0)', 'rgba(0, 0, 0, 0.8)' ]} 
+                    start={{ x: 0.5, y: 0.8 }}
+                    end={{ x: 0.5, y: 1.1 }}
+                    style={[styles.gradientBottom, { ...StyleSheet.absoluteFillObject }]} />
             </View>
         )
     }
@@ -58,6 +93,8 @@ export default function FoodRecipesItem() {
                         itemWidth={screenWidth}
                         layout="default"
                     />
+                    
+                {user && <FontAwesome name={bookmarkIconType} color={COLORS.light} style={styles.bookmarkIcon} size={1.2 * SIZES.tabIcon} onPress={handleAddToBookmarks}/>}
                 </View>
 
                 <BottomSheet
@@ -132,6 +169,21 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: SIZES.extraLarge,
         borderTopRightRadius: SIZES.extraLarge,
         marginTop: SIZES.extraLarge
+    },
+    gradientTop: {
+        borderTopLeftRadius: SIZES.extraLarge,
+        borderTopRightRadius: SIZES.extraLarge,
+        marginTop: SIZES.small
+    },
+    gradientBottom: {
+        borderTopLeftRadius: SIZES.extraLarge,
+        borderTopRightRadius: SIZES.extraLarge,
+        marginBottom: - SIZES.small
+    },
+    bookmarkIcon: {
+        position: 'absolute',
+        top: SIZES.extraLarge,
+        right: SIZES.extraLarge,
     },
     input: {
         width: '95%',

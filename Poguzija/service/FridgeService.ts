@@ -33,11 +33,9 @@ function AddFridge(id: string, user: string) {
 
 async function AddToMyFridge(ingredients: Ingredient[]) {
     const user = await getCurrentUser()
-    console.log('fridge input', user.aditionalUserData.fridgeId, ingredients)
     const data = await updateDoc(doc(db, DatabaseCollection.fridges, user.aditionalUserData.fridgeId), {
         ingredients: ingredients
     })
-    console.log('fridge data', data)
     console.log('Data updated at AddToMyFridge()')
 }
 
