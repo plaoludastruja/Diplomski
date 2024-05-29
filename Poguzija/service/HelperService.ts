@@ -1,6 +1,6 @@
 import { addDoc, collection } from "firebase/firestore/lite"
 import { db } from "./firebase"
-import { DatabaseCollection } from "../model/model"
+import { Category, DatabaseCollection } from "../model/model"
 
 async function AddIngredientsData() {
     const ingredients = [
@@ -49,7 +49,31 @@ async function AddMeasurementUnitsData() {
     console.log('Data added at AddMeasurementUnitsData()')
 }
 
+function GetCategoryData(){
+    const categories = {
+        'National cuisine': ['Chinese', 'Greek', 'Serbian'],
+        'Meal': ['Breakfast', 'Brunch', 'Lunch', 'Snack', 'Dinner', 'Dessert'],
+        'Popular category': ['Fast', 'Healty', 'Salad', 'Pasta']
+    }
+
+    const categoriesArray: Category[] = []
+
+    for (const [type, names] of Object.entries(categories)) {
+        const data = names.map(name => ({
+            name: name,
+            isSelected: false
+        }))
+        categoriesArray.push({
+            type: type,
+            data: data
+        })
+    }
+    console.log('categoriesArray ', categoriesArray)
+    return categoriesArray;
+}
+
 export {
     AddIngredientsData,
-    AddMeasurementUnitsData
+    AddMeasurementUnitsData,
+    GetCategoryData
 }

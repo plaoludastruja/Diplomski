@@ -12,7 +12,7 @@ import BottomSheet, { BottomSheetFlatList, BottomSheetScrollView, BottomSheetTex
 import { getCurrentUser } from '../../service/UserService'
 import { AddFoodRecipe, UploadFoodRecipesImages } from '../../service/RecipesService'
 import { UserContext } from '../_layout'
-
+import { AddCategoryModal } from '../../components/AddCategoryModal'
 
 export default function AddRecipeScreen() {
     const { user } = useContext(UserContext)
@@ -20,6 +20,10 @@ export default function AddRecipeScreen() {
     const screenWidth = Dimensions.get('window').width
     const screenHeight = Dimensions.get('window').height
     const [snapPoints, setSnapPoints] = useState(['66', '95'])
+
+    const [categoryModalVisible, setCategoryModalVisible] = useState(false)
+    const [categoryNumber, setCategoryNumber] = useState<number>(0)
+    const [searchFields, setSearchFields] = useState<string[]>([])
 
     const [ingredientsModalVisible, setIngredientsModalVisible] = useState(false)
     const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([])
@@ -60,6 +64,7 @@ export default function AddRecipeScreen() {
                 servingSize: servingSize,
                 ingredients: selectedIngredients,
                 steps: updatedStepList,
+                searchFields: searchFields,
             }
 
             const uploadedImages = await UploadFoodRecipesImages(selectedImageToUpload, StorageFolder.FoodRecipesPhotos)
@@ -71,6 +76,8 @@ export default function AddRecipeScreen() {
             setServingSize('')
             setCookingTime('')
             setSelectedIngredients([])
+            setSearchFields([])
+            setCategoryNumber(0)
             setSelectedImageArray([PlaceholderImage])
             setSelectedImageToUpload([])
             setSnapPoints(['66', '95'])
@@ -98,6 +105,11 @@ export default function AddRecipeScreen() {
         )
     }
 
+    const handleDeleteIngredient = (newIngredient: Ingredient) => {
+        const updatedIngredients = selectedIngredients.filter((ingredient) => ingredient.name !== newIngredient.name)
+        setSelectedIngredients(updatedIngredients)
+    }
+
     const handleAddIngredient = (newIngredient: Ingredient) => {
         const updatedIngredients = selectedIngredients.map(ingredient =>
             ingredient.name === newIngredient.name ? newIngredient : ingredient
@@ -108,9 +120,14 @@ export default function AddRecipeScreen() {
         setSelectedIngredients(updatedIngredients)
     }
 
-    const handleDeleteIngredient = (newIngredient: Ingredient) => {
-        const updatedIngredients = selectedIngredients.filter((ingredient) => ingredient.name !== newIngredient.name)
-        setSelectedIngredients(updatedIngredients)
+    const handleOpenCategoryModal = () => {
+        setCategoryModalVisible(true)
+    }
+
+    const handleCloseCategoryModal = (selectedCategories: string[]) => {
+        setCategoryNumber(selectedCategories.length)
+        setCategoryModalVisible(false)
+        setSearchFields(selectedCategories)
     }
 
     const handlePressToEdit = (ingredient: Ingredient) => {
@@ -118,7 +135,7 @@ export default function AddRecipeScreen() {
         setIngredientsModalVisible(true)
     }
 
-    const handleClose = () => {
+    const handleCloseIngredientModal = () => {
         setIngredientsModalVisible(false)
         setIngredientEdit({})
     }
@@ -217,6 +234,11 @@ export default function AddRecipeScreen() {
                             />
                         </View>
 
+                        <Text style={styles.subtitleText}>Selected categories: {categoryNumber}</Text>
+                        <Pressable style={styles.button} onPress={() => handleOpenCategoryModal()}>
+                            <Text style={styles.buttonText}>Add categories</Text>
+                        </Pressable>
+
                         <Text style={styles.subtitleText}>Ingredients</Text>
                         {selectedIngredients?.map((ingredient, index) => (
                             <Pressable key={index} style={styles.ingredientItem} onPress={() => handlePressToEdit(ingredient)}>
@@ -260,7 +282,11 @@ export default function AddRecipeScreen() {
                     visible={ingredientsModalVisible}
                     dataEdit={ingredientEdit}
                     onAdd={handleAddIngredient}
-                    onClose={handleClose} />
+                    onClose={handleCloseIngredientModal} />
+
+                <AddCategoryModal
+                    visible={categoryModalVisible}
+                    onClose={(selectedCategories: string[]) => handleCloseCategoryModal(selectedCategories)} />
             </View>
         </BackgroundSafeAreaView>
     )

@@ -95,3 +95,8 @@ export interface RecipeByDay {
     author: string
     images: string[]
 }
+
+export interface Category {
+    type: string
+    data: { name: string, isSelected: boolean}[]
+}
