@@ -1,5 +1,5 @@
 import BackgroundSafeAreaView from '../../components/BackgroundSafeAreaView'
-import {  useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { View, TextInput, Pressable, Text, StyleSheet, Image, Platform, ScrollView, KeyboardAvoidingView, Alert, Dimensions, Modal, FlatList, Button } from 'react-native'
 import { FoodRecipes, Ingredient, Step, StorageFolder } from '../../model/model'
 const PlaceholderImage = require('../../assets/images/icon.png')
@@ -9,7 +9,6 @@ import Carousel from 'react-native-snap-carousel'
 import { COLORS, SIZES } from '../../constants/Colors'
 import AddIngredientsModal from '../../components/AddIngredientsModal'
 import BottomSheet, { BottomSheetFlatList, BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
-import { getCurrentUser } from '../../service/UserService'
 import { AddFoodRecipe, UploadFoodRecipesImages } from '../../service/RecipesService'
 import { UserContext } from '../_layout'
 import { AddCategoryModal } from '../../components/AddCategoryModal'
@@ -35,6 +34,7 @@ export default function AddRecipeScreen() {
     const [title, setTitle] = useState('')
     const [servingSize, setServingSize] = useState('')
     const [cookingTime, setCookingTime] = useState('')
+    const [refreshTime, setRefreshTime] = useState(false)
     const [author, setAuthor] = useState('')
 
     const [stepList, setStepList] = useState<Step[]>([])
@@ -45,7 +45,7 @@ export default function AddRecipeScreen() {
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: false,
             quality: 0.4,
-            
+
         })
 
         if (!result.canceled) {
@@ -61,6 +61,7 @@ export default function AddRecipeScreen() {
             const newRecipe: Partial<FoodRecipes> = {
                 title: title,
                 author: user ? user.id : '',
+                cookingTime: cookingTime,
                 servingSize: servingSize,
                 ingredients: selectedIngredients,
                 steps: updatedStepList,
@@ -76,6 +77,7 @@ export default function AddRecipeScreen() {
             setStepList([])
             setServingSize('')
             setCookingTime('')
+            setRefreshTime(!refreshTime)
             setSelectedIngredients([])
             setSearchFields([])
             setCategoryNumber(0)
@@ -142,9 +144,9 @@ export default function AddRecipeScreen() {
     }
 
     const handleNextStep = (text: string) => {
-        if(text === '') return
+        if (text === '') return
         let numberOfSteps = stepList.length
-        setStepList([...stepList, {number: ++numberOfSteps, description: text}])
+        setStepList([...stepList, { number: ++numberOfSteps, description: text }])
         setStep('')
         setStepsPlaceholder('Add next step')
     }
@@ -157,6 +159,10 @@ export default function AddRecipeScreen() {
             return updatedStepList
         })
     }
+
+    const handleTimeChange = (newTime) => {
+        setCookingTime(newTime);
+    };
 
     const renderItem = ({ item }: { item: string }) => {
         return (
@@ -179,7 +185,7 @@ export default function AddRecipeScreen() {
     return (
         <BackgroundSafeAreaView>
             <View style={styles.scrollViewContent}>
-                <View style={[styles.flex, { flexDirection: 'row'}]}>
+                <View style={[styles.flex, { flexDirection: 'row' }]}>
                     <Carousel
                         data={selectedImageArray}
                         renderItem={renderItem}
@@ -194,11 +200,11 @@ export default function AddRecipeScreen() {
                     backgroundStyle={{ backgroundColor: COLORS.dark }}
                     keyboardBehavior='extend'
                 >
-                    <BottomSheetScrollView 
-                        showsVerticalScrollIndicator={false} 
+                    <BottomSheetScrollView
+                        showsVerticalScrollIndicator={false}
                         contentContainerStyle={styles.scrollViewContent}
                         keyboardShouldPersistTaps={'handled'}
-                        >
+                    >
                         <Text style={styles.subtitleText}>Recipe name</Text>
                         <View style={styles.inputContainer}>
                             <MaterialIcons name="receipt" style={styles.icon} />
@@ -219,21 +225,13 @@ export default function AddRecipeScreen() {
                                 placeholder="Serving size"
                                 value={servingSize}
                                 onChangeText={text => setServingSize(text)}
+                                maxLength={3}
                                 keyboardType='numeric'
                             />
                         </View>
 
                         <Text style={styles.subtitleText}>Time to prepare</Text>
-                        <View style={styles.inputContainer}>
-                            <MaterialIcons name="timelapse" style={styles.icon} />
-                            <TextInput
-                                style={styles.textInput}
-                                placeholder="Time to prepare"
-                                value={cookingTime}
-                                onChangeText={text => setCookingTime(text)}
-                                keyboardType='numeric'
-                            />
-                        </View>
+                        <TimeInput time={cookingTime} onTimeChange={handleTimeChange} refresh={refreshTime}/>
 
                         <Text style={styles.subtitleText}>Selected categories: {categoryNumber}</Text>
                         <Pressable style={styles.button} onPress={() => handleOpenCategoryModal()}>
@@ -292,6 +290,50 @@ export default function AddRecipeScreen() {
         </BackgroundSafeAreaView>
     )
 }
+
+const TimeInput = ({ time, onTimeChange, refresh }) => {
+    const [hours, setHours] = useState('')
+    const [minutes, setMinutes] = useState('')
+
+    useEffect(() => {
+        setHours('')
+        setMinutes('')
+    }, [refresh])
+    const handleHoursChange = (text) => {
+        setHours(text)
+        onTimeChange(`${text} h ${minutes} min`)
+    }
+
+    const handleMinutesChange = (text) => {
+        setMinutes(text)
+        onTimeChange(`${hours} h ${text} min`)
+    }
+
+    return (
+        <View style={styles.inputContainer}>
+            <MaterialIcons name="timelapse" style={styles.icon} />
+            <TextInput
+                style={styles.smallTextInput}
+                value={hours}
+                onChangeText={handleHoursChange}
+                maxLength={2}
+                keyboardType='numeric'
+                placeholder="00"
+            />
+            <Text style={styles.textInputTime}>h</Text>
+            <TextInput
+                style={styles.smallTextInput}
+                value={minutes}
+                onChangeText={handleMinutesChange}
+                maxLength={2}
+                keyboardType='numeric'
+                placeholder="00"
+            />
+            <Text style={styles.textInputTime}>min</Text>
+        </View>
+    )
+}
+
 
 const styles = StyleSheet.create({
     flex: {
@@ -352,9 +394,19 @@ const styles = StyleSheet.create({
         fontSize: SIZES.large,
     },
     textInput: {
-        width: '100%',
+        width: '86%',
         marginRight: 10,
         color: COLORS.tint,
+        fontSize: SIZES.large,
+    },
+    textInputTime: {
+        color: COLORS.tint,
+        fontSize: SIZES.large,
+        padding: SIZES.base
+    },
+    smallTextInput: {
+        textAlign: 'center',
+        color: COLORS.dark,
         fontSize: SIZES.large,
     },
     icon: {

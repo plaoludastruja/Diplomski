@@ -21,6 +21,7 @@ export interface FoodRecipes {
     id: string
     title: string
     author: string
+    cookingTime: string
     servingSize: string
     ingredients: Ingredient[]
     steps: Step[]

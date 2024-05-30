@@ -127,6 +127,17 @@ export default function FoodRecipesItem() {
                             />
                         </View>
 
+                        <Text style={styles.subtitleText}>Time to prepare</Text>
+                        <View style={styles.inputContainer}>
+                            <MaterialIcons name="people" style={styles.icon} />
+                            <BottomSheetTextInput
+                                style={styles.textInput}
+                                placeholder="Time to prepare"
+                                value={food?.cookingTime}
+                                editable={false}
+                            />
+                        </View>
+
                         <Text style={styles.subtitleText}>Serving size</Text>
                         <View style={styles.inputContainer}>
                             <MaterialIcons name="people" style={styles.icon} />

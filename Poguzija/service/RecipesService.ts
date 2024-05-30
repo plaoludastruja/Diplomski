@@ -107,6 +107,7 @@ const foodRecipesConverter = {
         return {
             title: foodRecipe.title,
             author: foodRecipe.author,
+            cookingTime: foodRecipe.cookingTime,
             servingSize: foodRecipe.servingSize,
             ingredients: foodRecipe.ingredients,
             steps: foodRecipe.steps,
