@@ -65,6 +65,7 @@ export default function AddRecipeScreen() {
                 ingredients: selectedIngredients,
                 steps: updatedStepList,
                 searchFields: searchFields,
+                savedCount: 0
             }
 
             const uploadedImages = await UploadFoodRecipesImages(selectedImageToUpload, StorageFolder.FoodRecipesPhotos)

@@ -1,4 +1,4 @@
-import { getDocs, query, collection, orderBy, getDoc, doc, addDoc, QueryDocumentSnapshot, serverTimestamp, where } from "firebase/firestore/lite"
+import { getDocs, query, collection, orderBy, getDoc, doc, addDoc, QueryDocumentSnapshot, serverTimestamp, where, updateDoc, increment } from "firebase/firestore/lite"
 import { DatabaseCollection, FoodRecipes } from "../model/model"
 import { db, storage } from "./firebase"
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
@@ -47,6 +47,14 @@ async function GetMyFoodRecipes() {
     return foodRecipesData
 }
 
+async function UpdateSavedCount(id: string, toIncrease: boolean){
+    const incrementValue = toIncrease ? 1 : -1
+    updateDoc(doc(db, DatabaseCollection.recipes, id), {
+        savedCount: increment(incrementValue)
+    })
+    console.log('Data updated at UpdateSavedCount()')
+}
+
 async function UploadFoodRecipesImages(selectedImages: string[], folder: string): Promise<string[]> {
     const urls = []
     for (var selectedImage of selectedImages) {
@@ -92,18 +100,19 @@ function generateUniqueName() {
 }
 
 const foodRecipesConverter = {
-    toFirestore: (foodRecipes: FoodRecipes) => {
-        const ingredientNames = foodRecipes.ingredients.map(ingredient => ingredient.name.toLowerCase())
-        const searchFieldsData = foodRecipes.searchFields.map(searchField => searchField.toLowerCase())
+    toFirestore: (foodRecipe: FoodRecipes) => {
+        const ingredientNames = foodRecipe.ingredients.map(ingredient => ingredient.name.toLowerCase())
+        const searchFieldsData = foodRecipe.searchFields.map(searchField => searchField.toLowerCase())
         const searchFields = [...searchFieldsData, ...ingredientNames]
         return {
-            title: foodRecipes.title,
-            author: foodRecipes.author,
-            servingSize: foodRecipes.servingSize,
-            ingredients: foodRecipes.ingredients,
-            steps: foodRecipes.steps,
-            images: foodRecipes.images || null,
+            title: foodRecipe.title,
+            author: foodRecipe.author,
+            servingSize: foodRecipe.servingSize,
+            ingredients: foodRecipe.ingredients,
+            steps: foodRecipe.steps,
+            images: foodRecipe.images || null,
             searchFields: searchFields,
+            savedCount: foodRecipe.savedCount,
             createdAt: serverTimestamp()
         }
     },
@@ -120,4 +129,6 @@ export {
     GetMyFoodRecipes,
     foodRecipesConverter,
     UploadFoodRecipesImages,
+    UpdateSavedCount,
+
 }

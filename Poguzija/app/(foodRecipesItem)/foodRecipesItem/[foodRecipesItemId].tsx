@@ -8,7 +8,7 @@ import { COLORS, SIZES } from '../../../constants/Colors'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import LoadingScreen from '../../../components/LoadingScreen'
-import { GetFoodRecipe } from '../../../service/RecipesService'
+import { GetFoodRecipe, UpdateSavedCount } from '../../../service/RecipesService'
 import { UserContext } from '../../_layout'
 import { LinearGradient } from 'expo-linear-gradient'
 import { AddToMyBookmark, IsRecipeBookmarked, RemoveFromMyBookmark } from '../../../service/BookmarkService'
@@ -21,6 +21,7 @@ export default function FoodRecipesItem() {
     const [loading, setLoading] = useState(true)
     const [bookmarkIconType, setBookmarkIconType] = useState('bookmark-o')
     const [isRecipeBookmarked, setIsRecipeBookmarked] = useState(false)
+    const [savedCount, setSavedCount] = useState(0)
 
     const router = useRouter()
 
@@ -40,6 +41,7 @@ export default function FoodRecipesItem() {
                 setBookmarkIconType('bookmark-o')
                 setIsRecipeBookmarked(false)
             }
+            setSavedCount(foodRecipesData.savedCount || 0)
             setLoading(false)
         } catch (error) {
             console.error('Error fetching data:', error)
@@ -52,10 +54,14 @@ export default function FoodRecipesItem() {
     const handleAddToBookmarks = () => {
         if(isRecipeBookmarked){
             RemoveFromMyBookmark(foodRecipesItemId)
+            UpdateSavedCount(foodRecipesItemId, false)
+            setSavedCount(savedCount === 0 ? 0 : savedCount - 1)
             setBookmarkIconType('bookmark-o')
             setIsRecipeBookmarked(false)
         }else{
             AddToMyBookmark(foodRecipesItemId)
+            UpdateSavedCount(foodRecipesItemId, true)
+            setSavedCount(savedCount + 1)
             setBookmarkIconType('bookmark')
             setIsRecipeBookmarked(true)
         }
@@ -72,7 +78,7 @@ export default function FoodRecipesItem() {
                 <LinearGradient 
                     colors={['rgba(0, 0, 0, 0.8)', 'rgba(255, 255, 255, 0)' ]} 
                     start={{ x: 0.5, y: - 0.2 }}
-                    end={{ x: 0.5, y: 0.1 }}
+                    end={{ x: 0.5, y: 0.15 }}
                     style={[styles.gradientTop, { ...StyleSheet.absoluteFillObject }]} />
                 <LinearGradient 
                     colors={['rgba(255, 255, 255, 0)', 'rgba(0, 0, 0, 0.8)' ]} 
@@ -97,7 +103,11 @@ export default function FoodRecipesItem() {
                         layout="default"
                     />
                     
-                {user && <FontAwesome name={bookmarkIconType} color={COLORS.light} style={styles.bookmarkIcon} size={1.2 * SIZES.tabIcon} onPress={handleAddToBookmarks}/>}
+                {user && 
+                <View style={styles.bookmarkContainer}>
+                    <Text style={styles.savedCount}>{savedCount}</Text>
+                    <FontAwesome name={bookmarkIconType} color={COLORS.light} size={1.2 * SIZES.tabIcon} onPress={handleAddToBookmarks}/>
+                </View>}
                 </View>
 
                 <BottomSheet
@@ -186,11 +196,6 @@ const styles = StyleSheet.create({
         borderTopRightRadius: SIZES.extraLarge,
         marginBottom: - SIZES.small
     },
-    bookmarkIcon: {
-        position: 'absolute',
-        top: SIZES.extraLarge,
-        right: SIZES.extraLarge,
-    },
     input: {
         width: '95%',
         minHeight: 60,
@@ -260,5 +265,21 @@ const styles = StyleSheet.create({
         paddingHorizontal: SIZES.small,
         color: COLORS.tint,
         fontSize: SIZES.large,
+    },
+    bookmarkContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: 'auto',
+        position: 'absolute',
+        top: SIZES.extraLarge,
+        right: SIZES.extraLarge,
+        paddingTop: SIZES.base
+    },
+    savedCount: {
+        color: COLORS.light,
+        fontSize: SIZES.large,
+        fontWeight: 'bold',
+        marginEnd: SIZES.base,
+        textAlignVertical: 'center'
     },
 })

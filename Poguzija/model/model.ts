@@ -26,6 +26,7 @@ export interface FoodRecipes {
     steps: Step[]
     images: string[]
     searchFields: string[]
+    savedCount: number
     createdAt: Timestamp
 }
 
