@@ -94,7 +94,8 @@ function generateUniqueName() {
 const foodRecipesConverter = {
     toFirestore: (foodRecipes: FoodRecipes) => {
         const ingredientNames = foodRecipes.ingredients.map(ingredient => ingredient.name.toLowerCase())
-        const searchFields = [...ingredientNames]
+        const searchFieldsData = foodRecipes.searchFields.map(searchField => searchField.toLowerCase())
+        const searchFields = [...searchFieldsData, ...ingredientNames]
         return {
             title: foodRecipes.title,
             author: foodRecipes.author,

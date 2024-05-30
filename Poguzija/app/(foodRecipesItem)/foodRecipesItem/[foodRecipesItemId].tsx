@@ -1,28 +1,28 @@
-import { useLocalSearchParams } from 'expo-router'
-import BackgroundSafeAreaView from '../../components/BackgroundSafeAreaView'
-import React, { useContext, useEffect, useMemo, useState } from 'react'
-import { View, TextInput, Pressable, Text, StyleSheet, Image, Platform, ScrollView, KeyboardAvoidingView, Alert, Dimensions, ActivityIndicator } from 'react-native'
-import { FoodRecipes, Ingredient, Step, StorageFolder } from '../../model/model'
-const PlaceholderImage = require('../../assets/images/icon.png')
+import { useLocalSearchParams, useRouter } from 'expo-router'
+import BackgroundSafeAreaView from '../../../components/BackgroundSafeAreaView'
+import { useContext, useEffect, useState } from 'react'
+import { View,  Pressable, Text, StyleSheet, Image, Dimensions } from 'react-native'
+import { FoodRecipes } from '../../../model/model'
 import Carousel from 'react-native-snap-carousel'
-import { COLORS, SIZES } from '../../constants/Colors'
+import { COLORS, SIZES } from '../../../constants/Colors'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
-import AddIngredientsModal from '../../components/AddIngredientsModal'
-import LoadingScreen from '../../components/LoadingScreen'
-import { GetFoodRecipe } from '../../service/RecipesService'
-import { UserContext } from '../_layout'
+import LoadingScreen from '../../../components/LoadingScreen'
+import { GetFoodRecipe } from '../../../service/RecipesService'
+import { UserContext } from '../../_layout'
 import { LinearGradient } from 'expo-linear-gradient'
-import { AddToMyBookmark, IsRecipeBookmarked, RemoveFromMyBookmark } from '../../service/BookmarkService'
+import { AddToMyBookmark, IsRecipeBookmarked, RemoveFromMyBookmark } from '../../../service/BookmarkService'
 
 
 export default function FoodRecipesItem() {
-    const { foodRecipesItem } = useLocalSearchParams<{ foodRecipesItem: string }>()
+    const { foodRecipesItemId } = useLocalSearchParams<{ foodRecipesItemId: string }>()
     const { user } = useContext(UserContext)
     const [food, setFood] = useState<FoodRecipes>()
     const [loading, setLoading] = useState(true)
     const [bookmarkIconType, setBookmarkIconType] = useState('bookmark-o')
     const [isRecipeBookmarked, setIsRecipeBookmarked] = useState(false)
+
+    const router = useRouter()
 
     useEffect(() => {
         fetchData()
@@ -30,8 +30,8 @@ export default function FoodRecipesItem() {
 
     const fetchData = async () => {
         try {
-            const foodRecipesData = await GetFoodRecipe(foodRecipesItem)
-            const isRecipeBookmarkedData = await IsRecipeBookmarked(foodRecipesItem)
+            const foodRecipesData = await GetFoodRecipe(foodRecipesItemId)
+            const isRecipeBookmarkedData = await IsRecipeBookmarked(foodRecipesItemId)
             setFood(foodRecipesData)
             if(isRecipeBookmarkedData){
                 setBookmarkIconType('bookmark')
@@ -51,16 +51,19 @@ export default function FoodRecipesItem() {
 
     const handleAddToBookmarks = () => {
         if(isRecipeBookmarked){
-            RemoveFromMyBookmark(foodRecipesItem)
+            RemoveFromMyBookmark(foodRecipesItemId)
             setBookmarkIconType('bookmark-o')
             setIsRecipeBookmarked(false)
         }else{
-            AddToMyBookmark(foodRecipesItem)
+            AddToMyBookmark(foodRecipesItemId)
             setBookmarkIconType('bookmark')
             setIsRecipeBookmarked(true)
         }
     }
 
+    const handleOpenComments = () => {
+        router.push(`/comments/${foodRecipesItemId}`)
+    }
     
     const renderItem = ({ item }: { item: string }) => {
         return (
@@ -142,6 +145,9 @@ export default function FoodRecipesItem() {
                                 editable={false}
                             />
                         ))}
+                        <Pressable style={styles.button} onPress={handleOpenComments}>
+                            <Text style={styles.buttonText}>Show comments</Text>
+                        </Pressable>
                     </BottomSheetScrollView>
                 </BottomSheet>
 

@@ -1,0 +1,36 @@
+import { QueryDocumentSnapshot, addDoc, collection, getDocs, orderBy, query, serverTimestamp } from "firebase/firestore/lite"
+import { Comment, DatabaseCollection } from "../model/model"
+import { db } from "./firebase"
+
+async function GetCommentsForRecipe(recipeId: string) {
+    const data = await getDocs(query(collection(db, DatabaseCollection.recipes, recipeId, DatabaseCollection.comments).withConverter(commentConverter)))
+    console.log('Data fetched at GetCommentsForRecipe()')
+    const commentsdata = data.docs.map(doc => (doc.data()))
+    return commentsdata
+}
+
+function AddComment(recipeId: string, comment: Partial<Comment>) {
+    addDoc(collection(db, DatabaseCollection.recipes, recipeId, DatabaseCollection.comments).withConverter(commentConverter), comment)
+    console.log('Data added at AddComment()')
+}
+
+const commentConverter = {
+    toFirestore: (comment: Comment) => {
+        return {
+            authorName: comment.authorName,
+            authorProfilePhoto: comment.authorProfilePhoto,
+            text: comment.text,
+            createdAt: serverTimestamp()
+        }
+    },
+    fromFirestore: (snapshot: QueryDocumentSnapshot) => {
+        const data = snapshot.data() as Comment
+        return { ...data, id: snapshot.id }
+    }
+}
+
+export {
+    GetCommentsForRecipe,
+    AddComment,
+
+}

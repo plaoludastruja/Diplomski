@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore/lite"
+
 export interface MyUser {
     id: string
     email: string
@@ -6,7 +8,7 @@ export interface MyUser {
     fullName: string
     profilePhoto: string
     aditionalUserData: AdditionalUserData
-    createdAt: string
+    createdAt: Timestamp
 }
 
 export interface AdditionalUserData {
@@ -24,7 +26,7 @@ export interface FoodRecipes {
     steps: Step[]
     images: string[]
     searchFields: string[]
-    createdAt: string
+    createdAt: Timestamp
 }
 
 export interface MyComponentProps {
@@ -43,6 +45,7 @@ export enum DatabaseCollection {
     units = 'units',
     fridges = 'fridges',
     bookmarks = 'bookmarks',
+    comments = 'comments'
 }
 
 export interface Ingredient {
@@ -77,6 +80,14 @@ export interface Bookmark {
     id: string
     user: string
     savedFoodRecipesIds: string[]
+}
+
+export interface Comment {
+    id: string
+    authorName: string
+    authorProfilePhoto: string
+    text: string
+    createdAt: Timestamp
 }
 
 export enum Day {
