@@ -32,19 +32,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)'
-    },    
-    container: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        height: 60,
-        backgroundColor: COLORS.dark,
-        borderRadius: SIZES.extraLarge,
-        marginBottom: SIZES.small,
-        paddingHorizontal: SIZES.small,
-        color: COLORS.tint,
-        fontSize: SIZES.large,
-    },     
+    },   
     containerAuthor: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
@@ -55,7 +43,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        backgroundColor: COLORS.lightDark,
+        backgroundColor: COLORS.dark,
         borderTopEndRadius: SIZES.extraLarge,
         borderTopStartRadius: SIZES.extraLarge,
         borderBottomStartRadius: SIZES.extraLarge,
@@ -94,7 +82,7 @@ const styles = StyleSheet.create({
     textInputDate: {
         width: '100%',
         marginRight: 10,
-        color: COLORS.dark,
+        color: COLORS.darkLight,
         fontSize: SIZES.font,
     },
     image: {

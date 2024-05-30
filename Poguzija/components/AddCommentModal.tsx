@@ -1,15 +1,20 @@
 import { Text, StyleSheet, View, Modal, Pressable, TextInput, FlatList } from 'react-native'
 import { useState } from 'react'
 import { COLORS, SIZES } from '../constants/Colors'
+import { StarRating } from './StartRating'
+import { FontAwesome } from '@expo/vector-icons'
 
 export const AddCommentModal = ({ visible, onAdd, onClose }) => {
     const [text, setText] = useState('')
+    const [rating, setRating] = useState(0)
     const handleClose = () => {
         onClose()
     }
 
     const handleOnAdd = () => {
-        onAdd(text)
+        onAdd(text, rating)
+        setText('')
+        setRating(0)
         onClose()
     }
 
@@ -21,18 +26,24 @@ export const AddCommentModal = ({ visible, onAdd, onClose }) => {
             onRequestClose={ () => handleClose() }>
             <Pressable style={styles.centeredView} onPress={ () => handleClose() }>
                 <View style={styles.modalView}>
-                    <TextInput
-                        style={styles.textInput}
-                        placeholder="Write a comment..."
-                        value={text}
-                        autoComplete='off'
-                        onChangeText={text => {
-                            setText(text)
-                        }}
-                    />
-                    <Pressable style={ styles.button } onPress={ handleOnAdd }>
-                        <Text style={ styles.buttonText }>Comment</Text>
-                    </Pressable>
+                    <View style={styles.inputContainer}>
+                        <FontAwesome name="comments" style={styles.icon} />
+                        <TextInput
+                            style={styles.commentInput}
+                            placeholder="Write a review..."
+                            multiline={true}
+                            value={text}
+                            autoComplete='off'
+                            maxLength={250}
+                            onChangeText={text => setText(text)}
+                        />
+                    </View>
+                    <View style={styles.bottomContainer}>
+                        <StarRating ratingValue={rating} onRatingChange={setRating} />
+                        <Pressable style={ styles.button } onPress={ handleOnAdd }>
+                            <Text style={ styles.buttonText }>Comment</Text>
+                        </Pressable>
+                    </View>
                 </View>
             </Pressable>
         </Modal>
@@ -48,9 +59,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalView: {
-        height: '50%',
+        justifyContent: 'space-between',
+        minHeight: '30%',
         width: '80%',
-        backgroundColor: COLORS.light,
+        backgroundColor: COLORS.dark,
         borderRadius: SIZES.extraLarge,
         padding: SIZES.small,
         alignItems: 'center',
@@ -80,15 +92,32 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: SIZES.large,
     },
-    textInput: {
-        width: '100%',
-        height: '70%',
-        margin: SIZES.medium,
-        padding: SIZES.base,
+    commentInput: {
+        width: '86%',
+        marginRight: 10,
         color: COLORS.tint,
         fontSize: SIZES.large,
-        backgroundColor: COLORS.lightDark,
-        borderRadius: SIZES.extraLarge
+    },
+    inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '95%',
+        minHeight: 60,
+        backgroundColor: COLORS.light,
+        borderRadius: SIZES.extraLarge,
+        marginVertical: SIZES.small,
+        padding: SIZES.small,
+        color: COLORS.tint,
+        fontSize: SIZES.large,
+    },
+    icon: {
+        marginRight: 10,
+        color: COLORS.lightDark,
+        fontSize: SIZES.extraLarge
+    },
+    bottomContainer: {
+        width: '100%',
+        alignItems: 'center',
     },
 })
 

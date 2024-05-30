@@ -10,6 +10,7 @@ import { AddComment, GetCommentsForRecipe } from "../../../service/CommentServic
 import { Comment } from "../../../model/model"
 import { CardComment } from "../../../components/CardComment"
 import { AddCommentModal } from "../../../components/AddCommentModal"
+import { UpdateRecipeRating } from "../../../service/RecipesService"
 
 export default function CommentsScreen() {
     const { commentRecipeId } = useLocalSearchParams<{ commentRecipeId: string }>()
@@ -40,17 +41,24 @@ export default function CommentsScreen() {
         fetchData()
     }
 
-    const onAddNewComment = (text: string) => {
-        const comment: Partial<Comment> = {
-            authorName: user?.fullName || '',
-            authorProfilePhoto: user?.profilePhoto || '',
-            text: text
-        }
+    const onAddNewComment = (text: string, rating: number) => {
         setAddCommentModalVisible(false)
-        comment.authorName = user?.fullName
-        comment.authorProfilePhoto = user?.profilePhoto
-        console.log(commentRecipeId, comment)
-        AddComment(commentRecipeId, comment)
+        if(text != ''){
+            const comment: Partial<Comment> = {
+                authorName: user?.fullName || '',
+                authorProfilePhoto: user?.profilePhoto || '',
+                text: text
+            }
+            
+            comment.authorName = user?.fullName
+            comment.authorProfilePhoto = user?.profilePhoto
+            console.log(commentRecipeId, comment)
+            AddComment(commentRecipeId, comment)
+        }
+        
+        if(rating != 0){
+            UpdateRecipeRating(commentRecipeId, rating)
+        }
     }
 
     if (loading) return <LoadingScreen />
@@ -59,7 +67,7 @@ export default function CommentsScreen() {
         <BackgroundSafeAreaView>
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <Text style={styles.subtitleText}>Comments</Text>
+                    <Text style={styles.subtitleText}>Reviews</Text>
                     <Pressable style={styles.addButton} onPress={() => setAddCommentModalVisible(true)}>
                         <MaterialIcons name="add" style={styles.icon}  />
                     </Pressable>
@@ -78,8 +86,7 @@ export default function CommentsScreen() {
                         onRefresh={handleRefresh}
                     />
                 }
-            />  
-            
+            />             
             <AddCommentModal 
                 visible={ addCommentModalVisible } 
                 onAdd={onAddNewComment} 
@@ -90,6 +97,23 @@ export default function CommentsScreen() {
 }
 
 const styles = StyleSheet.create({
+    
+    buttonText: {
+        color: COLORS.white,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontSize: SIZES.large,
+    },
+    button: {
+        textAlign: 'center',
+        justifyContent: 'center',
+        width: '85%',
+        backgroundColor: COLORS.tint,
+        borderRadius: SIZES.extraLarge,
+        padding: SIZES.base,
+        marginVertical: SIZES.base,
+        elevation: 2,
+    },
     container: {
         flexDirection: 'column',
         justifyContent: 'center',
@@ -121,7 +145,7 @@ const styles = StyleSheet.create({
     },
     flex: {
         flex: 1,
-        width: '95%'
+        width: '95%',
     },
     subtitleText: {
         width: '85%',

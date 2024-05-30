@@ -28,6 +28,7 @@ export interface FoodRecipes {
     images: string[]
     searchFields: string[]
     savedCount: number
+    rating: Rating
     createdAt: Timestamp
 }
 
@@ -112,4 +113,9 @@ export interface RecipeByDay {
 export interface Category {
     type: string
     data: { name: string, isSelected: boolean}[]
+}
+
+export interface Rating {
+    sum: number
+    count: number
 }

@@ -7,6 +7,7 @@ import { useRouter } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient'
 import { AddToScheduler, RemoveFromScheduler } from '../service/SchedulerService'
 import { SchedulerContext, UserContext } from '../app/_layout'
+import { StarRatingShow } from './StartRating'
 
 const PlaceholderImage = require('../assets/images/icon.png')
 
@@ -57,6 +58,7 @@ const CardFoodRecipes: FC<{ data: FoodRecipes, route: string }> = ({ data, route
                     end={{ x: 0.5, y: 0.9 }}
                     style={[styles.image, { ...StyleSheet.absoluteFillObject }]} />
                 <View style={styles.textContainer}>
+                    { data?.rating?.count != 0 && <StarRatingShow rating={(data?.rating?.sum / (data?.rating?.count == 0 ? 1 : data?.rating?.count)).toFixed(2)} />}
                     <Text style={styles.text}>{data.title}</Text>
                 </View>
             </Pressable>

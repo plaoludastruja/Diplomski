@@ -112,14 +112,14 @@ export default function FoodRecipesItem() {
 
                 <BottomSheet
                     snapPoints={['35', '65', '95']}
-                    backgroundStyle={{ backgroundColor: COLORS.dark }}
-                >
+                    backgroundStyle={{ backgroundColor: COLORS.dark }} >
                     <BottomSheetScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
                         <Text style={styles.subtitleText}>Recipe name</Text>
                         <View style={styles.inputContainer}>
                             <MaterialIcons name="receipt" style={styles.icon} />
                             <BottomSheetTextInput
                                 style={styles.textInput}
+                                multiline={true}
                                 placeholder="Recipe name"
                                 value={food?.title}
                                 autoComplete='off'
@@ -167,7 +167,7 @@ export default function FoodRecipesItem() {
                             />
                         ))}
                         <Pressable style={styles.button} onPress={handleOpenComments}>
-                            <Text style={styles.buttonText}>Show comments</Text>
+                            <Text style={styles.buttonText}>Show reviews</Text>
                         </Pressable>
                     </BottomSheetScrollView>
                 </BottomSheet>
@@ -237,16 +237,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         width: '95%',
-        height: 60,
+        minHeight: 60,
         backgroundColor: COLORS.light,
         borderRadius: SIZES.extraLarge,
         marginBottom: SIZES.small,
-        paddingHorizontal: SIZES.small,
+        padding: SIZES.small,
         color: COLORS.tint,
         fontSize: SIZES.large,
     },
     textInput: {
-        width: '100%',
+        width: '88%',
         marginRight: 10,
         color: COLORS.tint,
         fontSize: SIZES.large,

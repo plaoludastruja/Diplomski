@@ -55,6 +55,14 @@ async function UpdateSavedCount(id: string, toIncrease: boolean){
     console.log('Data updated at UpdateSavedCount()')
 }
 
+async function UpdateRecipeRating(id: string, rating: number){
+    updateDoc(doc(db, DatabaseCollection.recipes, id), {
+        'rating.sum': increment(rating),
+        'rating.count': increment(1)
+    })
+    console.log('Data updated at UpdateRecipeRating()')
+}
+
 async function UploadFoodRecipesImages(selectedImages: string[], folder: string): Promise<string[]> {
     const urls = []
     for (var selectedImage of selectedImages) {
@@ -114,6 +122,7 @@ const foodRecipesConverter = {
             images: foodRecipe.images || null,
             searchFields: searchFields,
             savedCount: foodRecipe.savedCount,
+            rating: foodRecipe.rating,
             createdAt: serverTimestamp()
         }
     },
@@ -131,5 +140,6 @@ export {
     foodRecipesConverter,
     UploadFoodRecipesImages,
     UpdateSavedCount,
+    UpdateRecipeRating,
 
 }

@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     textInput: {
         width: '100%',
         marginRight: 10,
-        color: COLORS.tint,
+        color: COLORS.light,
         fontSize: SIZES.large,
     },
     

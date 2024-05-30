@@ -66,7 +66,8 @@ export default function AddRecipeScreen() {
                 ingredients: selectedIngredients,
                 steps: updatedStepList,
                 searchFields: searchFields,
-                savedCount: 0
+                savedCount: 0,
+                rating: { sum: 0, count: 0}
             }
 
             const uploadedImages = await UploadFoodRecipesImages(selectedImageToUpload, StorageFolder.FoodRecipesPhotos)
@@ -211,8 +212,10 @@ export default function AddRecipeScreen() {
                             <TextInput
                                 style={styles.textInput}
                                 placeholder="Recipe name"
+                                multiline={true}
                                 value={title}
                                 autoComplete='off'
+                                maxLength={60}
                                 onChangeText={text => setTitle(text)}
                             />
                         </View>
@@ -385,11 +388,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         width: '95%',
-        height: 60,
+        minHeight: 60,
         backgroundColor: COLORS.light,
         borderRadius: SIZES.extraLarge,
         marginBottom: SIZES.small,
-        paddingHorizontal: SIZES.small,
+        padding: SIZES.small,
         color: COLORS.tint,
         fontSize: SIZES.large,
     },
