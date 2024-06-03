@@ -1,10 +1,7 @@
 import { Text, StyleSheet, View, Modal, Pressable, TextInput, FlatList } from 'react-native'
 import React, { Component, FC, useEffect, useState } from 'react'
-import { Category, Ingredient, MyComponentProps } from '../model/model'
-import { MaterialIcons } from '@expo/vector-icons'
+import { Category } from '../model/model'
 import { COLORS, SIZES } from '../constants/Colors'
-import SelectIngredientList from './SelectIngredientList'
-import { GetIngredients, GetUnits } from '../service/IngredientService'
 import { GetCategoryData } from '../service/HelperService'
 
 export const AddCategoryModal = ({ visible, onClose }) => {
@@ -38,7 +35,7 @@ export const AddCategoryModal = ({ visible, onClose }) => {
                         style={styles.flex}
                         renderItem={({ item }) => 
                             <View>
-                                <Text style={styles.subtitleText}>{item.type}</Text>
+                                <Pressable><Text style={styles.subtitleText}>{item.type}</Text></Pressable>
                                 { item.data?.map((categoryData, index) => (
                                     <Pressable
                                         style={ categoryData.isSelected ? styles.buttonModalSelected : styles.buttonModal }
