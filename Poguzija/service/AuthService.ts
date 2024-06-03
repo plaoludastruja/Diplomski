@@ -1,18 +1,18 @@
 import { GoogleSignin } from "@react-native-google-signin/google-signin"
 import * as SecureStore from 'expo-secure-store'
-import { GoogleAuthProvider, signInWithCredential } from "firebase/auth"
+import { GoogleAuthProvider, onAuthStateChanged, signInWithCredential, signInWithRedirect } from "firebase/auth"
 import { auth } from "./firebase"
-import { setUserMandatoryData } from "./UserService"
+import { GetOrAddUser } from "./UserService"
 import { MyUser } from "../model/model"
 
-async function signIn() : Promise<MyUser> {
+async function signIn(): Promise<MyUser> {
     try {
         await GoogleSignin.hasPlayServices()
         const user = await GoogleSignin.signIn()
         const credential = GoogleAuthProvider.credential(user.idToken)
-        signInWithCredential(auth, credential)
-        const myUser = await setUserMandatoryData(user)
-        return myUser
+        await signInWithCredential(auth, credential)
+        if(!auth.currentUser) return 
+        return await GetOrAddUser(user, auth.currentUser)
     } catch (e) {
         throw e
     }
@@ -28,7 +28,15 @@ function signOut() {
     }
 }
 
+
+async function getCurrentUser() : Promise<MyUser> {
+    let userValue = await SecureStore.getItemAsync('signedUser')
+    console.log("Current user: " + userValue)
+    return userValue != null ? JSON.parse(userValue) : null
+}
+
 export {
     signIn,
-    signOut
+    signOut,
+    getCurrentUser
 }

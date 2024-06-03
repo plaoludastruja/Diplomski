@@ -7,7 +7,6 @@ export interface MyUser {
     surname: string
     fullName: string
     profilePhoto: string
-    aditionalUserData: AdditionalUserData
     createdAt: Timestamp
 }
 
@@ -64,7 +63,6 @@ export interface Step {
 
 export interface RecipeScheduler {
     id: string
-    user: string
     recipeByDay: RecipesByDay[]
 }
 
@@ -75,13 +73,11 @@ export interface RecipesByDay {
 
 export interface Fridge {
     id: string
-    user: string
     ingredients: Ingredient[]
 }
 
 export interface Bookmark {
     id: string
-    user: string
     savedFoodRecipesIds: string[]
 }
 

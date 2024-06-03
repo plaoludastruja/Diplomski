@@ -1,6 +1,6 @@
 import { QueryDocumentSnapshot, doc, getDoc, setDoc, updateDoc } from "firebase/firestore/lite"
 import { DatabaseCollection, Fridge, Ingredient } from "../model/model"
-import { getCurrentUser } from "./UserService"
+import { getCurrentUser } from "./AuthService"
 import { db } from "./firebase"
 
 async function GetFridge() {
@@ -10,10 +10,9 @@ async function GetFridge() {
     }
     let fridge: Fridge = {
         id: "",
-        user: "",
         ingredients: [],
     }
-    const data = await getDoc(doc(db, DatabaseCollection.fridges, user.aditionalUserData.fridgeId).withConverter(fridgeConverter))
+    const data = await getDoc(doc(db, DatabaseCollection.fridges, user.id).withConverter(fridgeConverter))
     console.log('Data fetched at GetFridge()')
     if (data.exists()) {
         fridge = data.data()
@@ -21,10 +20,9 @@ async function GetFridge() {
     return fridge
 }
 
-function AddFridge(id: string, user: string) {
+function AddFridge(id: string) {
     const fridge: Fridge = {
         id: id,
-        user: user,
         ingredients: [] 
     }
     setDoc(doc(db, DatabaseCollection.fridges, id).withConverter(fridgeConverter), fridge)
@@ -33,7 +31,7 @@ function AddFridge(id: string, user: string) {
 
 async function AddToMyFridge(ingredients: Ingredient[]) {
     const user = await getCurrentUser()
-    const data = await updateDoc(doc(db, DatabaseCollection.fridges, user.aditionalUserData.fridgeId), {
+    updateDoc(doc(db, DatabaseCollection.fridges, user.id), {
         ingredients: ingredients
     })
     console.log('Data updated at AddToMyFridge()')
@@ -42,7 +40,6 @@ async function AddToMyFridge(ingredients: Ingredient[]) {
 const fridgeConverter = {
     toFirestore: (fridge: Fridge) => {
         return {
-            user: fridge.user,
             ingredients: fridge.ingredients
         }
     },

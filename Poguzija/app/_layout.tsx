@@ -8,7 +8,7 @@ import { COLORS } from '../constants/Colors'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { MyUser } from '../model/model'
 import { signIn, signOut } from '../service/AuthService'
-import { getCurrentUser } from '../service/UserService'
+import { getCurrentUser } from '../service/AuthService'
 
 export { ErrorBoundary, } from 'expo-router'
 

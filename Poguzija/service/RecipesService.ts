@@ -2,7 +2,7 @@ import { getDocs, query, collection, orderBy, getDoc, doc, addDoc, QueryDocument
 import { DatabaseCollection, FoodRecipes } from "../model/model"
 import { db, storage } from "./firebase"
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
-import { getCurrentUser } from "./UserService"
+import { getCurrentUser } from "./AuthService"
 import 'react-native-get-random-values'
 import { v4 as uuidv4 } from 'uuid'
 

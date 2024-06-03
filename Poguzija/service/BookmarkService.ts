@@ -1,5 +1,5 @@
 import { QueryDocumentSnapshot, arrayRemove, arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore/lite"
-import { getCurrentUser } from "./UserService"
+import { getCurrentUser } from "./AuthService"
 import { Bookmark, DatabaseCollection } from "../model/model"
 import { db } from "./firebase"
 
@@ -9,10 +9,9 @@ async function GetMySavedFoodRecipes() {
     if(!user) return []
     let bookmark: Bookmark = {
         id: '',
-        user: '',
         savedFoodRecipesIds: [] 
     }
-    const data = await getDoc(doc(db, DatabaseCollection.bookmarks, user.aditionalUserData.bookmarkId).withConverter(bookmarkConverter))
+    const data = await getDoc(doc(db, DatabaseCollection.bookmarks, user.id).withConverter(bookmarkConverter))
     console.log('Data fetched at GetMySavedFoodRecipes()')
     if (data.exists()) {
         bookmark = data.data()
@@ -29,10 +28,9 @@ async function GetMySavedFoodRecipes() {
     }))
 }
 
-function AddBookmark(id: string, user: string) {
+function AddBookmark(id: string) {
     const bookmark: Bookmark = {
         id: id,
-        user: user,
         savedFoodRecipesIds: [] 
     }
     setDoc(doc(db, DatabaseCollection.bookmarks, id).withConverter(bookmarkConverter), bookmark)
@@ -42,7 +40,7 @@ function AddBookmark(id: string, user: string) {
 async function AddToMyBookmark(newSavedFoodRecipesId: string){
     const user = await getCurrentUser()
     if(!user) return
-    updateDoc(doc(db, DatabaseCollection.bookmarks, user.aditionalUserData.bookmarkId), {
+    updateDoc(doc(db, DatabaseCollection.bookmarks, user.id), {
         savedFoodRecipesIds: arrayUnion(newSavedFoodRecipesId)
     })
     console.log('Data updated at AddToMyBookmark()')
@@ -51,7 +49,7 @@ async function AddToMyBookmark(newSavedFoodRecipesId: string){
 async function RemoveFromMyBookmark(newSavedFoodRecipesId: string){
     const user = await getCurrentUser()
     if(!user) return
-    updateDoc(doc(db, DatabaseCollection.bookmarks, user.aditionalUserData.bookmarkId), {
+    updateDoc(doc(db, DatabaseCollection.bookmarks, user.id), {
         savedFoodRecipesIds: arrayRemove(newSavedFoodRecipesId)
     })
     console.log('Data updated at RemoveFromMyBookmark()')
@@ -62,10 +60,9 @@ async function IsRecipeBookmarked(newSavedFoodRecipesId: string){
     if(!user) return []
     let bookmark: Bookmark = {
         id: '',
-        user: '',
         savedFoodRecipesIds: [] 
     }
-    const data = await getDoc(doc(db, DatabaseCollection.bookmarks, user.aditionalUserData.bookmarkId).withConverter(bookmarkConverter))
+    const data = await getDoc(doc(db, DatabaseCollection.bookmarks, user.id).withConverter(bookmarkConverter))
     console.log('Data fetched at IsRecipeBookmarked()')
     if (data.exists()) {
         bookmark = data.data()
@@ -79,7 +76,6 @@ async function IsRecipeBookmarked(newSavedFoodRecipesId: string){
 const bookmarkConverter = {
     toFirestore: (bookmark: Bookmark) => {
         return {
-            user: bookmark.user,
             savedFoodRecipesIds: bookmark.savedFoodRecipesIds
         }
     },
