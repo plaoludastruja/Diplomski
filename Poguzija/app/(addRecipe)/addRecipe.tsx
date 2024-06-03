@@ -9,9 +9,10 @@ import Carousel from 'react-native-snap-carousel'
 import { COLORS, SIZES } from '../../constants/Colors'
 import AddIngredientsModal from '../../components/AddIngredientsModal'
 import BottomSheet, { BottomSheetFlatList, BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
-import { AddFoodRecipe, UploadFoodRecipesImages } from '../../service/RecipesService'
+import { AddFoodRecipe } from '../../service/RecipesService'
 import { UserContext } from '../_layout'
 import { AddCategoryModal } from '../../components/AddCategoryModal'
+import { UploadFoodRecipesImages } from '../../service/ImageService'
 
 export default function AddRecipeScreen() {
     const { user } = useContext(UserContext)
@@ -70,7 +71,7 @@ export default function AddRecipeScreen() {
                 rating: { sum: 0, count: 0}
             }
 
-            const uploadedImages = await UploadFoodRecipesImages(selectedImageToUpload, StorageFolder.FoodRecipesPhotos)
+            const uploadedImages = await UploadFoodRecipesImages(selectedImageToUpload)
             newRecipe.images = uploadedImages
 
             setTitle('')

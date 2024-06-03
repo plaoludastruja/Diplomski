@@ -1,17 +1,15 @@
-import { QueryDocumentSnapshot, addDoc, collection, getDocs, orderBy, query, serverTimestamp } from "firebase/firestore/lite"
+import { QueryDocumentSnapshot, addDoc, collection, getDocs, query, serverTimestamp } from "firebase/firestore/lite"
 import { Comment, DatabaseCollection } from "../model/model"
 import { db } from "./firebase"
 
 async function GetCommentsForRecipe(recipeId: string) {
     const data = await getDocs(query(collection(db, DatabaseCollection.recipes, recipeId, DatabaseCollection.comments).withConverter(commentConverter)))
-    console.log('Data fetched at GetCommentsForRecipe()')
-    const commentsdata = data.docs.map(doc => (doc.data()))
-    return commentsdata
+    const commentsData = data.docs.map(doc => (doc.data()))
+    return commentsData
 }
 
 function AddComment(recipeId: string, comment: Partial<Comment>) {
     addDoc(collection(db, DatabaseCollection.recipes, recipeId, DatabaseCollection.comments).withConverter(commentConverter), comment)
-    console.log('Data added at AddComment()')
 }
 
 const commentConverter = {
@@ -32,5 +30,4 @@ const commentConverter = {
 export {
     GetCommentsForRecipe,
     AddComment,
-
 }

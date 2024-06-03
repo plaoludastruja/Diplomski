@@ -20,7 +20,7 @@ export default function addToSchedulerByDay() {
 
     const fetchData = async () => {
         try {
-            const foodRecipesData = await GetAllFoodRecipes()
+            const { foodRecipesData } = await GetAllFoodRecipes(null)
             setFood(foodRecipesData)
             setRefreshing(false)
             setLoading(false)

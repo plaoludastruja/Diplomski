@@ -1,29 +1,25 @@
-import * as SecureStore from 'expo-secure-store'
-import { auth, db } from "./firebase"
-import { getDoc, doc, serverTimestamp, setDoc, QueryDocumentSnapshot } from "firebase/firestore/lite"
-import { AdditionalUserData, DatabaseCollection, MyUser } from "../model/model"
-import { v4 as uuidv4 } from 'uuid'
-import { AddRecipesScheduler } from "./SchedulerService"
-import { AddFridge } from "./FridgeService"
-import { AddBookmark } from "./BookmarkService"
+import { db } from './firebase'
+import { getDoc, doc, serverTimestamp, setDoc, QueryDocumentSnapshot } from 'firebase/firestore/lite'
+import { DatabaseCollection, MyUser } from '../model/model'
+import { AddRecipesScheduler } from './SchedulerService'
+import { AddFridge } from './FridgeService'
+import { AddBookmark } from './BookmarkService'
 import { User as AuthUser } from 'firebase/auth'
-import { User } from "@react-native-google-signin/google-signin"
+import { User } from '@react-native-google-signin/google-signin'
+import { SetCurrentUser } from './AuthService'
 
 
 async function GetOrAddUser(user: User, authUser: AuthUser) {
     let userAdded = await GetUser(authUser.uid)
-    if(!userAdded) { 
-        AddRecipesScheduler(authUser.uid)
-        AddFridge(authUser.uid)
-        AddBookmark(authUser.uid)
-        userAdded = await AddNewUser(user, authUser)
-    }    
-    const userValue = JSON.stringify(userAdded)
-    SecureStore.setItemAsync('signedUser', userValue)
+    if (!userAdded) {
+        AddUserAdditionalData(authUser.uid)
+        userAdded = await AddUser(user, authUser)
+    }
+    SetCurrentUser(userAdded)
     return userAdded
 }
 
-async function AddNewUser(user: User, authUser: AuthUser) : Promise<MyUser> {
+async function AddUser(user: User, authUser: AuthUser): Promise<MyUser> {
     const myUser: MyUser = {
         id: authUser.uid,
         email: user.user.email,
@@ -34,8 +30,8 @@ async function AddNewUser(user: User, authUser: AuthUser) : Promise<MyUser> {
         createdAt: serverTimestamp()
     }
     setDoc(doc(db, DatabaseCollection.users, myUser.id), myUser)
-    console.log('Data added at AddNewUser()')
-    return myUser 
+    console.log('Data added at AddUser()')
+    return myUser
 }
 
 async function GetUser(id: string): Promise<MyUser> {
@@ -46,6 +42,12 @@ async function GetUser(id: string): Promise<MyUser> {
         return user
     }
     return
+}
+
+function AddUserAdditionalData(uid: string) {
+    AddRecipesScheduler(uid)
+    AddFridge(uid)
+    AddBookmark(uid)
 }
 
 const userConverter = {

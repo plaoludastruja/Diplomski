@@ -5,7 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { COLORS, SIZES } from '../constants/Colors'
 import { UserContext } from '../app/_layout'
 import AddIngredientsModal from './AddIngredientsModal'
-import { AddToMyFridge, GetFridge } from '../service/FridgeService'
+import { AddToMyFridge, GetMyFridge } from '../service/FridgeService'
 import LoadingScreen from './LoadingScreen'
 import { ScrollView } from 'react-native-gesture-handler'
 
@@ -55,7 +55,7 @@ export default function MyFridge() {
     
     const fetchData = async () => {
         try {
-            const fridgeData = await GetFridge()
+            const fridgeData = await GetMyFridge()
             setFridge(fridgeData)
             setSelectedIngredients(fridgeData?.ingredients)
             setLoading(false)

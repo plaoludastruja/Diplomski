@@ -5,7 +5,7 @@ import Colors, { COLORS, SIZES } from '../constants/Colors'
 import { FoodRecipes } from '../model/model'
 import { useRouter } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient'
-import { AddToScheduler, RemoveFromScheduler } from '../service/SchedulerService'
+import { AddToMyScheduler, RemoveFromScheduler } from '../service/SchedulerService'
 import { SchedulerContext, UserContext } from '../app/_layout'
 import { StarRatingShow } from './StartRating'
 
@@ -21,7 +21,7 @@ const CardFoodRecipes: FC<{ data: FoodRecipes, route: string }> = ({ data, route
         if(!route){
             router.push(`/foodRecipesItem/${data.id}`)
         }else if (route.split('/')[0] === 'schedulerAdd'){
-            await AddToScheduler(data, route.split('/')[1])
+            await AddToMyScheduler(data, route.split('/')[1])
             setRefreshScheduler(true)
             router.back()
         }else{

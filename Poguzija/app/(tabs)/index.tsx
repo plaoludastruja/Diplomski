@@ -6,12 +6,14 @@ import BackgroundSafeAreaView from '../../components/BackgroundSafeAreaView'
 import { COLORS } from '../../constants/Colors'
 import LoadingScreen from '../../components/LoadingScreen'
 import { GetAllFoodRecipes } from '../../service/RecipesService'
+import { QueryDocumentSnapshot } from 'firebase/firestore/lite'
 
 
 export default function IndexScreen() {
     const [food, setFood] = useState<FoodRecipes[]>([])
     const [refreshing, setRefreshing] = useState(false)
     const [loading, setLoading] = useState(true)
+    const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>()
 
     useEffect(() => {
         setLoading(true)
@@ -20,8 +22,9 @@ export default function IndexScreen() {
 
     const fetchData = async () => {
         try {
-            const foodRecipesData = await GetAllFoodRecipes()
+            const { foodRecipesData, newLastVisible } = await GetAllFoodRecipes(null)
             setFood(foodRecipesData)
+            setLastVisible(newLastVisible)
             setRefreshing(false)
             setLoading(false)
         } catch (error) {
@@ -32,6 +35,12 @@ export default function IndexScreen() {
     const handleRefresh = () => {
         setRefreshing(true)
         fetchData()
+    }
+
+    const handleEndReached = async () => {
+        const { foodRecipesData, newLastVisible } = await GetAllFoodRecipes(lastVisible)
+        setFood([...food, ...foodRecipesData])
+        setLastVisible(newLastVisible)
     }
 
     if (loading) return <LoadingScreen />
@@ -50,6 +59,8 @@ export default function IndexScreen() {
                         onRefresh={handleRefresh}
                     />
                 }
+                onEndReached={handleEndReached}
+                onEndReachedThreshold={0.5}
             />           
         </BackgroundSafeAreaView>
     )

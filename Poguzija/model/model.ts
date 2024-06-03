@@ -10,12 +10,6 @@ export interface MyUser {
     createdAt: Timestamp
 }
 
-export interface AdditionalUserData {
-    recipeSchedulerId: string,
-    fridgeId: string,
-    bookmarkId: string
-}
-
 export interface FoodRecipes {
     id: string
     title: string
@@ -29,25 +23,6 @@ export interface FoodRecipes {
     savedCount: number
     rating: Rating
     createdAt: Timestamp
-}
-
-export interface MyComponentProps {
-    children: React.ReactNode
-}
-
-export enum StorageFolder {
-    FoodRecipesPhotos = 'foodRecipesPhotos',
-}
-
-export enum DatabaseCollection {
-    users = 'users',
-    recipes = 'foodRecipes',
-    recipeSchedulers = 'recipeSchedulers',
-    ingredients = 'ingredients',
-    units = 'units',
-    fridges = 'fridges',
-    bookmarks = 'bookmarks',
-    comments = 'comments'
 }
 
 export interface Ingredient {
@@ -89,16 +64,6 @@ export interface Comment {
     createdAt: Timestamp
 }
 
-export enum Day {
-    MONDAY = 'Monday',
-    TUESDAY = 'Tuesday',
-    WEDNESDAY = 'Wednesday',
-    THURSDAY = 'Thursday',
-    FRIDAY = 'Friday',
-    SATURDAY = 'Saturday',
-    SUNDAY = 'Sunday'
-}
-
 export interface RecipeByDay {
     id: string
     title: string
@@ -114,4 +79,33 @@ export interface Category {
 export interface Rating {
     sum: number
     count: number
+}
+
+export enum Day {
+    MONDAY = 'Monday',
+    TUESDAY = 'Tuesday',
+    WEDNESDAY = 'Wednesday',
+    THURSDAY = 'Thursday',
+    FRIDAY = 'Friday',
+    SATURDAY = 'Saturday',
+    SUNDAY = 'Sunday'
+}
+
+export interface MyComponentProps {
+    children: React.ReactNode
+}
+
+export enum StorageFolder {
+    FoodRecipesImages = 'foodRecipesPhotos',
+}
+
+export enum DatabaseCollection {
+    users = 'users',
+    recipes = 'foodRecipes',
+    recipeSchedulers = 'recipeSchedulers',
+    ingredients = 'ingredients',
+    units = 'units',
+    fridges = 'fridges',
+    bookmarks = 'bookmarks',
+    comments = 'comments'
 }

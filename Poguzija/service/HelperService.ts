@@ -18,16 +18,12 @@ async function AddIngredientsData() {
         'Sunflower Seeds', 'Pumpkin Seeds', 'Chia Seeds', 'Flaxseeds', 'Quinoa', 'Bulgur', 'Couscous', 'Barley',
         'Oats', 'Brown Rice', 'White Rice'
     ]
-
     const newIngredientsArray = ingredients.map((ingredient, index) => ({
         id: index + 1,
         name: ingredient
     }))
-
-    const newIngredients= {ingredients: newIngredientsArray}
-
+    const newIngredients = { ingredients: newIngredientsArray }
     addDoc(collection(db, DatabaseCollection.ingredients), newIngredients)
-    console.log('Data added at AddIngredientsData()')
 }
 
 async function AddMeasurementUnitsData() {
@@ -37,27 +33,21 @@ async function AddMeasurementUnitsData() {
         'bottle', 'package', 'slice', 'piece', 'stick', 'bunch', 'stalk', 'head', 'bulb', 'clove',
         'leaf', 'sprig', 'chop'
     ]
-
     const newMeasurementUnitsArray = measurementUnits.map((unit, index) => ({
         id: index + 1,
         name: unit
     }))
-
-    const newMeasurementUnits= {units: newMeasurementUnitsArray}
-
+    const newMeasurementUnits = { units: newMeasurementUnitsArray }
     addDoc(collection(db, DatabaseCollection.units), newMeasurementUnits)
-    console.log('Data added at AddMeasurementUnitsData()')
 }
 
-function GetCategoryData(){
+function GetCategoryData() {
     const categories = {
         'National cuisine': ['Chinese', 'Greek', 'Serbian'],
         'Meal': ['Breakfast', 'Brunch', 'Lunch', 'Snack', 'Dinner', 'Dessert'],
         'Popular category': ['Fast', 'Healty', 'Salad', 'Pasta']
     }
-
     const categoriesArray: Category[] = []
-
     for (const [type, names] of Object.entries(categories)) {
         const data = names.map(name => ({
             name: name,
@@ -68,12 +58,11 @@ function GetCategoryData(){
             data: data
         })
     }
-    console.log('categoriesArray ', categoriesArray)
     return categoriesArray;
 }
 
 export {
     AddIngredientsData,
     AddMeasurementUnitsData,
-    GetCategoryData
+    GetCategoryData,
 }

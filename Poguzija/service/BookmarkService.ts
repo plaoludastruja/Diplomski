@@ -1,25 +1,31 @@
 import { QueryDocumentSnapshot, arrayRemove, arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore/lite"
-import { getCurrentUser } from "./AuthService"
+import { GetCurrentUser } from "./AuthService"
 import { Bookmark, DatabaseCollection } from "../model/model"
 import { db } from "./firebase"
 
 
+function AddBookmark(id: string) {
+    const bookmark: Bookmark = {
+        id: id,
+        savedFoodRecipesIds: []
+    }
+    setDoc(doc(db, DatabaseCollection.bookmarks, id).withConverter(bookmarkConverter), bookmark)
+}
+
 async function GetMySavedFoodRecipes() {
-    const user = await getCurrentUser()
-    if(!user) return []
+    const user = await GetCurrentUser()
+    if (!user) return []
     let bookmark: Bookmark = {
-        id: '',
-        savedFoodRecipesIds: [] 
+        id: user.id,
+        savedFoodRecipesIds: []
     }
     const data = await getDoc(doc(db, DatabaseCollection.bookmarks, user.id).withConverter(bookmarkConverter))
-    console.log('Data fetched at GetMySavedFoodRecipes()')
     if (data.exists()) {
         bookmark = data.data()
     }
     if (bookmark.savedFoodRecipesIds.length === 0) {
         return []
     }
-    // Fetch each document by ID (this could be optimized if Firestore supported IN queries)
     const recipePromises = bookmark.savedFoodRecipesIds.map(id => getDoc(doc(db, DatabaseCollection.recipes, id)))
     const recipeSnapshots = await Promise.all(recipePromises)
     return recipeSnapshots.map(docSnapshot => ({
@@ -28,49 +34,34 @@ async function GetMySavedFoodRecipes() {
     }))
 }
 
-function AddBookmark(id: string) {
-    const bookmark: Bookmark = {
-        id: id,
-        savedFoodRecipesIds: [] 
-    }
-    setDoc(doc(db, DatabaseCollection.bookmarks, id).withConverter(bookmarkConverter), bookmark)
-    console.log('Data added at AddBookmark()')
-}
-
-async function AddToMyBookmark(newSavedFoodRecipesId: string){
-    const user = await getCurrentUser()
-    if(!user) return
+async function AddToMyBookmark(newSavedFoodRecipesId: string) {
+    const user = await GetCurrentUser()
+    if (!user) return
     updateDoc(doc(db, DatabaseCollection.bookmarks, user.id), {
         savedFoodRecipesIds: arrayUnion(newSavedFoodRecipesId)
     })
-    console.log('Data updated at AddToMyBookmark()')
 }
 
-async function RemoveFromMyBookmark(newSavedFoodRecipesId: string){
-    const user = await getCurrentUser()
-    if(!user) return
+async function RemoveFromMyBookmark(newSavedFoodRecipesId: string) {
+    const user = await GetCurrentUser()
+    if (!user) return
     updateDoc(doc(db, DatabaseCollection.bookmarks, user.id), {
         savedFoodRecipesIds: arrayRemove(newSavedFoodRecipesId)
     })
-    console.log('Data updated at RemoveFromMyBookmark()')
 }
 
-async function IsRecipeBookmarked(newSavedFoodRecipesId: string){
-    const user = await getCurrentUser()
-    if(!user) return []
+async function IsRecipeBookmarked(foodRecipesId: string) {
+    const user = await GetCurrentUser()
+    if (!user) return false
     let bookmark: Bookmark = {
         id: '',
-        savedFoodRecipesIds: [] 
+        savedFoodRecipesIds: []
     }
     const data = await getDoc(doc(db, DatabaseCollection.bookmarks, user.id).withConverter(bookmarkConverter))
-    console.log('Data fetched at IsRecipeBookmarked()')
     if (data.exists()) {
         bookmark = data.data()
     }
-    if (bookmark.savedFoodRecipesIds.includes(newSavedFoodRecipesId)){
-        return true
-    }
-    return false
+    return bookmark.savedFoodRecipesIds.includes(foodRecipesId)
 }
 
 const bookmarkConverter = {
@@ -86,8 +77,8 @@ const bookmarkConverter = {
 }
 
 export {
-    GetMySavedFoodRecipes,
     AddBookmark,
+    GetMySavedFoodRecipes,
     AddToMyBookmark,
     RemoveFromMyBookmark,
     IsRecipeBookmarked,

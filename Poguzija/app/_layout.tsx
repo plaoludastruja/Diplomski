@@ -7,8 +7,8 @@ import { useColorScheme } from 'react-native'
 import { COLORS } from '../constants/Colors'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { MyUser } from '../model/model'
-import { signIn, signOut } from '../service/AuthService'
-import { getCurrentUser } from '../service/AuthService'
+import { SignIn, SignOut } from '../service/AuthService'
+import { GetCurrentUser } from '../service/AuthService'
 
 export { ErrorBoundary, } from 'expo-router'
 
@@ -69,18 +69,18 @@ function RootLayoutNav() {
         getCurrentUserFn()
     }, [])
     const getCurrentUserFn = async () => {
-        const user = await getCurrentUser()
+        const user = await GetCurrentUser()
         setUser(user)
     }
 
     const signInFn = async () => {
-        const user = await signIn()
+        const user = await SignIn()
         setUser(user)
     }
 
     const signOutFn = () => {
         setUser(undefined)
-        signOut()
+        SignOut()
     }
 
     
