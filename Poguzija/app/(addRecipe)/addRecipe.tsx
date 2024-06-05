@@ -11,7 +11,7 @@ import AddIngredientsModal from '../../components/AddIngredientsModal'
 import BottomSheet, { BottomSheetFlatList, BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import { AddFoodRecipe } from '../../service/RecipesService'
 import { UserContext } from '../_layout'
-import { AddCategoryModal } from '../../components/AddCategoryModal'
+import { SelectCategoryModal } from '../../components/SelectCategoryModal'
 import { UploadFoodRecipesImages } from '../../service/ImageService'
 
 export default function AddRecipeScreen() {
@@ -287,7 +287,8 @@ export default function AddRecipeScreen() {
                     onAdd={handleAddIngredient}
                     onClose={handleCloseIngredientModal} />
 
-                <AddCategoryModal
+                <SelectCategoryModal
+                    alreadySelected={null}
                     visible={categoryModalVisible}
                     onClose={(selectedCategories: string[]) => handleCloseCategoryModal(selectedCategories)} />
             </View>

@@ -76,6 +76,11 @@ export interface Category {
     data: { name: string, isSelected: boolean}[]
 }
 
+export interface SelectedIngredient {
+    name: string, 
+    isSelected: boolean
+}
+
 export interface Rating {
     sum: number
     count: number

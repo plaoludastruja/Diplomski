@@ -5,11 +5,12 @@ import { useEffect, useRef, useState } from 'react'
 import { FoodRecipes } from '../../model/model'
 import { GetSearchResults } from '../../service/SearchService'
 import { MaterialIcons } from '@expo/vector-icons'
-import { AddCategoryModal } from '../../components/AddCategoryModal'
 import { Pressable } from 'react-native'
 import { COLORS, SIZES } from '../../constants/Colors'
-import SelectIngredientList from '../../components/SelectIngredientList'
 import LoadingScreen from '../../components/LoadingScreen'
+import GestureRecognizer from 'react-native-swipe-gestures'
+import { SelectIngredientModal } from '../../components/SelectIngredientModal'
+import { SelectCategoryModal } from '../../components/SelectCategoryModal'
 
 
 export default function SearchScreen() {
@@ -18,97 +19,79 @@ export default function SearchScreen() {
     const [categoryModalVisible, setCategoryModalVisible] = useState(false)
     const [ingredientModalVisible, setIngredientModalVisible] = useState(false)
 
-    const [categoryNumber, setCategoryNumber] = useState<number>(0)
     const [loading, setLoading] = useState(false)
     const [search, setSearch] = useState('')
     const [ingredientData, setIngredientData] = useState<string[]>([])
     const [categoryData, setCategoryData] = useState<string[]>([])
 
     const handleCloseCategoryModal = (selectedCategories: string[]) => {
-        setCategoryNumber(selectedCategories.length)
         setCategoryModalVisible(false)
         setCategoryData(selectedCategories)
-        //setSearchFields(selectedCategories)
     }
 
-    const handleCloseIngredientModal = (selectedIngredients: string) => {
-        setIngredientData([...ingredientData, selectedIngredients])
-        setCategoryModalVisible(false)
-        //setSearchFields(selectedCategories)
+    const handleCloseIngredientModal = (selectedIngredients: string[]) => {
+        setIngredientData(selectedIngredients)
+        setIngredientModalVisible(false)
     }
 
     const handleSearch = async () => {
         setLoading(true)
-        const searchData = search.toLowerCase()
-        console.log(searchData)
-        const searchParams = [...categoryData, ...ingredientData, searchData]
-        console.log(searchParams)
+        const searchData = search.toLowerCase().split(/[\s-\.,!?]/).filter(t => t.length >= 4)
+        const searchParams = [...categoryData, ...ingredientData, ...searchData]
+        
+        if(searchParams.length === 0){
+            setLoading(false)
+            return
+        }
+        
         const foodRecipesData = await GetSearchResults(searchParams)
         setLoading(false)
-        console.log('UI ', foodRecipesData)
         setFood(foodRecipesData)
         setScrollDirection('down')
     }
 
-    const [scrollDirection, setScrollDirection] = useState('');
-    const prevScrollPos = useRef(0);
-    const buttonAnimation = useRef(new Animated.Value(1)).current; // Initialize animated value
-    const positionAnimation = useRef(new Animated.Value(0)).current; // Initialize position animated value
-    const positionAnimationFlatList = useRef(new Animated.Value(0)).current; // Initialize position animated value
+    const onDeleteSelected = (type: string, selectedItem: string) => {
+        if(type === 'ingredient') {
+            const updatedItems = ingredientData.filter((item) => item !== selectedItem)
+            setIngredientData([...updatedItems])
+        }
+        if(type === 'category') {
+            const updatedItems = categoryData.filter((item) => item !== selectedItem)
+            setCategoryData([...updatedItems])
+        }
+    }
+
+    const [scrollDirection, setScrollDirection] = useState('')
+    const positionAnimation = useRef(new Animated.Value(0)).current
 
     const handleScroll = (event) => {
-        const currentScrollPos = event.nativeEvent.contentOffset.y;
+        const currentScrollPos = event.nativeEvent.contentOffset.y
         if (currentScrollPos > 0) {
-            // Scroll down and not at the very top
-            setScrollDirection('down');
-        } else if (currentScrollPos <= 0) {
-            // Scroll up
-            setScrollDirection('up');
+            setScrollDirection('down')
+        } else if (currentScrollPos <= 0 ) {
+            setScrollDirection('up')
         }
-        prevScrollPos.current = currentScrollPos;
-    };
+    }
 
     useEffect(() => {
         if (scrollDirection === 'down') {
-            // Hide button
             Animated.parallel([
-                Animated.timing(buttonAnimation, {
-                    toValue: 0,
-                    duration: 300,
-                    useNativeDriver: true,
-                }),
                 Animated.timing(positionAnimation, {
-                    toValue: -400, // Adjust this value based on your layout
+                    toValue: -400,
                     duration: 300,
                     useNativeDriver: true,
                 }),
-                Animated.timing(positionAnimationFlatList, {
-                    toValue: SIZES.extraLarge, // Adjust this value based on your layout
-                    duration: 300,
-                    useNativeDriver: true,
-                })
-            ]).start();
+            ]).start()
         } else if (scrollDirection === 'up') {
-            // Show button
             Animated.parallel([
-                Animated.timing(buttonAnimation, {
-                    toValue: 1,
-                    duration: 300,
-                    useNativeDriver: true,
-                }),
                 Animated.timing(positionAnimation, {
                     toValue: 0,
                     duration: 300,
                     useNativeDriver: true,
                 }),
-                Animated.timing(positionAnimationFlatList, {
-                    toValue: 300, // Adjust this value based on your layout
-                    duration: 300,
-                    useNativeDriver: true,
-                })
-            ]).start();
+            ]).start()
         }
-    }, [scrollDirection]);
+    }, [scrollDirection])
 
     return (
         <BackgroundSafeAreaView>
@@ -140,8 +123,7 @@ export default function SearchScreen() {
                     style={styles.flex}
                     contentContainerStyle={[{alignContent: 'flex-start'}]}
                     renderItem={({ item }) => 
-                        <Pressable style={ styles.buttonModalSelected }
-                                >
+                        <Pressable style={ styles.buttonModalSelected } onPress={() => onDeleteSelected('category', item)}>
                             <Text style={styles.textStyle}>{item}</Text>
                             <MaterialIcons name="close" style={styles.iconButton} />
                         </Pressable>}
@@ -154,8 +136,7 @@ export default function SearchScreen() {
                     style={styles.flex}
                     contentContainerStyle={[{alignContent: 'flex-start'}]}
                     renderItem={({ item }) => 
-                        <Pressable style={ styles.buttonModalSelected }
-                                >
+                        <Pressable style={ styles.buttonModalSelected } onPress={() => onDeleteSelected('ingredient', item)} >
                             <Text style={styles.textStyle}>{item}</Text>
                             <MaterialIcons name="close" style={styles.iconButton} />
                         </Pressable>}
@@ -164,27 +145,30 @@ export default function SearchScreen() {
                     horizontal
                 />
             </Animated.View>
-            {loading ? <ActivityIndicator size="large" color={COLORS.tint} /> :
-                <Animated.View style={[styles.flex,{transform: [{ translateY: positionAnimationFlatList }] }]}>
-                <FlatList
-                    data={food}
-                    renderItem={({ item }) => <CardFoodRecipes data={item} route={''} />}
-                    keyExtractor={(item) => item.id}
-                    showsVerticalScrollIndicator={false}
-                    style={styles.flex}
-                    onScroll={handleScroll}
-                    scrollEventThrottle={16}
-                /></Animated.View>}
+            {loading ? <LoadingScreen /> :
+            <GestureRecognizer style={styles.flex} onSwipeDown={(state) => { if(food.length!==0){setScrollDirection('up')}} } onSwipeUp={(state) => { if(food.length!==0){setScrollDirection('down')}}} >
+                <View style={[styles.flex]}>
+                    <FlatList
+                        data={food}
+                        renderItem={({ item }) => <CardFoodRecipes data={item} route={''} />}
+                        keyExtractor={(item) => item.id}
+                        showsVerticalScrollIndicator={false}
+                        style={styles.flex}
+                        onScroll={handleScroll}
+                        scrollEventThrottle={16}
+                    />
+                </View>
+            </GestureRecognizer>}
 
-            <AddCategoryModal
+            <SelectCategoryModal
+                alreadySelected={categoryData}
                 visible={categoryModalVisible}
                 onClose={(selectedCategories: string[]) => handleCloseCategoryModal(selectedCategories)} />
 
-            <SelectIngredientList
-                modalDataType={'ingredient'}
+            <SelectIngredientModal
+                alreadySelected={ingredientData}
                 visible={ingredientModalVisible}
-                onAdd={(item) => { handleCloseIngredientModal(item.name) }}
-                onClose={() => setIngredientModalVisible(false)} />
+                onClose={(selectedIngredients: string[]) => handleCloseIngredientModal(selectedIngredients)} />
 
         </View>
         </BackgroundSafeAreaView>

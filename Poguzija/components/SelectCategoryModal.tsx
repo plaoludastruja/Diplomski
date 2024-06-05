@@ -4,7 +4,7 @@ import { Category } from '../model/model'
 import { COLORS, SIZES } from '../constants/Colors'
 import { GetCategoryData } from '../service/HelperService'
 
-export const AddCategoryModal = ({ visible, onClose }) => {
+export const SelectCategoryModal = ({ alreadySelected, visible, onClose }) => {
     const [category, setCategory] = useState<Category[]>()
     const handlePress = (type: string, name: string) => {
         setCategory(prevCategories => prevCategories?.map(cat => cat.type === type ? { ...cat, data: cat.data.map(item => item.name === name ? { ...item, isSelected: !item.isSelected } : item )}: cat ))
@@ -17,9 +17,18 @@ export const AddCategoryModal = ({ visible, onClose }) => {
     }
 
     useEffect(() => {
-        const categoryData = GetCategoryData()
-        setCategory(categoryData)
-    },[])
+        console.log('category', alreadySelected, category)
+        if(alreadySelected && category){
+            const alreadySelectedData = category.map(cat => ({...cat,
+                data: cat.data.map(item => ({...item,
+                    isSelected: alreadySelected.includes(item.name),
+                }))}))
+            setCategory(alreadySelectedData)
+        }else{
+            const categoryData = GetCategoryData()
+            setCategory(categoryData)
+        }
+    },[alreadySelected])
 
     return (
         <Modal
