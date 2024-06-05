@@ -72,7 +72,9 @@ const foodRecipesConverter = {
     toFirestore: (foodRecipe: FoodRecipes) => {
         const ingredientNames = foodRecipe.ingredients.map(ingredient => ingredient.name.toLowerCase())
         const searchFieldsData = foodRecipe.searchFields.map(searchField => searchField.toLowerCase())
-        const searchFields = [...searchFieldsData, ...ingredientNames]
+        const titleFields = foodRecipe.title.toLowerCase().split(/[\s-\.,!?]/).filter(t => t.length >= 4)
+        const titleFieldsData = Array.from(new Set(titleFields))
+        const searchFields = [...searchFieldsData, ...ingredientNames, ...titleFieldsData]
         return {
             title: foodRecipe.title,
             author: foodRecipe.author,
