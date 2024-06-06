@@ -1,6 +1,6 @@
 import { QueryDocumentSnapshot, arrayRemove, arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore/lite"
 import { GetCurrentUser } from "./AuthService"
-import { Bookmark, DatabaseCollection } from "../model/model"
+import { Bookmark, DatabaseCollection, FoodRecipes } from "../model/model"
 import { db } from "./firebase"
 
 
@@ -12,7 +12,7 @@ function AddBookmark(id: string) {
     setDoc(doc(db, DatabaseCollection.bookmarks, id).withConverter(bookmarkConverter), bookmark)
 }
 
-async function GetMySavedFoodRecipes() {
+async function GetMySavedFoodRecipes(): Promise<FoodRecipes[]> {
     const user = await GetCurrentUser()
     if (!user) return []
     let bookmark: Bookmark = {
@@ -28,10 +28,10 @@ async function GetMySavedFoodRecipes() {
     }
     const recipePromises = bookmark.savedFoodRecipesIds.map(id => getDoc(doc(db, DatabaseCollection.recipes, id)))
     const recipeSnapshots = await Promise.all(recipePromises)
-    return recipeSnapshots.map(docSnapshot => ({
-        id: docSnapshot.id,
-        ...docSnapshot.data()
-    }))
+    return recipeSnapshots.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    } as FoodRecipes))
 }
 
 async function AddToMyBookmark(newSavedFoodRecipesId: string) {
@@ -50,7 +50,7 @@ async function RemoveFromMyBookmark(newSavedFoodRecipesId: string) {
     })
 }
 
-async function IsRecipeBookmarked(foodRecipesId: string) {
+async function IsRecipeBookmarked(foodRecipesId: string): Promise<boolean> {
     const user = await GetCurrentUser()
     if (!user) return false
     let bookmark: Bookmark = {

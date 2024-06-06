@@ -67,12 +67,13 @@ const styles = StyleSheet.create({
         width: '95%',
     },
     subtitleText: {
-        width: '85%',
+        width: '95%',
         color: COLORS.tint,
         fontSize: SIZES.extraLarge,
         fontWeight: 'bold',
-        marginBottom: 0.5 * SIZES.base,
-        alignSelf: 'flex-start'
+        alignSelf: 'flex-start',
+        paddingHorizontal: SIZES.base,
+        elevation: 2,
     },
     buttonText: {
         color: COLORS.white,
