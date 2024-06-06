@@ -35,7 +35,6 @@ function SetCurrentUser(userAdded: MyUser) {
 
 async function GetCurrentUser(): Promise<MyUser> {
     let userValue = await SecureStore.getItemAsync('signedUser')
-    console.log('Current user: ' + userValue)
     return userValue != null ? JSON.parse(userValue) : null
 }
 

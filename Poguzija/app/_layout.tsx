@@ -9,6 +9,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { MyUser } from '../model/model'
 import { SignIn, SignOut } from '../service/AuthService'
 import { GetCurrentUser } from '../service/AuthService'
+import { AlertNotificationRoot } from 'react-native-alert-notification'
 
 export { ErrorBoundary, } from 'expo-router'
 
@@ -89,6 +90,7 @@ function RootLayoutNav() {
             <ThemeProvider value={theme}>
                 <UserContext.Provider value={{ user, signInFn, signOutFn }}>
                 <SchedulerContext.Provider value={{ refreshScheduler, setRefreshScheduler }}>
+                <AlertNotificationRoot colors={[{ card: COLORS.darkLight }]}>
                     <Stack >
                         <Stack.Screen name="(tabs)" options={{
                             headerShown: false,
@@ -101,6 +103,7 @@ function RootLayoutNav() {
                         <Stack.Screen name="(bookmark)/bookmark" options={{ headerShown: false, }}/>
                         <Stack.Screen name="(comments)/comments/[commentRecipeId]" options={{ headerShown: false, }}/>
                     </Stack>
+                </AlertNotificationRoot>
                 </SchedulerContext.Provider>
                 </UserContext.Provider>
             </ThemeProvider>

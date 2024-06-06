@@ -1,27 +1,32 @@
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import BackgroundSafeAreaView from '../../../components/BackgroundSafeAreaView'
 import { useContext, useEffect, useState } from 'react'
-import { View,  Pressable, Text, StyleSheet, Image, Dimensions } from 'react-native'
+import { View, Pressable, Text, StyleSheet, Image, Dimensions } from 'react-native'
 import { FoodRecipes } from '../../../model/model'
 import Carousel from 'react-native-snap-carousel'
 import { COLORS, SIZES } from '../../../constants/Colors'
-import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
+import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons'
 import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import LoadingScreen from '../../../components/LoadingScreen'
 import { GetFoodRecipe, UpdateSavedCount } from '../../../service/RecipesService'
-import { UserContext } from '../../_layout'
+import { SchedulerContext, UserContext } from '../../_layout'
 import { LinearGradient } from 'expo-linear-gradient'
 import { AddToMyBookmark, IsRecipeBookmarked, RemoveFromMyBookmark } from '../../../service/BookmarkService'
+import { SelectWeekModal } from '../../../components/SelectWeekModal'
+import { AddToMyScheduler } from '../../../service/SchedulerService'
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 
 
 export default function FoodRecipesItem() {
     const { foodRecipesItemId } = useLocalSearchParams<{ foodRecipesItemId: string }>()
     const { user } = useContext(UserContext)
+    const { setRefreshScheduler } = useContext(SchedulerContext)
     const [food, setFood] = useState<FoodRecipes>()
     const [loading, setLoading] = useState(true)
-    const [bookmarkIconType, setBookmarkIconType] = useState('bookmark-o')
+    const [bookmarkIconType, setBookmarkIconType] = useState<string>('bookmark-o')
     const [isRecipeBookmarked, setIsRecipeBookmarked] = useState(false)
     const [savedCount, setSavedCount] = useState(0)
+    const [selectWeekModalVisible, setSelectWeekModalVisible] = useState(false)
 
     const router = useRouter()
 
@@ -34,10 +39,10 @@ export default function FoodRecipesItem() {
             const foodRecipesData = await GetFoodRecipe(foodRecipesItemId)
             const isRecipeBookmarkedData = await IsRecipeBookmarked(foodRecipesItemId)
             setFood(foodRecipesData)
-            if(isRecipeBookmarkedData){
+            if (isRecipeBookmarkedData) {
                 setBookmarkIconType('bookmark')
                 setIsRecipeBookmarked(true)
-            }else{
+            } else {
                 setBookmarkIconType('bookmark-o')
                 setIsRecipeBookmarked(false)
             }
@@ -47,18 +52,18 @@ export default function FoodRecipesItem() {
             console.error('Error fetching data:', error)
         }
     }
-    
+
     const screenWidth = Dimensions.get('window').width
     const screenHeight = Dimensions.get('window').height
 
     const handleAddToBookmarks = () => {
-        if(isRecipeBookmarked){
+        if (isRecipeBookmarked) {
             RemoveFromMyBookmark(foodRecipesItemId)
             UpdateSavedCount(foodRecipesItemId, false)
             setSavedCount(savedCount === 0 ? 0 : savedCount - 1)
             setBookmarkIconType('bookmark-o')
             setIsRecipeBookmarked(false)
-        }else{
+        } else {
             AddToMyBookmark(foodRecipesItemId)
             UpdateSavedCount(foodRecipesItemId, true)
             setSavedCount(savedCount + 1)
@@ -67,21 +72,45 @@ export default function FoodRecipesItem() {
         }
     }
 
+    const handleAddToScheduler = () => {
+        //open week dialog
+        setSelectWeekModalVisible(true)
+    }
+
+    const onDaySelected = async (day: string | null) => {
+        setSelectWeekModalVisible(false)
+        if (day) {
+            const recipe = await AddToMyScheduler(food, day)
+            if(recipe){
+                setRefreshScheduler(true)
+                Toast.show({
+                    type: ALERT_TYPE.SUCCESS,
+                    textBody: 'Recipe added to your scheduler'
+                })
+            }else{
+                Toast.show({
+                    type: ALERT_TYPE.WARNING,
+                    textBody: 'Recipe already added for '+ day
+                })
+            }
+            
+        }
+    }
     const handleOpenComments = () => {
         router.push(`/comments/${foodRecipesItemId}`)
     }
-    
+
     const renderItem = ({ item }: { item: string }) => {
         return (
             <View style={[styles.images, { width: screenWidth, height: 2 * screenHeight / 3 }]} >
                 <Image source={{ uri: item }} style={[styles.image, { width: screenWidth, height: 2 * screenHeight / 3 }]} />
-                <LinearGradient 
-                    colors={['rgba(0, 0, 0, 0.8)', 'rgba(255, 255, 255, 0)' ]} 
+                <LinearGradient
+                    colors={['rgba(0, 0, 0, 0.8)', 'rgba(255, 255, 255, 0)']}
                     start={{ x: 0.5, y: - 0.2 }}
                     end={{ x: 0.5, y: 0.15 }}
                     style={[styles.gradientTop, { ...StyleSheet.absoluteFillObject }]} />
-                <LinearGradient 
-                    colors={['rgba(255, 255, 255, 0)', 'rgba(0, 0, 0, 0.8)' ]} 
+                <LinearGradient
+                    colors={['rgba(255, 255, 255, 0)', 'rgba(0, 0, 0, 0.8)']}
                     start={{ x: 0.5, y: 0.8 }}
                     end={{ x: 0.5, y: 1.1 }}
                     style={[styles.gradientBottom, { ...StyleSheet.absoluteFillObject }]} />
@@ -90,11 +119,11 @@ export default function FoodRecipesItem() {
     }
 
     if (loading) return <LoadingScreen />
-    
+
     return (
         <BackgroundSafeAreaView>
             <View style={styles.scrollViewContent}>
-                <View style={[styles.flex, { flexDirection: 'row'}]}>
+                <View style={[styles.flex, { flexDirection: 'row' }]}>
                     <Carousel
                         data={food?.images}
                         renderItem={renderItem}
@@ -102,12 +131,13 @@ export default function FoodRecipesItem() {
                         itemWidth={screenWidth}
                         layout="default"
                     />
-                    
-                {user && 
-                <View style={styles.bookmarkContainer}>
-                    <Text style={styles.savedCount}>{savedCount}</Text>
-                    <FontAwesome name={bookmarkIconType} color={COLORS.light} size={1.2 * SIZES.tabIcon} onPress={handleAddToBookmarks}/>
-                </View>}
+
+                    {user &&
+                        <View style={styles.bookmarkContainer}>
+                            <Text style={styles.savedCount}>{savedCount}</Text>
+                            <FontAwesome name={bookmarkIconType} color={COLORS.light} size={1.2 * SIZES.tabIcon} onPress={handleAddToBookmarks} />
+                            <Ionicons name='calendar-outline' color={COLORS.light} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base }} onPress={handleAddToScheduler} />
+                        </View>}
                 </View>
 
                 <BottomSheet
@@ -173,6 +203,7 @@ export default function FoodRecipesItem() {
                 </BottomSheet>
 
             </View>
+            <SelectWeekModal visible={selectWeekModalVisible} onClose={(day: string | null) => onDaySelected(day)} />
         </BackgroundSafeAreaView>
     )
 }
@@ -284,7 +315,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: SIZES.extraLarge,
         right: SIZES.extraLarge,
-        paddingTop: SIZES.base
+        paddingTop: SIZES.base,
     },
     savedCount: {
         color: COLORS.light,

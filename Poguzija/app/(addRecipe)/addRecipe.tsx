@@ -13,6 +13,7 @@ import { AddFoodRecipe } from '../../service/RecipesService'
 import { UserContext } from '../_layout'
 import { SelectCategoryModal } from '../../components/SelectCategoryModal'
 import { UploadFoodRecipesImages } from '../../service/ImageService'
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 
 export default function AddRecipeScreen() {
     const { user } = useContext(UserContext)
@@ -88,9 +89,15 @@ export default function AddRecipeScreen() {
             setSnapPoints(['66', '95'])
 
             AddFoodRecipe(newRecipe)
-            alert('Recipe created successfully')
+            Toast.show({
+                title: 'Success',
+                textBody: 'Recipe created'
+            })
         } catch (error) {
-            alert(`Error creating recipe:' ${error}`)
+            Toast.show({
+                title: 'Error',
+                textBody: 'Recipe is not created'
+            })
         }
     }
 

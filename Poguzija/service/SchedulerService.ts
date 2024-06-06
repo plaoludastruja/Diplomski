@@ -42,10 +42,13 @@ async function AddToMyScheduler(recipe: FoodRecipes, day: string) {
         scheduler = data.data()
     }
     const dayIndex = scheduler.recipeByDay.findIndex(item => item.day === day)
+    const recipeExists = scheduler.recipeByDay[dayIndex].recipes.some(item => item.id === recipe.id)
+    if(recipeExists) return false
     scheduler.recipeByDay[dayIndex].recipes.push({ id: recipe.id, images: recipe.images, author: recipe.author, title: recipe.title })
     updateDoc(doc(db, DatabaseCollection.recipeSchedulers, user.id), {
         recipeByDay: scheduler.recipeByDay
     })
+    return true
 }
 
 async function RemoveFromScheduler(recipeToRemove: FoodRecipes, day: string) {
