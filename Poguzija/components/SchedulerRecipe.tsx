@@ -22,7 +22,7 @@ export default function SchedulerRecipe( { recipesWeek, day }: { recipesWeek: Re
         <View style={styles.container}>
             <View style={styles.addContainer}>
                 <Text style={styles.subtitleText}>{day}</Text>
-                { user && <Pressable style={styles.addButton} >
+                { false && user && <Pressable style={styles.addButton} >
                     <MaterialIcons name="add" style={styles.icon} onPress={ onAddToScheduler } />
                 </Pressable>}
             </View>
@@ -30,7 +30,7 @@ export default function SchedulerRecipe( { recipesWeek, day }: { recipesWeek: Re
             <ScrollView horizontal={true} style={styles.flex}>
                 { recipesWeek.map((recipe, index) => 
                     <View key={index} style={{ width: 0.8 * screenWidth }}>
-                        <CardFoodRecipes data={recipe} route={'schedulerRemove/' + day }/>
+                        <CardFoodRecipes data={recipe} route={'scheduler/' + day }/>
                     </View>
                 )}
             </ScrollView>

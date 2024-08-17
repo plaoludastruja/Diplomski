@@ -14,6 +14,7 @@ export default function IndexScreen() {
     const [refreshing, setRefreshing] = useState(false)
     const [loading, setLoading] = useState(true)
     const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>()
+    const [hasMore, setHasMore] = useState(true)
 
     useEffect(() => {
         setLoading(true)
@@ -25,6 +26,7 @@ export default function IndexScreen() {
             const { foodRecipesData, newLastVisible } = await GetAllFoodRecipes(null)
             setFood(foodRecipesData)
             setLastVisible(newLastVisible)
+            setHasMore(foodRecipesData.length > 0)
             setRefreshing(false)
             setLoading(false)
         } catch (error) {
@@ -38,9 +40,15 @@ export default function IndexScreen() {
     }
 
     const handleEndReached = async () => {
-        const { foodRecipesData, newLastVisible } = await GetAllFoodRecipes(lastVisible)
-        setFood([...food, ...foodRecipesData])
-        setLastVisible(newLastVisible)
+        if(hasMore){
+            const { foodRecipesData, newLastVisible } = await GetAllFoodRecipes(lastVisible)
+            if (foodRecipesData.length > 0) {
+                setFood([...food, ...foodRecipesData])
+                setLastVisible(newLastVisible)
+            }else{
+                setHasMore(false)
+            }
+        }
     }
 
     if (loading) return <LoadingScreen />

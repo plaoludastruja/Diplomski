@@ -69,6 +69,10 @@ async function RemoveFromScheduler(recipeToRemove: FoodRecipes, day: string) {
     })
 }
 
+async function SwapFromScheduler(recipeToRemove: FoodRecipes, day: string) {
+
+}
+
 async function GetMyRecipesScheduler(id: string) {
     let recipeScheduler: RecipeScheduler = {
         id: id,
@@ -125,4 +129,5 @@ export {
     GetRecipesScheduler,
     AddToMyScheduler,
     RemoveFromScheduler,
+    SwapFromScheduler
 }

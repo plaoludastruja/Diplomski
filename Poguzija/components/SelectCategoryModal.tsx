@@ -17,7 +17,6 @@ export const SelectCategoryModal = ({ alreadySelected, visible, onClose }) => {
     }
 
     useEffect(() => {
-        console.log('category', alreadySelected, category)
         if(alreadySelected && category){
             const alreadySelectedData = category.map(cat => ({...cat,
                 data: cat.data.map(item => ({...item,

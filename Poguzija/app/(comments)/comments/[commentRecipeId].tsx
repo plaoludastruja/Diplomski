@@ -52,7 +52,6 @@ export default function CommentsScreen() {
             
             comment.authorName = user?.fullName
             comment.authorProfilePhoto = user?.profilePhoto
-            console.log(commentRecipeId, comment)
             AddComment(commentRecipeId, comment)
         }
         

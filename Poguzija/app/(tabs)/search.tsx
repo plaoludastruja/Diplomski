@@ -11,6 +11,7 @@ import LoadingScreen from '../../components/LoadingScreen'
 import GestureRecognizer from 'react-native-swipe-gestures'
 import { SelectIngredientModal } from '../../components/SelectIngredientModal'
 import { SelectCategoryModal } from '../../components/SelectCategoryModal'
+import { QueryDocumentSnapshot } from 'firebase/firestore/lite'
 
 
 export default function SearchScreen() {
@@ -23,6 +24,8 @@ export default function SearchScreen() {
     const [search, setSearch] = useState('')
     const [ingredientData, setIngredientData] = useState<string[]>([])
     const [categoryData, setCategoryData] = useState<string[]>([])
+    const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>()
+    const [hasMore, setHasMore] = useState(true)
 
     const handleCloseCategoryModal = (selectedCategories: string[]) => {
         setCategoryModalVisible(false)
@@ -44,10 +47,35 @@ export default function SearchScreen() {
             return
         }
         
-        const foodRecipesData = await GetSearchResults(searchParams)
+        const { foodRecipesData, newLastVisible } = await GetSearchResults(searchParams, null)
         setLoading(false)
         setFood(foodRecipesData)
-        setScrollDirection('down')
+        setLastVisible(newLastVisible)
+        setHasMore(foodRecipesData.length > 0)
+
+        if(foodRecipesData.length === 0){
+            setScrollDirection('up')
+        }else{
+            setScrollDirection('down')
+        }
+    }
+
+    const handleEndReached = async () => {
+        if(hasMore){
+            const searchData = search.toLowerCase().split(/[\s-\.,!?]/).filter(t => t.length >= 4)
+            const searchParams = [...categoryData, ...ingredientData, ...searchData]
+            
+            if(searchParams.length === 0){
+                return
+            }
+            const { foodRecipesData, newLastVisible } = await GetSearchResults(searchParams, lastVisible)
+            if (foodRecipesData.length > 0) {
+                setFood([...food, ...foodRecipesData])
+                setLastVisible(newLastVisible)
+            }else{
+                setHasMore(false)
+            }
+        }
     }
 
     const onDeleteSelected = (type: string, selectedItem: string) => {
@@ -146,7 +174,7 @@ export default function SearchScreen() {
                 />
             </Animated.View>
             {loading ? <LoadingScreen /> :
-            <GestureRecognizer style={styles.flex} onSwipeDown={(state) => { if(food.length!==0){setScrollDirection('up')}} } onSwipeUp={(state) => { if(food.length!==0){setScrollDirection('down')}}} >
+            <GestureRecognizer style={styles.flex} onSwipeDown={(state) => { if(food.length!==0){ setScrollDirection('up')}} } onSwipeUp={(state) => { if(food.length!==0){ setScrollDirection('down')}}} >
                 <View style={[styles.flex]}>
                     <FlatList
                         data={food}
@@ -156,6 +184,8 @@ export default function SearchScreen() {
                         style={styles.flex}
                         onScroll={handleScroll}
                         scrollEventThrottle={16}
+                        onEndReached={handleEndReached}
+                        onEndReachedThreshold={0.5}
                     />
                 </View>
             </GestureRecognizer>}

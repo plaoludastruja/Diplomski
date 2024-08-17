@@ -30,13 +30,11 @@ async function AddUser(user: User, authUser: AuthUser): Promise<MyUser> {
         createdAt: serverTimestamp()
     }
     setDoc(doc(db, DatabaseCollection.users, myUser.id), myUser)
-    console.log('Data added at AddUser()')
     return myUser
 }
 
 async function GetUser(id: string): Promise<MyUser> {
     const data = await getDoc(doc(db, DatabaseCollection.users, id).withConverter(userConverter))
-    console.log('Data fetched at GetUser()')
     if (data.exists()) {
         const user = data.data()
         return user

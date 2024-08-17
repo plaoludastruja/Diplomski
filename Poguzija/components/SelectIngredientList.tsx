@@ -9,6 +9,7 @@ const SelectIngredientList = ({ modalDataType, visible, onAdd, onClose }) => {
     const [search, setSearch] = useState('')
     const [data, setData] = useState([])
     const [dataFilter, setDataFilter] = useState([])
+    const [addButtonVisible, setAddButtonVisible] = useState(false)
 
     useEffect(() => {
         if(visible)
@@ -43,6 +44,7 @@ const SelectIngredientList = ({ modalDataType, visible, onAdd, onClose }) => {
         setSearch('')
         setData([])
         setDataFilter([])
+        setAddButtonVisible(false)
         onClose()
     }
 
@@ -51,6 +53,7 @@ const SelectIngredientList = ({ modalDataType, visible, onAdd, onClose }) => {
             item.name.toLowerCase().includes(search.toLowerCase())
         )
         setDataFilter(filteredData)
+        setAddButtonVisible(filteredData.length === 0 && search !== '')
     }
 
     return (
@@ -74,6 +77,9 @@ const SelectIngredientList = ({ modalDataType, visible, onAdd, onClose }) => {
                             }}
                         />
                     </View>
+                    { addButtonVisible && <Pressable style={ styles.buttonModal } onPress={() => handlePress({ name: search})} >
+                        <Text style={ styles.textStyle }>Add</Text>
+                    </Pressable>}
                     <FlatList
                         data={dataFilter}
                         showsVerticalScrollIndicator={false}
@@ -130,9 +136,10 @@ const styles = StyleSheet.create({
     },
     textStyle: {
         width: '100%',
-        color: 'white',
+        color: COLORS.white,
         fontWeight: 'bold',
         textAlign: 'center',
+        fontSize: SIZES.large,
     },
     inputContainer: {
         flexDirection: 'row',

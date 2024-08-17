@@ -33,7 +33,6 @@ export const SelectIngredientModal = ({ alreadySelected, visible, onClose }) => 
     }
 
     useEffect(() => {
-        console.log('inger', alreadySelected, selectedIngredient)
         if(alreadySelected && selectedIngredient){
             const alreadySelectedData = selectedIngredient.map(cat => ({...cat,
                     isSelected: alreadySelected.includes(cat.name),
@@ -47,7 +46,6 @@ export const SelectIngredientModal = ({ alreadySelected, visible, onClose }) => 
 
     const fetchData = async () => {
         const ingredients = await GetIngredients()
-        console.log(ingredients)
         const ingredientsData = ingredients?.map(i => ({...i, isSelected: false}))
         setSelectedIngredient(ingredientsData)
         setDataFilter(ingredientsData)

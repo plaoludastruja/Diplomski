@@ -4,11 +4,11 @@ export default {
     slug: "Poguzija",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/images/icon.png",
+    icon: "./assets/images/iconTest1.png",
     scheme: "myapp",
     userInterfaceStyle: "light",
     splash: {
-      image: "./assets/images/splash.png",
+      image: "./assets/images/splashTest1.png",
       resizeMode: "contain",
       backgroundColor: "#ffffff"
     },

@@ -1,13 +1,13 @@
-import { View, Image, StyleSheet, Pressable, Text, Alert } from 'react-native'
+import { View, Image, StyleSheet, Pressable, Text, Alert, GestureResponderEvent } from 'react-native'
 import React, { FC, useContext, useEffect, useState } from 'react'
-import styled from 'styled-components/native'
-import Colors, { COLORS, SIZES } from '../constants/Colors'
+import { COLORS, SIZES } from '../constants/Colors'
 import { FoodRecipes } from '../model/model'
 import { useRouter } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient'
-import { AddToMyScheduler, RemoveFromScheduler } from '../service/SchedulerService'
+import { AddToMyScheduler, RemoveFromScheduler, SwapFromScheduler } from '../service/SchedulerService'
 import { SchedulerContext, UserContext } from '../app/_layout'
 import { StarRatingShow } from './StartRating'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 const PlaceholderImage = require('../assets/images/icon.png')
 
@@ -18,40 +18,43 @@ const CardFoodRecipes: FC<{ data: FoodRecipes, route: string }> = ({ data, route
     
     
     const handlePress = async (data: FoodRecipes) => {
-        if(!route){
-            router.push(`/foodRecipesItem/${data.id}`)
-        }else if (route.split('/')[0] === 'schedulerAdd'){
+        router.push(`/foodRecipesItem/${data.id}`)
+        if (route.split('/')[0] === 'schedulerAdd' && false){
             await AddToMyScheduler(data, route.split('/')[1])
             setRefreshScheduler(true)
             router.back()
-        }else{
-            router.push(`/foodRecipesItem/${data.id}`)
         }
     }
 
     const handleLongPress = async (data: FoodRecipes) => {
         if(!route){
             return
-        }else if (route.split('/')[0] === 'schedulerRemove'){
-            user && Alert.alert('Remove Item', 'Are you sure you want to remove this item from scheduler?',
-            [
-                { text: 'Cancel', style: 'cancel' },
-                {
-                    text: 'Remove', onPress: async () => {
-                    await RemoveFromScheduler(data, route.split('/')[1])
-                    setRefreshScheduler(true)
-                    },
-                },
-            ],
-            { cancelable: false }
-        )
         }
+    }
+
+    const handleRemoveFromScheduler = async (event: GestureResponderEvent, data: FoodRecipes) => {
+        event.stopPropagation()
+        if(route.split('/')[0] !== 'scheduler' || !user)return
+        await RemoveFromScheduler(data, route.split('/')[1])
+        setRefreshScheduler(true)
+    }
+
+    const handleSwapFromScheduler = async (event: GestureResponderEvent, data: FoodRecipes) => {
+        event.stopPropagation()
+        if(route.split('/')[0] !== 'scheduler' || !user) return
+        //await SwapFromScheduler(data, route.split('/')[1])
+        setRefreshScheduler(true)
     }
 
     return (
         <View style={styles.cardContainer}>
+            <Image source={data.images ? { uri: data.images[0] } : PlaceholderImage} style={[styles.image]} />
             <Pressable style={styles.pressable} onPress={() => handlePress(data)} onLongPress={() => handleLongPress(data)} >
-                <Image source={data.images ? { uri: data.images[0] } : PlaceholderImage} style={[styles.image]} />
+                <LinearGradient 
+                    colors={['rgba(0, 0, 0, 0.8)', 'rgba(255, 255, 255, 0)']}
+                    start={{ x: 0.5, y: - 0.2 }}
+                    end={{ x: 0.5, y: 0.15 }}
+                    style={[styles.image, { ...StyleSheet.absoluteFillObject }]} />
                 <LinearGradient 
                     colors={['rgba(255, 255, 255, 0)', 'rgba(0, 0, 0, 0.8)']} 
                     start={{ x: 0.5, y: 0.65 }}
@@ -62,6 +65,10 @@ const CardFoodRecipes: FC<{ data: FoodRecipes, route: string }> = ({ data, route
                     <Text style={styles.text}>{data.title}</Text>
                 </View>
             </Pressable>
+            {route.split('/')[0]==='scheduler' && user &&<View style={styles.textContainerTop}>
+                { false && <MaterialCommunityIcons name='swap-horizontal-circle-outline' color={COLORS.light} size={1.2*SIZES.tabIcon} onPress={(event) => handleSwapFromScheduler(event, data)} />}
+                <MaterialCommunityIcons name='close-circle-outline' color={COLORS.light} size={1.2*SIZES.tabIcon} onPress={(event) => handleRemoveFromScheduler(event, data)} />
+            </View>}
         </View>
     )
 }
@@ -93,11 +100,23 @@ const styles = StyleSheet.create({
         borderRadius: SIZES.large,
     },
     textContainer: {
-        flex: 1, // Ensure text container takes up remaining space
-        justifyContent: 'flex-end', // Align text to bottom
-        alignItems: 'flex-start', // Center text horizontally
-        padding: SIZES.base, // Add padding for visual breathing space
+        flex: 1,
+        justifyContent: 'flex-end',
+        alignItems: 'flex-start',
+        padding: SIZES.base,
         margin: SIZES.base
+    },
+    textContainerTop: {
+        position: 'absolute',
+        top: 0, 
+        left: 0,
+        right: 0,
+        //justifyContent: 'space-between',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        padding: SIZES.base,
+        margin: SIZES.base,
+        flexDirection: 'row',
     },
     text: {
         fontSize: SIZES.large,

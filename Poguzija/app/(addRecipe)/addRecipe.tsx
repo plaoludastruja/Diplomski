@@ -58,6 +58,13 @@ export default function AddRecipeScreen() {
     }
 
     const handleCreateRecipe = async () => {
+        if(!title || !servingSize || !/\d/.test(cookingTime) || stepList.length === 0 || selectedIngredients.length === 0 || selectedImageToUpload.length === 0){
+            Toast.show({
+                type: ALERT_TYPE.WARNING,
+                title: 'Please fill all fields'
+            })
+            return
+        } 
         const updatedStepList = step !== '' ? [...stepList, { number: stepList.length + 1, description: step }] : stepList
         try {
             const newRecipe: Partial<FoodRecipes> = {
@@ -90,13 +97,13 @@ export default function AddRecipeScreen() {
 
             AddFoodRecipe(newRecipe)
             Toast.show({
-                title: 'Success',
-                textBody: 'Recipe created'
+                type: ALERT_TYPE.SUCCESS,
+                title: 'Recipe created'
             })
         } catch (error) {
             Toast.show({
-                title: 'Error',
-                textBody: 'Recipe is not created'
+                type: ALERT_TYPE.DANGER,
+                title: 'Recipe not created'
             })
         }
     }

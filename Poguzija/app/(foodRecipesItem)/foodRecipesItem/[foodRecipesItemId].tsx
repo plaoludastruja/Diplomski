@@ -85,12 +85,12 @@ export default function FoodRecipesItem() {
                 setRefreshScheduler(true)
                 Toast.show({
                     type: ALERT_TYPE.SUCCESS,
-                    textBody: 'Recipe added to your scheduler'
+                    title: 'Recipe added to your scheduler'
                 })
             }else{
                 Toast.show({
                     type: ALERT_TYPE.WARNING,
-                    textBody: 'Recipe already added for '+ day
+                    title: 'Recipe already added for '+ day
                 })
             }
             
