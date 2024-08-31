@@ -13,6 +13,7 @@ export interface MyUser {
 export interface FoodRecipes {
     id: string
     title: string
+    description: string
     author: string
     cookingTime: string
     servingSize: string
@@ -46,6 +47,13 @@ export interface RecipesByDay {
     recipes: RecipeByDay[]
 }
 
+export interface RecipeByDay {
+    id: string
+    title: string
+    author: string
+    images: string[]
+}
+
 export interface Fridge {
     id: string
     ingredients: Ingredient[]
@@ -62,13 +70,6 @@ export interface Comment {
     authorProfilePhoto: string
     text: string
     createdAt: Timestamp
-}
-
-export interface RecipeByDay {
-    id: string
-    title: string
-    author: string
-    images: string[]
 }
 
 export interface Category {

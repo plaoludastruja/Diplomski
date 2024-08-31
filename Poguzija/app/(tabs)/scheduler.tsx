@@ -1,4 +1,4 @@
-import { Dimensions, ScrollView, StyleSheet } from 'react-native'
+import { Dimensions, RefreshControl, ScrollView, StyleSheet } from 'react-native'
 import BackgroundSafeAreaView from '../../components/BackgroundSafeAreaView'
 import SchedulerRecipe from '../../components/SchedulerRecipe'
 import { FoodRecipes, RecipeScheduler } from '../../model/model'
@@ -15,6 +15,7 @@ export default function SchedulerScreen() {
     const [loading, setLoading] = useState(true)
     const [recipesWeek, setRecipesWeek] = useState<RecipeScheduler>()
     const isFocused = useIsFocused()
+    const [refreshing, setRefreshing] = useState(false)
     
     useEffect(() => {
         setLoading(true)
@@ -28,16 +29,31 @@ export default function SchedulerScreen() {
             const recipesWeekData = await GetRecipesScheduler()
             setRecipesWeek(recipesWeekData)
             setLoading(false)
+            setRefreshing(false)
         } catch (error) {
             console.error('Error fetching data:', error)
         }
+    }
+
+    const handleRefresh = () => {
+        setRefreshing(true)
+        fetchData()
     }
     
     if (loading) return <LoadingScreen />
     
     return (
             <BackgroundSafeAreaView>
-                <ScrollView style={styles.flex} horizontal={false} showsVerticalScrollIndicator={false} >
+                <ScrollView 
+                    style={styles.flex}
+                    horizontal={false} 
+                    showsVerticalScrollIndicator={false} 
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={handleRefresh}
+                        />
+                    }>
                 { recipesWeek?.recipeByDay.map(recipeByDay => (
                     <SchedulerRecipe key={recipeByDay.day} day={recipeByDay.day} recipesWeek={recipeByDay.recipes} />
                 ))}
