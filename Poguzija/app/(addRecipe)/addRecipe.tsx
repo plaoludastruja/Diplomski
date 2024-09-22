@@ -303,6 +303,8 @@ export default function AddRecipeScreen() {
                             autoComplete='off'
                             onChangeText={(text) => setStep(text)}
                             onEndEditing={() => handleNextStep(step)}
+                            onSubmitEditing={() => handleNextStep(step)}
+                            blurOnSubmit={false}
                         />
 
                         <Pressable style={styles.button} onPress={handleCreateRecipe}>

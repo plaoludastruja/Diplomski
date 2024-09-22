@@ -83,6 +83,7 @@ const SelectIngredientList = ({ modalDataType, visible, onAdd, onClose }) => {
                     <FlatList
                         data={dataFilter}
                         showsVerticalScrollIndicator={false}
+                        keyboardShouldPersistTaps="always"
                         style={styles.flex}
                         renderItem={({ item }) =>
                             <Pressable

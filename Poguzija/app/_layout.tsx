@@ -90,7 +90,7 @@ function RootLayoutNav() {
             <ThemeProvider value={theme}>
                 <UserContext.Provider value={{ user, signInFn, signOutFn }}>
                 <SchedulerContext.Provider value={{ refreshScheduler, setRefreshScheduler }}>
-                <AlertNotificationRoot colors={[{ card: COLORS.darkLight }]}>
+                <AlertNotificationRoot colors={[{ card: COLORS.dark, label: COLORS.white }]}>
                     <Stack >
                         <Stack.Screen name="(tabs)" options={{ headerShown: false, navigationBarColor: COLORS.white, }} />
                         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
