@@ -1,7 +1,7 @@
 import { Dimensions, RefreshControl, ScrollView, StyleSheet } from 'react-native'
 import BackgroundSafeAreaView from '../../components/BackgroundSafeAreaView'
 import SchedulerRecipe from '../../components/SchedulerRecipe'
-import { FoodRecipes, RecipeScheduler } from '../../model/model'
+import { FoodRecipes, RecipeScheduler, RecipeSchedulerReturn } from '../../model/model'
 import { Dispatch, SetStateAction, createContext, useContext, useEffect, useRef, useState } from 'react'
 import LoadingScreen from '../../components/LoadingScreen'
 import { useIsFocused } from "@react-navigation/native"
@@ -13,7 +13,7 @@ export default function SchedulerScreen() {
     const { user } = useContext(UserContext)
     const { refreshScheduler, setRefreshScheduler } = useContext(SchedulerContext)
     const [loading, setLoading] = useState(true)
-    const [recipesWeek, setRecipesWeek] = useState<RecipeScheduler>()
+    const [recipesWeek, setRecipesWeek] = useState<RecipeSchedulerReturn>()
     const isFocused = useIsFocused()
     const [refreshing, setRefreshing] = useState(false)
     

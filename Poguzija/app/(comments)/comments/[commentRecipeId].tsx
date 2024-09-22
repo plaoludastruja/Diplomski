@@ -67,9 +67,10 @@ export default function CommentsScreen() {
             <View style={styles.container}>
                 <View style={styles.header}>
                     <Text style={styles.subtitleText}>Reviews</Text>
+                    { user ? 
                     <Pressable style={styles.addButton} onPress={() => setAddCommentModalVisible(true)}>
                         <MaterialIcons name="add" style={styles.icon}  />
-                    </Pressable>
+                    </Pressable> : <View / >}
                 </View>
             </View>
             <View style={styles.line} />
@@ -132,7 +133,7 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     icon: {
-        color: COLORS.light,
+        color: COLORS.white,
         fontSize: SIZES.extraLarge
     },    
     line: {
@@ -152,6 +153,6 @@ const styles = StyleSheet.create({
         fontSize: SIZES.extraLarge,
         fontWeight: 'bold',
         marginBottom: 0.5 * SIZES.base,
-        marginTop: SIZES.small
+        marginTop: SIZES.small,
     },
 })

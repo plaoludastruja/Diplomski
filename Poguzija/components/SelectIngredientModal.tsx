@@ -59,7 +59,7 @@ export const SelectIngredientModal = ({ alreadySelected, visible, onClose }) => 
             onRequestClose={ () => handleClose() }>
             <Pressable style={styles.centeredView} onPress={ () => handleClose() }>
                 <View style={styles.modalView}>
-                <View style={styles.inputContainer}>
+                    <View style={styles.inputContainer}>
                         <MaterialIcons name="search" style={styles.icon} />
                         <TextInput
                             style={styles.textInput}
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     modalView: {
         height: '80%',
         width: '80%',
-        backgroundColor: COLORS.darkLight,
+        backgroundColor: COLORS.light,
         borderRadius: SIZES.extraLarge,
         padding: SIZES.small,
         alignItems: 'center',
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     },
     textStyle: {
         width: '100%',
-        color: COLORS.light,
+        color: COLORS.white,
         fontWeight: 'bold',
         textAlign: 'center',
     },
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '95%',
         height: 60,
-        backgroundColor: COLORS.light,
+        backgroundColor: COLORS.white,
         borderRadius: SIZES.extraLarge,
         marginBottom: SIZES.small,
         paddingHorizontal: SIZES.small,

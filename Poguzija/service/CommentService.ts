@@ -1,6 +1,7 @@
 import { QueryDocumentSnapshot, addDoc, collection, getDocs, query, serverTimestamp } from "firebase/firestore/lite"
 import { Comment, DatabaseCollection } from "../model/model"
 import { db } from "./firebase"
+import { GetCurrentUser } from "./AuthService"
 
 async function GetCommentsForRecipe(recipeId: string) {
     const data = await getDocs(query(collection(db, DatabaseCollection.recipes, recipeId, DatabaseCollection.comments).withConverter(commentConverter)))
@@ -8,7 +9,9 @@ async function GetCommentsForRecipe(recipeId: string) {
     return commentsData
 }
 
-function AddComment(recipeId: string, comment: Partial<Comment>) {
+async function AddComment(recipeId: string, comment: Partial<Comment>) {
+    const user = await GetCurrentUser()
+    if (!user) return
     addDoc(collection(db, DatabaseCollection.recipes, recipeId, DatabaseCollection.comments).withConverter(commentConverter), comment)
 }
 

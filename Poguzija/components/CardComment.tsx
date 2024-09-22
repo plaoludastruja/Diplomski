@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         width: '100%',
-        color: COLORS.light,
+        color: COLORS.white,
         fontSize: SIZES.large,
         textAlign: 'left'
     },
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     textInputDate: {
         width: '100%',
         marginRight: 10,
-        color: COLORS.darkLight,
+        color: COLORS.light,
         fontSize: SIZES.font,
     },
     image: {

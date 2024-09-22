@@ -4,13 +4,13 @@ export default {
     slug: "Poguzija",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/images/iconTest1.png",
+    icon: "./assets/images/icon.png",
     scheme: "myapp",
     userInterfaceStyle: "light",
     splash: {
-      image: "./assets/images/splashTest3.png",
+      image: "./assets/images/splashScreen.png",
       resizeMode: "contain",
-      backgroundColor: "#ffffff"
+      backgroundColor: "#FCF8E8"
     },
     assetBundlePatterns: [
       "**/*"
@@ -22,7 +22,7 @@ export default {
     android: {
       adaptiveIcon: {
         foregroundImage: "./assets/images/adaptive-icon.png",
-        backgroundColor: "#ffffff"
+        backgroundColor: "#FCF8E8"
       },
       package: "com.plaoludastruja.poguzija",
       googleServicesFile: process.env.GOOGLE_SERVICE_JSON

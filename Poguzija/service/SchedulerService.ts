@@ -1,5 +1,5 @@
 import { doc, updateDoc, getDoc, QueryDocumentSnapshot, collection, getDocs, query, setDoc, limit } from "firebase/firestore/lite"
-import { RecipeScheduler, DatabaseCollection, FoodRecipes, Day } from "../model/model"
+import { RecipeScheduler, DatabaseCollection, FoodRecipes, Day, RecipeSchedulerReturn } from "../model/model"
 import { db } from "./firebase"
 import { GetCurrentUser } from "./AuthService"
 import { foodRecipesConverter } from "./RecipesService"
@@ -42,9 +42,9 @@ async function AddToMyScheduler(recipe: FoodRecipes, day: string) {
         scheduler = data.data()
     }
     const dayIndex = scheduler.recipeByDay.findIndex(item => item.day === day)
-    const recipeExists = scheduler.recipeByDay[dayIndex].recipes.some(item => item.id === recipe.id)
+    const recipeExists = scheduler.recipeByDay[dayIndex].recipes.some(id => id === recipe.id)
     if(recipeExists) return false
-    scheduler.recipeByDay[dayIndex].recipes.push({ id: recipe.id, images: recipe.images, author: recipe.author, title: recipe.title })
+    scheduler.recipeByDay[dayIndex].recipes.push(recipe.id)
     updateDoc(doc(db, DatabaseCollection.recipeSchedulers, user.id), {
         recipeByDay: scheduler.recipeByDay
     })
@@ -63,7 +63,7 @@ async function RemoveFromScheduler(recipeToRemove: FoodRecipes, day: string) {
         scheduler = data.data()
     }
     const dayIndex = scheduler.recipeByDay.findIndex(item => item.day === day)
-    scheduler.recipeByDay[dayIndex].recipes = scheduler.recipeByDay[dayIndex].recipes.filter(recipe => recipe.id !== recipeToRemove.id)
+    scheduler.recipeByDay[dayIndex].recipes = scheduler.recipeByDay[dayIndex].recipes.filter(id => id !== recipeToRemove.id)
     await updateDoc(doc(db, DatabaseCollection.recipeSchedulers, user.id), {
         recipeByDay: scheduler.recipeByDay
     })
@@ -82,14 +82,30 @@ async function GetMyRecipesScheduler(id: string) {
     if (data.exists()) {
         recipeScheduler = data.data()
     }
-    return recipeScheduler
+
+    const recipePromises = recipeScheduler.recipeByDay.map(day =>  day.recipes.map(id => getDoc(doc(db, DatabaseCollection.recipes, id)))).flat()
+    const recipeSnapshots = await Promise.all(recipePromises)
+
+    const allFoodRecipes = recipeSnapshots.map(doc => ({ id: doc.id, ...doc.data() } as FoodRecipes))
+
+    const recipeSchedulerData: RecipeSchedulerReturn = {
+        id: id,
+        recipeByDay: recipeScheduler.recipeByDay.map((day) => {
+            return {
+                day: day.day,
+                recipes: day.recipes.map(id => allFoodRecipes.find(recipe => recipe.id === id)!)
+            }
+        })
+    }
+
+    return recipeSchedulerData
 }
 
 async function GetRecipesSchedulerRandom() {
     const data = await getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), limit(14)))
     const foodRecipesData = data.docs.map(doc => (doc.data()))
     const daysOfWeek = Object.values(Day)
-    let randomItemsByDay: RecipeScheduler = {
+    let randomItemsByDay: RecipeSchedulerReturn = {
         recipeByDay: [],
         id: ""
     }

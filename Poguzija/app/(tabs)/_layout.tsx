@@ -19,7 +19,7 @@ export default function TabLayout() {
                 tabBarShowLabel: false,
                 headerShown: false,
                 tabBarStyle: {
-                    backgroundColor: COLORS.light,
+                    backgroundColor: COLORS.white,
                     borderTopEndRadius: SIZES.tabIcon,
                     borderTopStartRadius: SIZES.tabIcon,
                 }

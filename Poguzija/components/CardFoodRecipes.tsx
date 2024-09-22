@@ -66,8 +66,8 @@ const CardFoodRecipes: FC<{ data: FoodRecipes, route: string }> = ({ data, route
                 </View>
             </Pressable>
             {route.split('/')[0]==='scheduler' && user &&<View style={styles.textContainerTop}>
-                { false && <MaterialCommunityIcons name='swap-horizontal-circle-outline' color={COLORS.light} size={1.2*SIZES.tabIcon} onPress={(event) => handleSwapFromScheduler(event, data)} />}
-                <MaterialCommunityIcons name='close-circle-outline' color={COLORS.light} size={1.2*SIZES.tabIcon} onPress={(event) => handleRemoveFromScheduler(event, data)} />
+                { false && <MaterialCommunityIcons name='swap-horizontal-circle-outline' color={COLORS.white} size={1.2*SIZES.tabIcon} onPress={(event) => handleSwapFromScheduler(event, data)} />}
+                <MaterialCommunityIcons name='close-circle-outline' color={COLORS.white} size={1.2*SIZES.tabIcon} onPress={(event) => handleRemoveFromScheduler(event, data)} />
             </View>}
         </View>
     )
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: SIZES.large,
-        color: COLORS.light,
+        color: COLORS.white,
         fontWeight: 'bold',
     },
 })

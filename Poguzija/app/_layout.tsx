@@ -92,16 +92,12 @@ function RootLayoutNav() {
                 <SchedulerContext.Provider value={{ refreshScheduler, setRefreshScheduler }}>
                 <AlertNotificationRoot colors={[{ card: COLORS.darkLight }]}>
                     <Stack >
-                        <Stack.Screen name="(tabs)" options={{
-                            headerShown: false,
-                            navigationBarColor: COLORS.light,
-                        }} />
+                        <Stack.Screen name="(tabs)" options={{ headerShown: false, navigationBarColor: COLORS.white, }} />
                         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-                        <Stack.Screen name="(foodRecipesItem)/foodRecipesItem/[foodRecipesItemId]" options={{ headerShown: false, }}/>
-                        <Stack.Screen name="(addRecipe)/addRecipe" options={{ headerShown: false, }}/>
-                        <Stack.Screen name="(scheduler)/addToScheduler/[addToSchedulerByDay]" options={{ headerShown: true, headerTitle: 'Choose recipe' }}/>
-                        <Stack.Screen name="(bookmark)/bookmark" options={{ headerShown: false, }}/>
-                        <Stack.Screen name="(comments)/comments/[commentRecipeId]" options={{ headerShown: false, }}/>
+                        <Stack.Screen name="(foodRecipesItem)/foodRecipesItem/[foodRecipesItemId]" options={{ headerShown: false, navigationBarColor: COLORS.dark, }}/>
+                        <Stack.Screen name="(addRecipe)/addRecipe" options={{ headerShown: false, navigationBarColor: COLORS.dark, }}/>
+                        <Stack.Screen name="(bookmark)/bookmark" options={{ headerShown: false, navigationBarColor: COLORS.dark, }}/>
+                        <Stack.Screen name="(comments)/comments/[commentRecipeId]" options={{ headerShown: false, navigationBarColor: COLORS.dark, }}/>
                     </Stack>
                 </AlertNotificationRoot>
                 </SchedulerContext.Provider>

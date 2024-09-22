@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '95%',
         minHeight: 60,
-        backgroundColor: COLORS.light,
+        backgroundColor: COLORS.white,
         borderRadius: SIZES.extraLarge,
         marginVertical: SIZES.small,
         padding: SIZES.small,

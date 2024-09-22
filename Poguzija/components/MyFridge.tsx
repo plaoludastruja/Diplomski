@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     textInput: {
         width: '100%',
         marginRight: 10,
-        color: COLORS.light,
+        color: COLORS.white,
         fontSize: SIZES.large,
     },
     

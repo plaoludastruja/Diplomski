@@ -9,7 +9,7 @@ import { UserContext } from '../app/_layout'
 
 
 
-export default function SchedulerRecipe( { recipesWeek, day }: { recipesWeek: RecipeByDay[], day: string } ) {
+export default function SchedulerRecipe( { recipesWeek, day }: { recipesWeek: FoodRecipes[], day: string } ) {
     const screenWidth = Dimensions.get('window').width
     const router = useRouter()
     const { user } = useContext(UserContext)

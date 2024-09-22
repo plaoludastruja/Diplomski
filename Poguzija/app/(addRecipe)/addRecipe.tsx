@@ -3,7 +3,7 @@ import { useContext, useEffect, useMemo, useState } from 'react'
 import { View, TextInput, Pressable, Text, StyleSheet, Image, Platform, ScrollView, KeyboardAvoidingView, Alert, Dimensions, Modal, FlatList, Button } from 'react-native'
 import { FoodRecipes, Ingredient, Step, StorageFolder } from '../../model/model'
 const PlaceholderImage = require('../../assets/images/icon.png')
-import { MaterialIcons, Entypo } from '@expo/vector-icons'
+import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
 import Carousel from 'react-native-snap-carousel'
 import { COLORS, SIZES } from '../../constants/Colors'
@@ -34,6 +34,7 @@ export default function AddRecipeScreen() {
     const [selectedImageToUpload, setSelectedImageToUpload] = useState<string[]>([])
 
     const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('')
     const [servingSize, setServingSize] = useState('')
     const [cookingTime, setCookingTime] = useState('')
     const [refreshTime, setRefreshTime] = useState(false)
@@ -69,6 +70,7 @@ export default function AddRecipeScreen() {
         try {
             const newRecipe: Partial<FoodRecipes> = {
                 title: title,
+                description: description,
                 author: user ? user.id : '',
                 cookingTime: cookingTime,
                 servingSize: servingSize,
@@ -81,8 +83,9 @@ export default function AddRecipeScreen() {
 
             const uploadedImages = await UploadFoodRecipesImages(selectedImageToUpload)
             newRecipe.images = uploadedImages
-
+            AddFoodRecipe(newRecipe)
             setTitle('')
+            setDescription('')
             setAuthor('')
             setStepList([])
             setServingSize('')
@@ -94,8 +97,7 @@ export default function AddRecipeScreen() {
             setSelectedImageArray([PlaceholderImage])
             setSelectedImageToUpload([])
             setSnapPoints(['66', '95'])
-
-            AddFoodRecipe(newRecipe)
+            
             Toast.show({
                 type: ALERT_TYPE.SUCCESS,
                 title: 'Recipe created'
@@ -232,6 +234,20 @@ export default function AddRecipeScreen() {
                                 autoComplete='off'
                                 maxLength={60}
                                 onChangeText={text => setTitle(text)}
+                            />
+                        </View>
+
+                        <Text style={styles.subtitleText}>Description</Text>
+                        <View style={styles.inputContainer}>
+                            <MaterialCommunityIcons name="pencil" style={styles.icon} />
+                            <TextInput
+                                style={styles.textInput}
+                                placeholder="Description"
+                                multiline={true}
+                                value={description}
+                                autoComplete='off'
+                                maxLength={1000}
+                                onChangeText={text => setDescription(text)}
                             />
                         </View>
 
@@ -377,7 +393,7 @@ const styles = StyleSheet.create({
     input: {
         width: '95%',
         minHeight: 60,
-        backgroundColor: COLORS.light,
+        backgroundColor: COLORS.white,
         borderRadius: SIZES.extraLarge,
         marginBottom: SIZES.small,
         padding: SIZES.small,
@@ -405,7 +421,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '95%',
         minHeight: 60,
-        backgroundColor: COLORS.light,
+        backgroundColor: COLORS.white,
         borderRadius: SIZES.extraLarge,
         marginBottom: SIZES.small,
         padding: SIZES.small,
@@ -447,7 +463,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '95%',
         height: 60,
-        backgroundColor: COLORS.light,
+        backgroundColor: COLORS.white,
         borderRadius: SIZES.extraLarge,
         marginBottom: SIZES.small,
         paddingHorizontal: SIZES.small,

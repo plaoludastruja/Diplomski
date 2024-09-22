@@ -55,6 +55,8 @@ async function GetMyFoodRecipes() {
 }
 
 async function UpdateSavedCount(id: string, toIncrease: boolean) {
+    const user = await GetCurrentUser()
+    if (!user) return
     const incrementValue = toIncrease ? 1 : -1
     updateDoc(doc(db, DatabaseCollection.recipes, id), {
         savedCount: increment(incrementValue)
@@ -62,6 +64,8 @@ async function UpdateSavedCount(id: string, toIncrease: boolean) {
 }
 
 async function UpdateRecipeRating(id: string, rating: number) {
+    const user = await GetCurrentUser()
+    if (!user) return
     updateDoc(doc(db, DatabaseCollection.recipes, id), {
         'rating.sum': increment(rating),
         'rating.count': increment(1)
@@ -77,6 +81,7 @@ const foodRecipesConverter = {
         const searchFields = [...searchFieldsData, ...ingredientNames, ...titleFieldsData]
         return {
             title: foodRecipe.title,
+            description: foodRecipe.description,
             author: foodRecipe.author,
             cookingTime: foodRecipe.cookingTime,
             servingSize: foodRecipe.servingSize,

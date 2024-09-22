@@ -135,8 +135,8 @@ export default function FoodRecipesItem() {
                     {user &&
                         <View style={styles.bookmarkContainer}>
                             <Text style={styles.savedCount}>{savedCount}</Text>
-                            <FontAwesome name={bookmarkIconType} color={COLORS.light} size={1.2 * SIZES.tabIcon} onPress={handleAddToBookmarks} />
-                            <Ionicons name='calendar-outline' color={COLORS.light} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base }} onPress={handleAddToScheduler} />
+                            <FontAwesome name={bookmarkIconType} color={COLORS.white} size={1.2 * SIZES.tabIcon} onPress={handleAddToBookmarks} />
+                            <Ionicons name='calendar-outline' color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base }} onPress={handleAddToScheduler} />
                         </View>}
                 </View>
 
@@ -152,6 +152,19 @@ export default function FoodRecipesItem() {
                                 multiline={true}
                                 placeholder="Recipe name"
                                 value={food?.title}
+                                autoComplete='off'
+                                editable={false}
+                            />
+                        </View>
+
+                        <Text style={styles.subtitleText}>Description</Text>
+                        <View style={styles.inputContainer}>
+                            <MaterialIcons name="receipt" style={styles.icon} />
+                            <BottomSheetTextInput
+                                style={styles.textInput}
+                                multiline={true}
+                                placeholder="Description"
+                                value={food?.description}
                                 autoComplete='off'
                                 editable={false}
                             />
@@ -241,7 +254,7 @@ const styles = StyleSheet.create({
     input: {
         width: '95%',
         minHeight: 60,
-        backgroundColor: COLORS.light,
+        backgroundColor: COLORS.white,
         borderRadius: SIZES.extraLarge,
         marginBottom: SIZES.small,
         padding: SIZES.small,
@@ -269,7 +282,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '95%',
         minHeight: 60,
-        backgroundColor: COLORS.light,
+        backgroundColor: COLORS.white,
         borderRadius: SIZES.extraLarge,
         marginBottom: SIZES.small,
         padding: SIZES.small,
@@ -301,7 +314,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '95%',
         height: 60,
-        backgroundColor: COLORS.light,
+        backgroundColor: COLORS.white,
         borderRadius: SIZES.extraLarge,
         marginBottom: SIZES.small,
         paddingHorizontal: SIZES.small,
@@ -318,7 +331,7 @@ const styles = StyleSheet.create({
         paddingTop: SIZES.base,
     },
     savedCount: {
-        color: COLORS.light,
+        color: COLORS.white,
         fontSize: SIZES.large,
         fontWeight: 'bold',
         marginEnd: SIZES.base,

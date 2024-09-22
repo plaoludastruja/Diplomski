@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     modalView: {
         height: '80%',
         width: '80%',
-        backgroundColor: COLORS.darkLight,
+        backgroundColor: COLORS.light,
         borderRadius: SIZES.extraLarge,
         padding: SIZES.small,
         alignItems: 'center',
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     },
     textStyle: {
         width: '100%',
-        color: COLORS.light,
+        color: COLORS.white,
         fontWeight: 'bold',
         textAlign: 'center',
     },

@@ -28,7 +28,7 @@ export interface FoodRecipes {
 
 export interface Ingredient {
     name: string
-    amount: string
+    amount?: string
     unit: string
 }
 
@@ -44,7 +44,17 @@ export interface RecipeScheduler {
 
 export interface RecipesByDay {
     day: Day
-    recipes: RecipeByDay[]
+    recipes: string[]
+}
+
+export interface RecipeSchedulerReturn {
+    id: string
+    recipeByDay: RecipesByDayReturn[]
+}
+
+export interface RecipesByDayReturn {
+    day: Day
+    recipes: FoodRecipes[]
 }
 
 export interface RecipeByDay {

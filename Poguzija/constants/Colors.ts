@@ -21,15 +21,12 @@ export default {
 export const COLORS = {
   primary: "#2B2E4A",
   secondary: "#E84545",
-
   tint: "#DF7861",
   light: "#FCF8E8",
   darkLight: "#faf2d2",
-
   dark: "#2B2E4A",
   lightDark: "#5C5470",
-
-  white: "#FFF",
+  white: "#FEFEFC",
   gray: "#74858C",
 }
 
