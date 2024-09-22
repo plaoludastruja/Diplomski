@@ -6,12 +6,15 @@ import { UserContext } from '../app/_layout'
 import CardFoodRecipes from './CardFoodRecipes'
 import { GetMyFoodRecipes } from '../service/RecipesService'
 import LoadingScreen from './LoadingScreen'
+import { QueryDocumentSnapshot } from 'firebase/firestore/lite'
 
 export default function MyRecipes() {
     const { user } = useContext(UserContext)
     const [food, setFood] = useState<FoodRecipes[]>([])
     const [refreshing, setRefreshing] = useState(false)
     const [loading, setLoading] = useState(true)
+    const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>()
+    const [hasMore, setHasMore] = useState(true)
     
     useEffect(() => {
         if(user){
@@ -25,8 +28,10 @@ export default function MyRecipes() {
     
     const fetchData = async () => {
         try {
-            const foodRecipesData = await GetMyFoodRecipes()
+            const { foodRecipesData, newLastVisible }  = await GetMyFoodRecipes(null)
             setFood(foodRecipesData)
+            setLastVisible(newLastVisible)
+            setHasMore(foodRecipesData.length > 0)
             setRefreshing(false)
             setLoading(false)
         } catch (error) {
@@ -37,6 +42,18 @@ export default function MyRecipes() {
     const handleRefresh = () => {
         setRefreshing(true)
         fetchData()
+    }
+
+    const handleEndReached = async () => {
+        if(hasMore){
+            const { foodRecipesData, newLastVisible } = await GetMyFoodRecipes(lastVisible)
+            if (foodRecipesData.length > 0) {
+                setFood([...food, ...foodRecipesData])
+                setLastVisible(newLastVisible)
+            }else{
+                setHasMore(false)
+            }
+        }
     }
     
     if (loading) return <LoadingScreen />
@@ -54,6 +71,8 @@ export default function MyRecipes() {
                     onRefresh={handleRefresh}
                 />
             }
+            onEndReached={handleEndReached}
+            onEndReachedThreshold={0.5}
         />
     )
 }

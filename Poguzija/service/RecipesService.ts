@@ -46,12 +46,18 @@ function AddFoodRecipe(newRecipe: Partial<FoodRecipes>) {
     addDoc(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), newRecipe)
 }
 
-async function GetMyFoodRecipes() {
+async function GetMyFoodRecipes(lastVisible: QueryDocumentSnapshot | null) {
     const user = await GetCurrentUser()
-    if (!user) return []
-    const data = await getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), where("author", "==", user.id), orderBy('createdAt', "desc")))
+    if (!user) return {}
+    let data
+    if (!lastVisible) {
+        data = await getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), where("author", "==", user.id), orderBy('createdAt', "desc"), limit(5)))
+    } else {
+        data = await getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), where("author", "==", user.id), orderBy('createdAt', "desc"), startAfter(lastVisible), limit(5)))
+    }
     const foodRecipesData = data.docs.map(doc => (doc.data()))
-    return foodRecipesData
+    const newLastVisible = data.docs[data.docs.length - 1] || null
+    return { foodRecipesData, newLastVisible }
 }
 
 async function UpdateSavedCount(id: string, toIncrease: boolean) {
