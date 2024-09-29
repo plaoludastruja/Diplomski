@@ -5,7 +5,7 @@ import { foodRecipesConverter } from "./RecipesService"
 
 async function GetSearchResults(searchParams: string[], lastVisible: QueryDocumentSnapshot | null) {
     let foodRecipesData: FoodRecipes[] = []
-    const searchParamsData = searchParams.map(searchParam => searchParam.toLowerCase())
+    const searchParamsData = searchParams.map(searchParam => searchParam.toUpperCase())
     const searchPromises = searchParamsData.map(searchParam => {
         let q = query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), where('searchFields', 'array-contains', searchParam), limit(5))
         if (lastVisible) {

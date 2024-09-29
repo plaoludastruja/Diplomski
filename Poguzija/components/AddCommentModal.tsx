@@ -3,8 +3,11 @@ import { useState } from 'react'
 import { COLORS, SIZES } from '../constants/Colors'
 import { StarRating } from './StartRating'
 import { FontAwesome } from '@expo/vector-icons'
+import { useTranslation } from 'react-i18next'
+import { TranslationKeys } from '../locales/_translationKeys'
 
 export const AddCommentModal = ({ visible, onAdd, onClose }) => {
+    const {t} = useTranslation()
     const [text, setText] = useState('')
     const [rating, setRating] = useState(0)
     const handleClose = () => {
@@ -30,7 +33,7 @@ export const AddCommentModal = ({ visible, onAdd, onClose }) => {
                         <FontAwesome name="comments" style={styles.icon} />
                         <TextInput
                             style={styles.commentInput}
-                            placeholder="Write a review..."
+                            placeholder={t(TranslationKeys.Review.WRITE_REVIEW)}
                             multiline={true}
                             value={text}
                             autoComplete='off'
@@ -41,7 +44,7 @@ export const AddCommentModal = ({ visible, onAdd, onClose }) => {
                     <View style={styles.bottomContainer}>
                         <StarRating ratingValue={rating} onRatingChange={setRating} />
                         <Pressable style={ styles.button } onPress={ handleOnAdd }>
-                            <Text style={ styles.buttonText }>Comment</Text>
+                            <Text style={ styles.buttonText }>{t(TranslationKeys.Review.CREATE_REVIEW)}</Text>
                         </Pressable>
                     </View>
                 </View>
@@ -59,7 +62,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalView: {
-        justifyContent: 'space-between',
+        justifyContent: 'space-evenly',
         minHeight: '30%',
         width: '80%',
         backgroundColor: COLORS.dark,
@@ -83,7 +86,7 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.tint,
         borderRadius: SIZES.extraLarge,
         padding: SIZES.base,
-        marginVertical: SIZES.base,
+        marginVertical: SIZES.small,
         elevation: 2,
     },
     buttonText: {

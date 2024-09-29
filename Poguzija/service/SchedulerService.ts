@@ -30,7 +30,7 @@ async function GetRecipesScheduler() {
     }
 }
 
-async function AddToMyScheduler(recipe: FoodRecipes, day: string) {
+async function AddToMyScheduler(recipe: FoodRecipes, day: keyof typeof Day) {
     const user = await GetCurrentUser()
     if (!user) return
     const data = await getDoc(doc(db, DatabaseCollection.recipeSchedulers, user.id).withConverter(recipesSchedulerConverter))
@@ -41,7 +41,7 @@ async function AddToMyScheduler(recipe: FoodRecipes, day: string) {
     if (data.exists()) {
         scheduler = data.data()
     }
-    const dayIndex = scheduler.recipeByDay.findIndex(item => item.day === day)
+    const dayIndex = scheduler.recipeByDay.findIndex(item => item.day === Day[day])
     const recipeExists = scheduler.recipeByDay[dayIndex].recipes.some(id => id === recipe.id)
     if(recipeExists) return false
     scheduler.recipeByDay[dayIndex].recipes.push(recipe.id)

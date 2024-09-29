@@ -8,9 +8,12 @@ import AddIngredientsModal from './AddIngredientsModal'
 import { AddToMyFridge, GetMyFridge } from '../service/FridgeService'
 import LoadingScreen from './LoadingScreen'
 import { ScrollView } from 'react-native-gesture-handler'
+import { TranslationKeys } from '../locales/_translationKeys'
+import { useTranslation } from 'react-i18next'
 
 export default function MyFridge() {
     const { user } = useContext(UserContext)
+    const {t} = useTranslation()
     const [loading, setLoading] = useState(true)
     const [fridge, setFridge] = useState<Fridge[]>([])
     const [ingredientsModalVisible, setIngredientsModalVisible] = useState(false)
@@ -67,7 +70,7 @@ export default function MyFridge() {
     return (
         <View style={styles.container}>
             <Pressable style={styles.button} onPress={() => setIngredientsModalVisible(true)}>
-                <Text style={styles.buttonText}>Add ingredients</Text>
+                <Text style={styles.buttonText}>{t(TranslationKeys.Recipe.ADD_INGREDIENT)}</Text>
             </Pressable>
             <ScrollView style={styles.flex} horizontal={false} showsVerticalScrollIndicator={false}>
             {selectedIngredients?.map((ingredient, index) => (
@@ -208,7 +211,7 @@ const styles = StyleSheet.create({
     
     icon: {
         marginRight: 10,
-        color: COLORS.lightDark,
+        color: COLORS.white,
         fontSize: SIZES.extraLarge
     },
 })

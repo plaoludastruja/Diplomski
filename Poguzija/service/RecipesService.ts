@@ -80,9 +80,9 @@ async function UpdateRecipeRating(id: string, rating: number) {
 
 const foodRecipesConverter = {
     toFirestore: (foodRecipe: FoodRecipes) => {
-        const ingredientNames = foodRecipe.ingredients.map(ingredient => ingredient.name.toLowerCase())
-        const searchFieldsData = foodRecipe.searchFields.map(searchField => searchField.toLowerCase())
-        const titleFields = foodRecipe.title.toLowerCase().split(/[\s-\.,!?]/).filter(t => t.length >= 4)
+        const ingredientNames = foodRecipe.ingredients.map(ingredient => ingredient.name.toUpperCase())
+        const searchFieldsData = foodRecipe.searchFields.map(categoryField => categoryField.toUpperCase())
+        const titleFields = foodRecipe.title.toUpperCase().split(/[\s-\.,!?]/).filter(t => t.length >= 4)
         const titleFieldsData = Array.from(new Set(titleFields))
         const searchFields = [...searchFieldsData, ...ingredientNames, ...titleFieldsData]
         return {

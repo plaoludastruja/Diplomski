@@ -12,9 +12,12 @@ import GestureRecognizer from 'react-native-swipe-gestures'
 import { SelectIngredientModal } from '../../components/SelectIngredientModal'
 import { SelectCategoryModal } from '../../components/SelectCategoryModal'
 import { QueryDocumentSnapshot } from 'firebase/firestore/lite'
+import { TranslationKeys } from '../../locales/_translationKeys'
+import { useTranslation } from 'react-i18next'
 
 
 export default function SearchScreen() {
+    const {t} = useTranslation()
     const [food, setFood] = useState<FoodRecipes[]>([])
 
     const [categoryModalVisible, setCategoryModalVisible] = useState(false)
@@ -39,7 +42,7 @@ export default function SearchScreen() {
 
     const handleSearch = async () => {
         setLoading(true)
-        const searchData = search.toLowerCase().split(/[\s-\.,!?]/).filter(t => t.length >= 4)
+        const searchData = search.toUpperCase().split(/[\s-\.,!?]/).filter(t => t.length >= 4)
         const searchParams = [...categoryData, ...ingredientData, ...searchData]
         
         if(searchParams.length === 0){
@@ -62,7 +65,7 @@ export default function SearchScreen() {
 
     const handleEndReached = async () => {
         if(hasMore){
-            const searchData = search.toLowerCase().split(/[\s-\.,!?]/).filter(t => t.length >= 4)
+            const searchData = search.toUpperCase().split(/[\s-\.,!?]/).filter(t => t.length >= 4)
             const searchParams = [...categoryData, ...ingredientData, ...searchData]
             
             if(searchParams.length === 0){
@@ -129,7 +132,7 @@ export default function SearchScreen() {
                     <MaterialIcons name="search" style={styles.icon} />
                     <TextInput
                         style={styles.textInput}
-                        placeholder="Search"
+                        placeholder={t(TranslationKeys.Button.SEARCH)}
                         value={search}
                         autoComplete='off'
                         onChangeText={text => {
@@ -138,13 +141,13 @@ export default function SearchScreen() {
                     />
                 </View>
                 <Pressable style={styles.button} onPress={() => setCategoryModalVisible(true)}>
-                    <Text style={styles.buttonText}>Select categories</Text>
+                    <Text style={styles.buttonText}>{t(TranslationKeys.Search.SELECT_CATEGORY)}</Text>
                 </Pressable>
                 <Pressable style={styles.button} onPress={() => setIngredientModalVisible(true)}>
-                    <Text style={styles.buttonText}>Select ingredients</Text>
+                    <Text style={styles.buttonText}>{t(TranslationKeys.Search.SELECT_INGREDIENT)}</Text>
                 </Pressable>
                 <Pressable style={styles.button} onPress={() => handleSearch()}>
-                    <Text style={styles.buttonText}>Search</Text>
+                    <Text style={styles.buttonText}>{t(TranslationKeys.Button.SEARCH)}</Text>
                 </Pressable>
                 <FlatList
                     data={categoryData}
@@ -152,7 +155,7 @@ export default function SearchScreen() {
                     contentContainerStyle={[{alignContent: 'flex-start'}]}
                     renderItem={({ item }) => 
                         <Pressable style={ styles.buttonModalSelected } onPress={() => onDeleteSelected('category', item)}>
-                            <Text style={styles.textStyle}>{item}</Text>
+                            <Text style={styles.textStyle}>{t(TranslationKeys.CategoryItem[item])}</Text>
                             <MaterialIcons name="close" style={styles.iconButton} />
                         </Pressable>}
                     keyExtractor={(item) => item}
@@ -165,7 +168,7 @@ export default function SearchScreen() {
                     contentContainerStyle={[{alignContent: 'flex-start'}]}
                     renderItem={({ item }) => 
                         <Pressable style={ styles.buttonModalSelected } onPress={() => onDeleteSelected('ingredient', item)} >
-                            <Text style={styles.textStyle}>{item}</Text>
+                            <Text style={styles.textStyle}> {item}</Text>
                             <MaterialIcons name="close" style={styles.iconButton} />
                         </Pressable>}
                     keyExtractor={(item) => item}

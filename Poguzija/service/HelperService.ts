@@ -43,9 +43,9 @@ async function AddMeasurementUnitsData() {
 
 function GetCategoryData() {
     const categories = {
-        'National cuisine': ['Chinese', 'Greek', 'Serbian'],
-        'Meal': ['Breakfast', 'Brunch', 'Lunch', 'Snack', 'Dinner', 'Dessert'],
-        'Popular category': ['Fast', 'Healty', 'Salad', 'Pasta']
+        'MEAL_TYPE': ['BREAKFAST', 'LUNCH', 'DINNER', 'BRUNCH', 'DESSERT', 'SNACK'],
+        'NATIONAL_COUSINE': ['SERBIAN', 'ASIAN', 'GREEK', 'TURKISH', 'AMERICAN', 'ITALIAN', 'LATIN'],
+        'POPULAR_CATEGORY': ['BUDGET_FRIENDLY', 'QUICK', 'EASY', 'BBQ', 'FISH', 'MEAT', 'SANDWICHES', 'HEALTY', 'VEGETERIAN', 'VEGE', 'FASTING', 'SALAD', 'PASTA', 'SMOOTHIE', 'SWEET', 'FRUITY', 'VEGETABLE', 'DRINK' ],
     }
     const categoriesArray: Category[] = []
     for (const [type, names] of Object.entries(categories)) {

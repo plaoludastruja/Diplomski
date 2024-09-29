@@ -2,7 +2,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import BackgroundSafeAreaView from '../../../components/BackgroundSafeAreaView'
 import { useContext, useEffect, useState } from 'react'
 import { View, Pressable, Text, StyleSheet, Image, Dimensions } from 'react-native'
-import { FoodRecipes } from '../../../model/model'
+import { Day, FoodRecipes } from '../../../model/model'
 import Carousel from 'react-native-snap-carousel'
 import { COLORS, SIZES } from '../../../constants/Colors'
 import { FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
@@ -76,11 +76,10 @@ export default function FoodRecipesItem() {
     }
 
     const handleAddToScheduler = () => {
-        //open week dialog
         setSelectWeekModalVisible(true)
     }
 
-    const onDaySelected = async (day: string | null) => {
+    const onDaySelected = async (day: keyof typeof Day | null) => {
         setSelectWeekModalVisible(false)
         if (day) {
             const recipe = await AddToMyScheduler(food, day)
@@ -88,12 +87,12 @@ export default function FoodRecipesItem() {
                 setRefreshScheduler(true)
                 Toast.show({
                     type: ALERT_TYPE.SUCCESS,
-                    title: 'Recipe added to your scheduler'
+                    title: t(TranslationKeys.Scheduler.RECIPE_ADDED_TO_SCHEDULER)
                 })
             }else{
                 Toast.show({
                     type: ALERT_TYPE.WARNING,
-                    title: 'Recipe already added for '+ day
+                    title: t(TranslationKeys.Scheduler.RECIPE_ALREADY_ADDED_TO_SCHEDULER) + ' ' +  t(TranslationKeys.Day[day]).toLowerCase()
                 })
             }
             
@@ -153,56 +152,56 @@ export default function FoodRecipesItem() {
                             <BottomSheetTextInput
                                 style={styles.textInput}
                                 multiline={true}
-                                placeholder="Recipe name"
+                                placeholder={t(TranslationKeys.Recipe.NAME)}
                                 value={food?.title}
                                 autoComplete='off'
                                 editable={false}
                             />
                         </View>
 
-                        <Text style={styles.subtitleText}>Description</Text>
+                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.DESCRIPTION)}</Text>
                         <View style={styles.inputContainer}>
                             <MaterialCommunityIcons name="pencil" style={styles.icon} />
                             <BottomSheetTextInput
                                 style={styles.textInput}
                                 multiline={true}
-                                placeholder="Description"
+                                placeholder={t(TranslationKeys.Recipe.DESCRIPTION)}
                                 value={food?.description}
                                 autoComplete='off'
                                 editable={false}
                             />
                         </View>
 
-                        <Text style={styles.subtitleText}>Time to prepare</Text>
+                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.TIME_TO_PREPARE)}</Text>
                         <View style={styles.inputContainer}>
                             <MaterialIcons name="people" style={styles.icon} />
                             <BottomSheetTextInput
                                 style={styles.textInput}
-                                placeholder="Time to prepare"
+                                placeholder={t(TranslationKeys.Recipe.TIME_TO_PREPARE)}
                                 value={food?.cookingTime}
                                 editable={false}
                             />
                         </View>
 
-                        <Text style={styles.subtitleText}>Serving size</Text>
+                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.SERVING_SIZE)}</Text>
                         <View style={styles.inputContainer}>
                             <MaterialIcons name="people" style={styles.icon} />
                             <BottomSheetTextInput
                                 style={styles.textInput}
-                                placeholder="Serving size"
+                                placeholder={t(TranslationKeys.Recipe.SERVING_SIZE)}
                                 value={food?.servingSize}
                                 editable={false}
                             />
                         </View>
 
-                        <Text style={styles.subtitleText}>Ingredients</Text>
+                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.INGREDIENTS)}</Text>
                         {food?.ingredients?.map((ingredient, index) => (
                             <View key={index} style={styles.ingredientItem}>
                                 <Text style={[styles.textInput, { width: "auto" }]}>   {ingredient.name}   -   {ingredient.amount} {ingredient.unit}</Text>
                             </View>
                         ))}
 
-                        <Text style={styles.subtitleText}>Cooking instructions</Text>
+                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.INSTRUCTIONS)}</Text>
                         {food?.steps?.map((step, index) => (
                             <BottomSheetTextInput
                                 style={styles.input}
@@ -213,7 +212,7 @@ export default function FoodRecipesItem() {
                             />
                         ))}
                         <Pressable style={styles.button} onPress={handleOpenComments}>
-                            <Text style={styles.buttonText}>Show reviews</Text>
+                            <Text style={styles.buttonText}>{t(TranslationKeys.Review.SHOW_REVIEWS)}</Text>
                         </Pressable>
                     </BottomSheetScrollView>
                 </BottomSheet>

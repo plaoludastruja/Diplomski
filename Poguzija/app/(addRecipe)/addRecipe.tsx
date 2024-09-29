@@ -14,9 +14,12 @@ import { UserContext } from '../_layout'
 import { SelectCategoryModal } from '../../components/SelectCategoryModal'
 import { UploadFoodRecipesImages } from '../../service/ImageService'
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
+import { useTranslation } from 'react-i18next'
+import { TranslationKeys } from '../../locales/_translationKeys'
 
 export default function AddRecipeScreen() {
     const { user } = useContext(UserContext)
+    const {t} = useTranslation()
 
     const screenWidth = Dimensions.get('window').width
     const screenHeight = Dimensions.get('window').height
@@ -24,7 +27,7 @@ export default function AddRecipeScreen() {
 
     const [categoryModalVisible, setCategoryModalVisible] = useState(false)
     const [categoryNumber, setCategoryNumber] = useState<number>(0)
-    const [searchFields, setSearchFields] = useState<string[]>([])
+    const [categoryFields, setCategoryFields] = useState<string[]>([])
 
     const [ingredientsModalVisible, setIngredientsModalVisible] = useState(false)
     const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([])
@@ -42,7 +45,7 @@ export default function AddRecipeScreen() {
 
     const [stepList, setStepList] = useState<Step[]>([])
     const [step, setStep] = useState('')
-    const [stepsPlaceholder, setStepsPlaceholder] = useState('Add first step')
+    const [stepsPlaceholder, setStepsPlaceholder] = useState('ADD_FIRST_STEP')
 
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -62,7 +65,7 @@ export default function AddRecipeScreen() {
         if(!title || !servingSize || !/\d/.test(cookingTime) || stepList.length === 0 || selectedIngredients.length === 0 || selectedImageToUpload.length === 0){
             Toast.show({
                 type: ALERT_TYPE.WARNING,
-                title: 'Please fill all fields'
+                title: t(TranslationKeys.Recipe.FILL_ALL_FIELDS)
             })
             return
         } 
@@ -76,7 +79,7 @@ export default function AddRecipeScreen() {
                 servingSize: servingSize,
                 ingredients: selectedIngredients,
                 steps: updatedStepList,
-                searchFields: searchFields,
+                searchFields: categoryFields,
                 savedCount: 0,
                 rating: { sum: 0, count: 0}
             }
@@ -92,7 +95,7 @@ export default function AddRecipeScreen() {
             setCookingTime('')
             setRefreshTime(!refreshTime)
             setSelectedIngredients([])
-            setSearchFields([])
+            setCategoryFields([])
             setCategoryNumber(0)
             setSelectedImageArray([PlaceholderImage])
             setSelectedImageToUpload([])
@@ -100,22 +103,22 @@ export default function AddRecipeScreen() {
             
             Toast.show({
                 type: ALERT_TYPE.SUCCESS,
-                title: 'Recipe created'
+                title: t(TranslationKeys.Recipe.RECIPE_CREATED)
             })
         } catch (error) {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
-                title: 'Recipe not created'
+                title: t(TranslationKeys.Recipe.RECIPE_NOT_CREATED)
             })
         }
     }
 
     const handleDeleteImage = (image: string) => {
-        Alert.alert('Delete Item', 'Are you sure you want to delete this item?',
+        Alert.alert(t(TranslationKeys.Recipe.DELETE_IMAGE), t(TranslationKeys.Recipe.DELETE_IMAGE_CONFIRMATION),
             [
-                { text: 'Cancel', style: 'cancel' },
+                { text: t(TranslationKeys.Button.CANCEL), style: 'cancel' },
                 {
-                    text: 'Delete', onPress: () => {
+                    text: t(TranslationKeys.Button.DELETE), onPress: () => {
                         const updatedItems = selectedImageArray.filter((item) => item !== image)
                         setSelectedImageArray([...updatedItems])
                         setSelectedImageToUpload([...updatedItems])
@@ -148,7 +151,7 @@ export default function AddRecipeScreen() {
     const handleCloseCategoryModal = (selectedCategories: string[]) => {
         setCategoryNumber(selectedCategories.length)
         setCategoryModalVisible(false)
-        setSearchFields(selectedCategories)
+        setCategoryFields(selectedCategories)
     }
 
     const handlePressToEdit = (ingredient: Ingredient) => {
@@ -166,7 +169,7 @@ export default function AddRecipeScreen() {
         let numberOfSteps = stepList.length
         setStepList([...stepList, { number: ++numberOfSteps, description: text }])
         setStep('')
-        setStepsPlaceholder('Add next step')
+        setStepsPlaceholder('ADD_NEXT_STEP')
     }
 
     const handleChangeText = (text: string, index: number) => {
@@ -223,12 +226,12 @@ export default function AddRecipeScreen() {
                         contentContainerStyle={styles.scrollViewContent}
                         keyboardShouldPersistTaps={'handled'}
                     >
-                        <Text style={styles.subtitleText}>Recipe name</Text>
+                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.NAME)}</Text>
                         <View style={styles.inputContainer}>
                             <MaterialIcons name="receipt" style={styles.icon} />
                             <TextInput
                                 style={styles.textInput}
-                                placeholder="Recipe name"
+                                placeholder={t(TranslationKeys.Recipe.NAME)}
                                 multiline={true}
                                 value={title}
                                 autoComplete='off'
@@ -237,12 +240,12 @@ export default function AddRecipeScreen() {
                             />
                         </View>
 
-                        <Text style={styles.subtitleText}>Description</Text>
+                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.DESCRIPTION)}</Text>
                         <View style={styles.inputContainer}>
                             <MaterialCommunityIcons name="pencil" style={styles.icon} />
                             <TextInput
                                 style={styles.textInput}
-                                placeholder="Description"
+                                placeholder={t(TranslationKeys.Recipe.DESCRIPTION)}
                                 multiline={true}
                                 value={description}
                                 autoComplete='off'
@@ -251,12 +254,12 @@ export default function AddRecipeScreen() {
                             />
                         </View>
 
-                        <Text style={styles.subtitleText}>Serving size</Text>
+                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.SERVING_SIZE)}</Text>
                         <View style={styles.inputContainer}>
                             <MaterialIcons name="people" style={styles.icon} />
                             <TextInput
                                 style={styles.textInput}
-                                placeholder="Serving size"
+                                placeholder={t(TranslationKeys.Recipe.SERVING_SIZE)}
                                 value={servingSize}
                                 onChangeText={text => setServingSize(text)}
                                 maxLength={3}
@@ -264,15 +267,15 @@ export default function AddRecipeScreen() {
                             />
                         </View>
 
-                        <Text style={styles.subtitleText}>Time to prepare</Text>
+                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.TIME_TO_PREPARE)}</Text>
                         <TimeInput time={cookingTime} onTimeChange={handleTimeChange} refresh={refreshTime}/>
 
-                        <Text style={styles.subtitleText}>Selected categories: {categoryNumber}</Text>
+                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.SELECTED_CATEGORIES)}: {categoryNumber}</Text>
                         <Pressable style={styles.button} onPress={() => handleOpenCategoryModal()}>
-                            <Text style={styles.buttonText}>Add categories</Text>
+                            <Text style={styles.buttonText}>{t(TranslationKeys.Recipe.ADD_CATEGORIES)}</Text>
                         </Pressable>
 
-                        <Text style={styles.subtitleText}>Ingredients</Text>
+                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.INGREDIENTS)}</Text>
                         {selectedIngredients?.map((ingredient, index) => (
                             <Pressable key={index} style={styles.ingredientItem} onPress={() => handlePressToEdit(ingredient)}>
                                 <Text style={[styles.textInput, { width: "auto" }]}>   {ingredient.name}   -   {ingredient.amount} {ingredient.unit}</Text>
@@ -282,10 +285,10 @@ export default function AddRecipeScreen() {
                             </Pressable>
                         ))}
                         <Pressable style={styles.button} onPress={() => setIngredientsModalVisible(true)}>
-                            <Text style={styles.buttonText}>Add ingredients</Text>
+                            <Text style={styles.buttonText}>{t(TranslationKeys.Recipe.ADD_INGREDIENT)}</Text>
                         </Pressable>
 
-                        <Text style={styles.subtitleText}>Cooking instructions</Text>
+                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.INSTRUCTIONS)}</Text>
                         {stepList?.map((step, index) => (
                             <TextInput
                                 style={styles.input}
@@ -298,7 +301,7 @@ export default function AddRecipeScreen() {
                         ))}
                         <TextInput
                             style={styles.input}
-                            placeholder={`${stepsPlaceholder}`}
+                            placeholder={t(TranslationKeys.Recipe[stepsPlaceholder])}
                             value={step}
                             autoComplete='off'
                             onChangeText={(text) => setStep(text)}
@@ -308,7 +311,7 @@ export default function AddRecipeScreen() {
                         />
 
                         <Pressable style={styles.button} onPress={handleCreateRecipe}>
-                            <Text style={styles.buttonText}>Submit</Text>
+                            <Text style={styles.buttonText}>{t(TranslationKeys.Recipe.CREATE_RECIPE)}</Text>
                         </Pressable>
                     </BottomSheetScrollView>
                 </BottomSheet>

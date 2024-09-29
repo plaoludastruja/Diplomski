@@ -6,8 +6,13 @@ import { GetCategoryData } from '../service/HelperService'
 import { GetIngredients } from '../service/IngredientService'
 import constructWithOptions from 'styled-components/dist/constructors/constructWithOptions'
 import { MaterialIcons } from '@expo/vector-icons'
+import { useTranslation } from 'react-i18next'
+import { TranslationKeys } from '../locales/_translationKeys'
+
 
 export const SelectWeekModal = ({ visible, onClose }) => {
+    const {t} = useTranslation()
+
     return (
         <Modal
             animationType="fade"
@@ -16,11 +21,12 @@ export const SelectWeekModal = ({ visible, onClose }) => {
             onRequestClose={ () => onClose() }>
             <Pressable style={styles.centeredView} onPress={ () => onClose() }>
                 <View style={styles.modalView}>
-                    { Object.values(Day)?.map((value, _) => (
+                    { Object.keys(Day)?.map((key, _) => (
                             <Pressable
                                 style={ styles.buttonModal }
-                                onPress={ () => onClose(value) }>
-                                <Text style={styles.textStyle}>{value}</Text>
+                                onPress={ () => onClose(key) }
+                                key={key}>
+                                <Text style={styles.textStyle}>{t(TranslationKeys.Day[key])}</Text>
                             </Pressable>
                         ))}
                 </View>

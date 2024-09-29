@@ -6,6 +6,8 @@ import CardFoodRecipes from './CardFoodRecipes'
 import { useRouter } from 'expo-router'
 import { useContext } from 'react'
 import { UserContext } from '../app/_layout'
+import { TranslationKeys } from '../locales/_translationKeys'
+import { useTranslation } from 'react-i18next'
 
 
 
@@ -13,6 +15,7 @@ export default function SchedulerRecipe( { recipesWeek, day }: { recipesWeek: Fo
     const screenWidth = Dimensions.get('window').width
     const router = useRouter()
     const { user } = useContext(UserContext)
+    const {t} = useTranslation()
     
     const onAddToScheduler = () => {
         router.push(`/addToScheduler/${day}`)
@@ -21,7 +24,7 @@ export default function SchedulerRecipe( { recipesWeek, day }: { recipesWeek: Fo
     return (
         <View style={styles.container}>
             <View style={styles.addContainer}>
-                <Text style={styles.subtitleText}>{day}</Text>
+                <Text style={styles.subtitleText}>{t(TranslationKeys.Day[day.toUpperCase()])}</Text>
                 { false && user && <Pressable style={styles.addButton} >
                     <MaterialIcons name="add" style={styles.icon} onPress={ onAddToScheduler } />
                 </Pressable>}

@@ -9,10 +9,14 @@ import { UserContext } from '../app/_layout'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { useRouter } from 'expo-router'
 import i18next from 'i18next'
+import * as SecureStore from 'expo-secure-store'
+import { useTranslation } from 'react-i18next'
+import { TranslationKeys } from '../locales/_translationKeys'
 
 const ProfileInfo = () => {
     const { user, signInFn, signOutFn } = useContext(UserContext)
     const router = useRouter()
+    const {t} = useTranslation()
     useEffect(() => {
         GoogleSignin.configure({
             webClientId: "679997496367-v24ck2ikahtou5jd89fa870fp9s83plt.apps.googleusercontent.com"
@@ -20,20 +24,21 @@ const ProfileInfo = () => {
     }, [])
     const emojisWithIcons = user ? 
         [
-            { title: 'Sign Out', code: 'signOut' },
-            { title: 'Settings', code: 'settings' },
-            { title: 'English', code: 'en' }, 
-            { title: 'Srpski', code: 'sr' }, 
+            { title: t(TranslationKeys.Settings.SETTINGS), code: 'settings' },
+            { title: t(TranslationKeys.Button.LOG_OUT), code: 'signOut' },
         ]
         :
         [
-            { title: 'Sign In', code: 'signIn' },
-            { title: 'English', code: 'en' }, 
-            { title: 'Srpski', code: 'sr' }, 
+            { title: t(TranslationKeys.Settings.SETTINGS), code: 'settings' },
+            { title: t(TranslationKeys.Button.LOG_IN), code: 'signIn' },
         ]
     
     const handleOpenBookmarks = () => {
         router.push(`/bookmark`)
+    }
+
+    const handleOpenSettings = () => {
+        router.push(`/settings`)
     }
     
     return (
@@ -45,9 +50,7 @@ const ProfileInfo = () => {
                     switch(selectedItem.code){
                         case 'signIn': {signInFn(); break;}
                         case 'signOut': {signOutFn(); break;}
-                        case 'settings': { break;} 
-                        case 'en': {i18next.changeLanguage('en'); break;}
-                        case 'sr': {i18next.changeLanguage('sr'); break;}
+                        case 'settings': { handleOpenSettings(); break;} 
                     }
                 }}
                 renderButton={(selectedItem, isOpened) => {

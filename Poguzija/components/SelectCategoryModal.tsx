@@ -3,8 +3,11 @@ import React, { Component, FC, useEffect, useState } from 'react'
 import { Category } from '../model/model'
 import { COLORS, SIZES } from '../constants/Colors'
 import { GetCategoryData } from '../service/HelperService'
+import { TranslationKeys } from '../locales/_translationKeys'
+import { useTranslation } from 'react-i18next'
 
 export const SelectCategoryModal = ({ alreadySelected, visible, onClose }) => {
+    const {t} = useTranslation()
     const [category, setCategory] = useState<Category[]>()
     const handlePress = (type: string, name: string) => {
         setCategory(prevCategories => prevCategories?.map(cat => cat.type === type ? { ...cat, data: cat.data.map(item => item.name === name ? { ...item, isSelected: !item.isSelected } : item )}: cat ))
@@ -43,12 +46,13 @@ export const SelectCategoryModal = ({ alreadySelected, visible, onClose }) => {
                         style={styles.flex}
                         renderItem={({ item }) => 
                             <View>
-                                <Pressable><Text style={styles.subtitleText}>{item.type}</Text></Pressable>
+                                <Pressable><Text style={styles.subtitleText}>{t(TranslationKeys.CategoryType[item.type])}</Text></Pressable>
                                 { item.data?.map((categoryData, index) => (
                                     <Pressable
                                         style={ categoryData.isSelected ? styles.buttonModalSelected : styles.buttonModal }
-                                        onPress={ () => handlePress(item.type, categoryData.name) }>
-                                        <Text style={styles.textStyle}>{categoryData.name}</Text>
+                                        onPress={ () => handlePress(item.type, categoryData.name) }
+                                        key={categoryData.name}>
+                                        <Text style={styles.textStyle}>{t(TranslationKeys.CategoryItem[categoryData.name])}</Text>
                                     </Pressable>
                                 ))}
                             </View>

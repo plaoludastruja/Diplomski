@@ -96,11 +96,11 @@ function RootLayoutNav() {
             <I18nextProvider i18n={i18n}>
                 <Stack >
                     <Stack.Screen name="(tabs)" options={{ headerShown: false, navigationBarColor: COLORS.white, }} />
-                    <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
                     <Stack.Screen name="(foodRecipesItem)/foodRecipesItem/[foodRecipesItemId]" options={{ headerShown: false, navigationBarColor: COLORS.dark, }}/>
                     <Stack.Screen name="(addRecipe)/addRecipe" options={{ headerShown: false, navigationBarColor: COLORS.dark, }}/>
                     <Stack.Screen name="(bookmark)/bookmark" options={{ headerShown: false, navigationBarColor: COLORS.dark, }}/>
                     <Stack.Screen name="(comments)/comments/[commentRecipeId]" options={{ headerShown: false, navigationBarColor: COLORS.dark, }}/>
+                    <Stack.Screen name="(settings)/settings" options={{ headerShown: false, navigationBarColor: COLORS.dark, }}/>
                 </Stack>  
             </I18nextProvider>
             </AlertNotificationRoot>

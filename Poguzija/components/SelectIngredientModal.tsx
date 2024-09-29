@@ -6,11 +6,14 @@ import { GetCategoryData } from '../service/HelperService'
 import { GetIngredients } from '../service/IngredientService'
 import constructWithOptions from 'styled-components/dist/constructors/constructWithOptions'
 import { MaterialIcons } from '@expo/vector-icons'
+import { TranslationKeys } from '../locales/_translationKeys'
+import { useTranslation } from 'react-i18next'
 
 export const SelectIngredientModal = ({ alreadySelected, visible, onClose }) => {
     const [selectedIngredient, setSelectedIngredient] = useState<SelectedIngredient[]>()
     const [search, setSearch] = useState('')
     const [dataFilter, setDataFilter] = useState<SelectedIngredient[]>([])
+    const {t} = useTranslation()
 
     const handlePress = (name: string) => {
         setSelectedIngredient(prevIngredients => prevIngredients?.map(i => i.name === name ? {...i,isSelected: !i.isSelected } : i ))
@@ -63,7 +66,7 @@ export const SelectIngredientModal = ({ alreadySelected, visible, onClose }) => 
                         <MaterialIcons name="search" style={styles.icon} />
                         <TextInput
                             style={styles.textInput}
-                            placeholder="Search"
+                            placeholder={t(TranslationKeys.Button.SEARCH)}
                             value={search}
                             autoComplete='off'
                             onChangeText={text => {

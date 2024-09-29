@@ -11,6 +11,8 @@ import { Comment } from "../../../model/model"
 import { CardComment } from "../../../components/CardComment"
 import { AddCommentModal } from "../../../components/AddCommentModal"
 import { UpdateRecipeRating } from "../../../service/RecipesService"
+import { useTranslation } from "react-i18next"
+import { TranslationKeys } from "../../../locales/_translationKeys"
 
 export default function CommentsScreen() {
     const { commentRecipeId } = useLocalSearchParams<{ commentRecipeId: string }>()
@@ -19,6 +21,7 @@ export default function CommentsScreen() {
     const [loading, setLoading] = useState(true)
     const [refreshing, setRefreshing] = useState(false)
     const [addCommentModalVisible, setAddCommentModalVisible] = useState(false)
+    const {t} = useTranslation()
 
     useEffect(() => {
         setLoading(true)
@@ -66,7 +69,7 @@ export default function CommentsScreen() {
         <BackgroundSafeAreaView>
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <Text style={styles.subtitleText}>Reviews</Text>
+                    <Text style={styles.subtitleText}>{t(TranslationKeys.Review.REVIEWS)}</Text>
                     { user ? 
                     <Pressable style={styles.addButton} onPress={() => setAddCommentModalVisible(true)}>
                         <MaterialIcons name="add" style={styles.icon}  />

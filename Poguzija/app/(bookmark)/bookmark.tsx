@@ -6,11 +6,14 @@ import { FoodRecipes } from "../../model/model"
 import LoadingScreen from "../../components/LoadingScreen"
 import CardFoodRecipes from "../../components/CardFoodRecipes"
 import { GetMySavedFoodRecipes } from "../../service/BookmarkService"
+import { TranslationKeys } from "../../locales/_translationKeys"
+import { useTranslation } from "react-i18next"
 
 export default function BookmarkScreen() {
     const [food, setFood] = useState<FoodRecipes[]>([])
     const [refreshing, setRefreshing] = useState(false)
     const [loading, setLoading] = useState(true)
+    const {t} = useTranslation()
 
     useEffect(() => {
         setLoading(true)
@@ -37,7 +40,7 @@ export default function BookmarkScreen() {
 
     return (
         <BackgroundSafeAreaView>
-            <Text style={styles.subtitleText}>Saved</Text>
+            <Text style={styles.subtitleText}>{t(TranslationKeys.Bookmark.SAVED)}</Text>
             <View style={styles.line} />
             <FlatList
                 data={food}

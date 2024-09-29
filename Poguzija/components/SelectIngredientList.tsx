@@ -4,8 +4,11 @@ import { MyComponentProps } from '../model/model'
 import { MaterialIcons } from '@expo/vector-icons'
 import { COLORS, SIZES } from '../constants/Colors'
 import { GetIngredients, GetUnits } from '../service/IngredientService'
+import { TranslationKeys } from '../locales/_translationKeys'
+import { useTranslation } from 'react-i18next'
 
 const SelectIngredientList = ({ modalDataType, visible, onAdd, onClose }) => {
+    const {t} = useTranslation()
     const [search, setSearch] = useState('')
     const [data, setData] = useState([])
     const [dataFilter, setDataFilter] = useState([])
@@ -68,7 +71,7 @@ const SelectIngredientList = ({ modalDataType, visible, onAdd, onClose }) => {
                         <MaterialIcons name="search" style={styles.icon} />
                         <TextInput
                             style={styles.textInput}
-                            placeholder="Search"
+                            placeholder={t(TranslationKeys.Button.SEARCH)}
                             value={search}
                             autoComplete='off'
                             onChangeText={text => {
@@ -78,7 +81,7 @@ const SelectIngredientList = ({ modalDataType, visible, onAdd, onClose }) => {
                         />
                     </View>
                     { addButtonVisible && <Pressable style={ styles.buttonModal } onPress={() => handlePress({ name: search})} >
-                        <Text style={ styles.textStyle }>Add</Text>
+                        <Text style={ styles.textStyle }>{t(TranslationKeys.Button.ADD)}</Text>
                     </Pressable>}
                     <FlatList
                         data={dataFilter}
