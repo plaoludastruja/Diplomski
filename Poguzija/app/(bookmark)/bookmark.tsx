@@ -8,22 +8,34 @@ import CardFoodRecipes from "../../components/CardFoodRecipes"
 import { GetMySavedFoodRecipes } from "../../service/BookmarkService"
 import { TranslationKeys } from "../../locales/_translationKeys"
 import { useTranslation } from "react-i18next"
+import { QueryDocumentSnapshot } from "firebase/firestore/lite"
+import { UserContext } from "../_layout"
 
 export default function BookmarkScreen() {
+    const { user } = useContext(UserContext)
     const [food, setFood] = useState<FoodRecipes[]>([])
     const [refreshing, setRefreshing] = useState(false)
     const [loading, setLoading] = useState(true)
+    const [lastVisible, setLastVisible] = useState<number>()
+    const [hasMore, setHasMore] = useState(true)
     const {t} = useTranslation()
 
     useEffect(() => {
-        setLoading(true)
-        fetchData()
+        if(user){
+            setLoading(true)
+            fetchData()
+        }else{
+            setFood([])
+            setLoading(false)
+        }
     }, [])
 
     const fetchData = async () => {
         try {
-            const foodRecipesData = await GetMySavedFoodRecipes()
+            const { foodRecipesData, newLastIndex } = await GetMySavedFoodRecipes()
             setFood(foodRecipesData)
+            setLastVisible(newLastIndex)
+            setHasMore(foodRecipesData.length > 0)
             setRefreshing(false)
             setLoading(false)
         } catch (error) {
@@ -34,6 +46,18 @@ export default function BookmarkScreen() {
     const handleRefresh = () => {
         setRefreshing(true)
         fetchData()
+    }
+
+    const handleEndReached = async () => {
+        if(hasMore){
+            const { foodRecipesData, newLastIndex } = await GetMySavedFoodRecipes(lastVisible)
+            if (foodRecipesData.length > 0) {
+                setFood([...food, ...foodRecipesData])
+                setLastVisible(newLastIndex)
+            }else{
+                setHasMore(false)
+            }
+        }
     }
 
     if (loading) return <LoadingScreen />
@@ -54,6 +78,8 @@ export default function BookmarkScreen() {
                         onRefresh={handleRefresh}
                     />
                 }
+                onEndReached={handleEndReached}
+                onEndReachedThreshold={0.5}
             />  
         </BackgroundSafeAreaView>
     )

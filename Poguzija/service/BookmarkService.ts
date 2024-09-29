@@ -12,9 +12,9 @@ function AddBookmark(id: string) {
     setDoc(doc(db, DatabaseCollection.bookmarks, id).withConverter(bookmarkConverter), bookmark)
 }
 
-async function GetMySavedFoodRecipes(): Promise<FoodRecipes[]> {
+async function GetMySavedFoodRecipes(lastIndex: number = 0): Promise<{foodRecipesData: FoodRecipes[], newLastIndex: number}> {
     const user = await GetCurrentUser()
-    if (!user) return []
+    if (!user) return { foodRecipesData: [], newLastIndex: -1 }
     let bookmark: Bookmark = {
         id: user.id,
         savedFoodRecipesIds: []
@@ -24,14 +24,21 @@ async function GetMySavedFoodRecipes(): Promise<FoodRecipes[]> {
         bookmark = data.data()
     }
     if (bookmark.savedFoodRecipesIds.length === 0) {
-        return []
+        return { foodRecipesData: [], newLastIndex: -1 }
     }
-    const recipePromises = bookmark.savedFoodRecipesIds.map(id => getDoc(doc(db, DatabaseCollection.recipes, id)))
+    const batchSize = 5
+    const nextBatchIds = bookmark.savedFoodRecipesIds.slice(lastIndex, lastIndex + batchSize)
+    if (nextBatchIds.length === 0) {
+        return { foodRecipesData: [], newLastIndex: -1 }
+    }
+    const recipePromises = nextBatchIds.map(id => getDoc(doc(db, DatabaseCollection.recipes, id)))
     const recipeSnapshots = await Promise.all(recipePromises)
-    return recipeSnapshots.map(doc => ({
+    const foodRecipesData = recipeSnapshots.map(doc => ({
         id: doc.id,
         ...doc.data()
     } as FoodRecipes))
+    const newLastIndex = lastIndex + batchSize < bookmark.savedFoodRecipesIds.length ? lastIndex + batchSize : -1
+    return { foodRecipesData, newLastIndex }
 }
 
 async function AddToMyBookmark(newSavedFoodRecipesId: string) {
