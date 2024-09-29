@@ -10,6 +10,8 @@ import { MyUser } from '../model/model'
 import { SignIn, SignOut } from '../service/AuthService'
 import { GetCurrentUser } from '../service/AuthService'
 import { AlertNotificationRoot } from 'react-native-alert-notification'
+import { I18nextProvider } from 'react-i18next'
+import i18n from '../locales/_i18n'
 
 export { ErrorBoundary, } from 'expo-router'
 
@@ -88,20 +90,22 @@ function RootLayoutNav() {
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <ThemeProvider value={theme}>
-                <UserContext.Provider value={{ user, signInFn, signOutFn }}>
-                <SchedulerContext.Provider value={{ refreshScheduler, setRefreshScheduler }}>
-                <AlertNotificationRoot colors={[{ card: COLORS.dark, label: COLORS.white }]}>
-                    <Stack >
-                        <Stack.Screen name="(tabs)" options={{ headerShown: false, navigationBarColor: COLORS.white, }} />
-                        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-                        <Stack.Screen name="(foodRecipesItem)/foodRecipesItem/[foodRecipesItemId]" options={{ headerShown: false, navigationBarColor: COLORS.dark, }}/>
-                        <Stack.Screen name="(addRecipe)/addRecipe" options={{ headerShown: false, navigationBarColor: COLORS.dark, }}/>
-                        <Stack.Screen name="(bookmark)/bookmark" options={{ headerShown: false, navigationBarColor: COLORS.dark, }}/>
-                        <Stack.Screen name="(comments)/comments/[commentRecipeId]" options={{ headerShown: false, navigationBarColor: COLORS.dark, }}/>
-                    </Stack>
-                </AlertNotificationRoot>
-                </SchedulerContext.Provider>
-                </UserContext.Provider>
+            <UserContext.Provider value={{ user, signInFn, signOutFn }}>
+            <SchedulerContext.Provider value={{ refreshScheduler, setRefreshScheduler }}>
+            <AlertNotificationRoot colors={[{ card: COLORS.dark, label: COLORS.white }]}>
+            <I18nextProvider i18n={i18n}>
+                <Stack >
+                    <Stack.Screen name="(tabs)" options={{ headerShown: false, navigationBarColor: COLORS.white, }} />
+                    <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+                    <Stack.Screen name="(foodRecipesItem)/foodRecipesItem/[foodRecipesItemId]" options={{ headerShown: false, navigationBarColor: COLORS.dark, }}/>
+                    <Stack.Screen name="(addRecipe)/addRecipe" options={{ headerShown: false, navigationBarColor: COLORS.dark, }}/>
+                    <Stack.Screen name="(bookmark)/bookmark" options={{ headerShown: false, navigationBarColor: COLORS.dark, }}/>
+                    <Stack.Screen name="(comments)/comments/[commentRecipeId]" options={{ headerShown: false, navigationBarColor: COLORS.dark, }}/>
+                </Stack>  
+            </I18nextProvider>
+            </AlertNotificationRoot>
+            </SchedulerContext.Provider>
+            </UserContext.Provider>
             </ThemeProvider>
         </GestureHandlerRootView>
                 

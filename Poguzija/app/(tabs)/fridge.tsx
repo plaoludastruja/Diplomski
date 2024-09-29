@@ -72,6 +72,7 @@ export default function FridgeScreen() {
             </>) 
             :(
             <>
+                <ProfileInfo />
                 <Image source={RegisterImage} style={[{ width: screenWidth, height: screenHeight / 2 }]} />
                 <Pressable style={styles.button}
                     onPress={() => { signInFn()

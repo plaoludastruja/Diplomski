@@ -8,6 +8,7 @@ import SelectDropdown from 'react-native-select-dropdown'
 import { UserContext } from '../app/_layout'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { useRouter } from 'expo-router'
+import i18next from 'i18next'
 
 const ProfileInfo = () => {
     const { user, signInFn, signOutFn } = useContext(UserContext)
@@ -20,10 +21,15 @@ const ProfileInfo = () => {
     const emojisWithIcons = user ? 
         [
             { title: 'Sign Out', code: 'signOut' },
-            { title: 'Settings', code: 'settings' }]
+            { title: 'Settings', code: 'settings' },
+            { title: 'English', code: 'en' }, 
+            { title: 'Srpski', code: 'sr' }, 
+        ]
         :
         [
-            { title: 'Sign In', code: 'signIn' }
+            { title: 'Sign In', code: 'signIn' },
+            { title: 'English', code: 'en' }, 
+            { title: 'Srpski', code: 'sr' }, 
         ]
     
     const handleOpenBookmarks = () => {
@@ -40,6 +46,8 @@ const ProfileInfo = () => {
                         case 'signIn': {signInFn(); break;}
                         case 'signOut': {signOutFn(); break;}
                         case 'settings': { break;} 
+                        case 'en': {i18next.changeLanguage('en'); break;}
+                        case 'sr': {i18next.changeLanguage('sr'); break;}
                     }
                 }}
                 renderButton={(selectedItem, isOpened) => {

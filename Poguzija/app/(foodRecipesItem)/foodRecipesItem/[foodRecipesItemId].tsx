@@ -5,7 +5,7 @@ import { View, Pressable, Text, StyleSheet, Image, Dimensions } from 'react-nati
 import { FoodRecipes } from '../../../model/model'
 import Carousel from 'react-native-snap-carousel'
 import { COLORS, SIZES } from '../../../constants/Colors'
-import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons'
+import { FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import LoadingScreen from '../../../components/LoadingScreen'
 import { GetFoodRecipe, UpdateSavedCount } from '../../../service/RecipesService'
@@ -15,6 +15,8 @@ import { AddToMyBookmark, IsRecipeBookmarked, RemoveFromMyBookmark } from '../..
 import { SelectWeekModal } from '../../../components/SelectWeekModal'
 import { AddToMyScheduler } from '../../../service/SchedulerService'
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
+import { useTranslation } from 'react-i18next'
+import { TranslationKeys } from '../../../locales/_translationKeys'
 
 
 export default function FoodRecipesItem() {
@@ -27,6 +29,7 @@ export default function FoodRecipesItem() {
     const [isRecipeBookmarked, setIsRecipeBookmarked] = useState(false)
     const [savedCount, setSavedCount] = useState(0)
     const [selectWeekModalVisible, setSelectWeekModalVisible] = useState(false)
+    const {t} = useTranslation()
 
     const router = useRouter()
 
@@ -144,7 +147,7 @@ export default function FoodRecipesItem() {
                     snapPoints={['35', '65', '95']}
                     backgroundStyle={{ backgroundColor: COLORS.dark }} >
                     <BottomSheetScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
-                        <Text style={styles.subtitleText}>Recipe name</Text>
+                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.NAME)}</Text>
                         <View style={styles.inputContainer}>
                             <MaterialIcons name="receipt" style={styles.icon} />
                             <BottomSheetTextInput
@@ -159,7 +162,7 @@ export default function FoodRecipesItem() {
 
                         <Text style={styles.subtitleText}>Description</Text>
                         <View style={styles.inputContainer}>
-                            <MaterialIcons name="receipt" style={styles.icon} />
+                            <MaterialCommunityIcons name="pencil" style={styles.icon} />
                             <BottomSheetTextInput
                                 style={styles.textInput}
                                 multiline={true}
