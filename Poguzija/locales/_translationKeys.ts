@@ -118,7 +118,7 @@ export namespace TranslationKeys {
         HEALTY = 'categoryItem.healty',
         BBQ = 'categoryItem.bbq',
         FISH = 'categoryItem.fish',
-        MEAT = 'categoryIten.meat',
+        MEAT = 'categoryItem.meat',
         SANDWICHES = 'categoryItem.sandwiches',
         VEGETERIAN = 'categoryItem.vegeterian',
         VEGE = 'categoryItem.vege',
