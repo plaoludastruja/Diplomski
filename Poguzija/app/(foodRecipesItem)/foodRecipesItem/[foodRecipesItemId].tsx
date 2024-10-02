@@ -251,13 +251,14 @@ export default function FoodRecipesItem() {
 
                         <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.INSTRUCTIONS)}</Text>
                         {food?.steps?.map((step, index) => (
-                            <BottomSheetTextInput
-                                style={styles.input}
-                                multiline={true}
-                                value={`${step.number}. ${step.description}`}
-                                key={step.number}
-                                editable={false}
-                            />
+                            <View style={styles.ingredientItem} key={step.number} >
+                                <BottomSheetTextInput
+                                    style={styles.input}
+                                    multiline={true}
+                                    value={`${step.number}. ${step.description}`}
+                                    editable={false}
+                                />
+                            </View>
                         ))}
                         <Pressable style={styles.button} onPress={handleOpenComments}>
                             <Text style={styles.buttonText}>{t(TranslationKeys.Review.SHOW_REVIEWS)}</Text>
@@ -306,8 +307,7 @@ const styles = StyleSheet.create({
         minHeight: 60,
         backgroundColor: COLORS.white,
         borderRadius: SIZES.extraLarge,
-        marginBottom: SIZES.small,
-        padding: SIZES.small,
+        paddingVertical: SIZES.base,
         color: COLORS.tint,
         fontSize: SIZES.large
     },
@@ -363,11 +363,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         width: '95%',
-        height: 60,
+        minHeight: 60,
         backgroundColor: COLORS.white,
         borderRadius: SIZES.extraLarge,
         marginBottom: SIZES.small,
-        paddingHorizontal: SIZES.small,
+        padding: SIZES.small,
+        paddingStart: SIZES.medium,
         color: COLORS.tint,
         fontSize: SIZES.large,
     },

@@ -134,6 +134,17 @@ export default function AddRecipeScreen() {
         setSelectedIngredients(updatedIngredients)
     }
 
+    const handleDeleteStep = (index: number) => {
+        setStepList((prevStepList) => {
+            const updatedStepList = prevStepList.filter((_, stepIndex) => stepIndex !== index)
+            if(updatedStepList.length === 0) setStepsPlaceholder('ADD_FIRST_STEP')
+            return updatedStepList.map((step, idx) => ({
+                ...step,
+                number: idx + 1
+            }))
+        })
+    }
+
     const handleAddIngredient = (newIngredient: Ingredient) => {
         const updatedIngredients = selectedIngredients.map(ingredient =>
             ingredient.name === newIngredient.name ? newIngredient : ingredient
@@ -279,7 +290,7 @@ export default function AddRecipeScreen() {
                         <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.INGREDIENTS)}</Text>
                         {selectedIngredients?.map((ingredient, index) => (
                             <Pressable key={index} style={styles.ingredientItem} onPress={() => handlePressToEdit(ingredient)}>
-                                <Text style={[styles.textInput, { width: "auto" }]}>   {t(TranslationKeys.IngredientItem[ingredient.name as keyof typeof TranslationKeys.IngredientItem]) || ingredient.name}   -   {ingredient.amount}  {t(TranslationKeys.UnitItem[ingredient.unit as keyof typeof TranslationKeys.UnitItem]).toLowerCase() || ingredient.unit}</Text>
+                                <Text style={[styles.textInput, { width: "85%" }]}>   {t(TranslationKeys.IngredientItem[ingredient.name as keyof typeof TranslationKeys.IngredientItem]) || ingredient.name}   -   {ingredient.amount}  {t(TranslationKeys.UnitItem[ingredient.unit as keyof typeof TranslationKeys.UnitItem]).toLowerCase() || ingredient.unit}</Text>
                                 <Pressable onPress={() => handleDeleteIngredient(ingredient)}>
                                     <MaterialIcons name="delete" style={styles.icon} />
                                 </Pressable>
@@ -291,26 +302,32 @@ export default function AddRecipeScreen() {
 
                         <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.INSTRUCTIONS)}</Text>
                         {stepList?.map((step, index) => (
-                            <TextInput
-                                style={styles.input}
+                            <Pressable key={index} style={styles.ingredientItem} >
+                                <TextInput
+                                style={[styles.input, { width: "85%" }]}
                                 multiline={true}
                                 value={`${step.number}. ${step.description}`}
                                 autoComplete='off'
                                 onChangeText={(text) => handleChangeText(text, index)}
                                 key={step.number}
                             />
+                                <Pressable onPress={() => handleDeleteStep(index)}>
+                                    <MaterialIcons name="delete" style={styles.icon} />
+                                </Pressable>
+                            </Pressable>
                         ))}
-                        <TextInput
-                            style={styles.input}
-                            placeholder={t(TranslationKeys.Recipe[stepsPlaceholder as keyof typeof TranslationKeys.Recipe]) || stepsPlaceholder}
-                            value={step}
-                            autoComplete='off'
-                            onChangeText={(text) => setStep(text)}
-                            onEndEditing={() => handleNextStep(step)}
-                            onSubmitEditing={() => handleNextStep(step)}
-                            blurOnSubmit={false}
-                        />
-
+                        <View style={styles.ingredientItem} >
+                            <TextInput
+                                style={styles.input}
+                                placeholder={t(TranslationKeys.Recipe[stepsPlaceholder as keyof typeof TranslationKeys.Recipe]) || stepsPlaceholder}
+                                value={step}
+                                autoComplete='off'
+                                onChangeText={(text) => setStep(text)}
+                                onEndEditing={() => handleNextStep(step)}
+                                onSubmitEditing={() => handleNextStep(step)}
+                                blurOnSubmit={false}
+                            />
+                        </View>
                         <Pressable style={styles.button} onPress={handleCreateRecipe}>
                             <Text style={styles.buttonText}>{t(TranslationKeys.Recipe.CREATE_RECIPE)}</Text>
                         </Pressable>
@@ -401,8 +418,7 @@ const styles = StyleSheet.create({
         minHeight: 60,
         backgroundColor: COLORS.white,
         borderRadius: SIZES.extraLarge,
-        marginBottom: SIZES.small,
-        padding: SIZES.small,
+        paddingVertical: SIZES.base,
         color: COLORS.tint,
         fontSize: SIZES.large
     },
@@ -468,11 +484,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         width: '95%',
-        height: 60,
+        minHeight: 60,
         backgroundColor: COLORS.white,
         borderRadius: SIZES.extraLarge,
         marginBottom: SIZES.small,
-        paddingHorizontal: SIZES.small,
+        padding: SIZES.small,
+        paddingStart: SIZES.medium,
         color: COLORS.tint,
         fontSize: SIZES.large,
     },
