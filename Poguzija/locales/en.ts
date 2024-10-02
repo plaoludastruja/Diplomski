@@ -17,6 +17,9 @@ export const en = {
         addCategories: 'Add category',
         addIngredient: 'Add ingredients',
         createRecipe: 'Create recipe',
+        editRecipe: 'Edit recipe',
+        deleteRecipe: 'Delete recipe',
+        recipeDeleted: 'Recipe is deleted',
     },
     ingredient: {
         name: 'Ingredient',

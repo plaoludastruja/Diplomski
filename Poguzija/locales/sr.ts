@@ -17,6 +17,9 @@ export const sr = {
         addCategories: 'Dodajte kategorije',
         addIngredient: 'Dodajte sastojke',
         createRecipe: 'Kreirajte recept',
+        editRecipe: 'Izmjenite recept',
+        deleteRecipe: 'Obrišite recept',
+        recipeDeleted: 'Recept je obrisan',
     },
     ingredient: {
         name: 'Sastojak',

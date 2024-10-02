@@ -8,7 +8,7 @@ import { COLORS, SIZES } from '../../../constants/Colors'
 import { FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import LoadingScreen from '../../../components/LoadingScreen'
-import { GetFoodRecipe, UpdateSavedCount } from '../../../service/RecipesService'
+import { DeleteFoodRecipe, GetFoodRecipe, UpdateSavedCount } from '../../../service/RecipesService'
 import { SchedulerContext, UserContext } from '../../_layout'
 import { LinearGradient } from 'expo-linear-gradient'
 import { AddToMyBookmark, IsRecipeBookmarked, RemoveFromMyBookmark } from '../../../service/BookmarkService'
@@ -17,6 +17,7 @@ import { AddToMyScheduler } from '../../../service/SchedulerService'
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 import { useTranslation } from 'react-i18next'
 import { TranslationKeys } from '../../../locales/_translationKeys'
+import SelectDropdown from 'react-native-select-dropdown'
 
 
 export default function FoodRecipesItem() {
@@ -98,6 +99,7 @@ export default function FoodRecipesItem() {
             
         }
     }
+
     const handleOpenComments = () => {
         router.push(`/comments/${foodRecipesItemId}`)
     }
@@ -120,6 +122,24 @@ export default function FoodRecipesItem() {
         )
     }
 
+    const emojisWithIcons =
+        [
+            { title: t(TranslationKeys.Recipe.EDIT_RECIPE), code: 'edit' },
+            { title: t(TranslationKeys.Recipe.DELETE_RECIPE), code: 'delete' },
+        ]
+
+    const handleEditRecipe = () => {
+
+    }
+
+    const handleDeleteRecipe = () => {
+        DeleteFoodRecipe(foodRecipesItemId)
+        Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: t(TranslationKeys.Recipe.RECIPE_DELETED)
+        })
+    }
+
     if (loading) return <LoadingScreen />
 
     return (
@@ -139,6 +159,32 @@ export default function FoodRecipesItem() {
                             <Text style={styles.savedCount}>{savedCount}</Text>
                             <FontAwesome name={bookmarkIconType} color={COLORS.white} size={1.2 * SIZES.tabIcon} onPress={handleAddToBookmarks} />
                             <Ionicons name='calendar-outline' color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base }} onPress={handleAddToScheduler} />
+                            {user.id === food?.author &&
+                                <SelectDropdown
+                                data={emojisWithIcons}
+                                onSelect={(selectedItem, index) => {
+                                    switch(selectedItem.code){
+                                        case 'edit': { handleEditRecipe(); break;}
+                                        case 'delete': { handleDeleteRecipe(); break;}
+                                    }
+                                }}
+                                renderButton={(selectedItem, isOpened) => {
+                                    return (
+                                        <View>
+                                            <Ionicons name="options" color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base / 2, }} />
+                                        </View>
+                                    )
+                                }}
+                                renderItem={(item, index, isSelected) => {
+                                    return (
+                                        <View style={{ ...styles.dropdownItemStyle }}>
+                                            <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
+                                        </View>
+                                    )
+                                }}
+                                showsVerticalScrollIndicator={false}
+                                dropdownStyle={styles.dropdownMenuStyle}
+                            />}
                         </View>}
                 </View>
 
@@ -340,5 +386,28 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginEnd: SIZES.base,
         textAlignVertical: 'center'
+    }, 
+    dropdownMenuStyle: {
+        width: 'auto',
+        padding: SIZES.base,
+        paddingEnd:0,
+        marginStart: -145,
+        marginTop: -30,
+        borderRadius: SIZES.base,
+        borderTopEndRadius: 0,
+    },
+    dropdownItemStyle: {
+        paddingHorizontal: SIZES.medium,
+        alignItems: 'flex-end',
+        paddingVertical: SIZES.base,
+        width: '100%'
+    },
+    dropdownItemTxtStyle: {
+        flex: 1,
+        width: '100%',
+        textAlign: 'right',
+        fontSize: SIZES.large,
+        fontWeight: '500',
+        color: COLORS.lightDark,
     },
 })

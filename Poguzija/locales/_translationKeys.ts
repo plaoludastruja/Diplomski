@@ -17,6 +17,9 @@ export namespace TranslationKeys {
         ADD_CATEGORIES = 'recipe.addCategories',
         ADD_INGREDIENT = 'recipe.addIngredient',
         CREATE_RECIPE = 'recipe.createRecipe',
+        EDIT_RECIPE = 'recipe.editRecipe',
+        DELETE_RECIPE = 'recipe.deleteRecipe',
+        RECIPE_DELETED = 'recipe.recipeDeleted',
     }
 
     export enum Ingredient {

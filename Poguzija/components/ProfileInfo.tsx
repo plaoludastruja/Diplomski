@@ -97,7 +97,9 @@ const styles = StyleSheet.create({
 
 
     dropdownMenuStyle: {
-        width: 150,
+        width: 'auto',
+        padding: SIZES.base,
+        paddingEnd: 0,
         marginStart: -145,
         marginTop: -30,
         borderRadius: SIZES.base,

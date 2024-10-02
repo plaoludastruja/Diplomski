@@ -86,18 +86,22 @@ async function GetMyRecipesScheduler(id: string) {
     const recipePromises = recipeScheduler.recipeByDay.map(day =>  day.recipes.map(id => getDoc(doc(db, DatabaseCollection.recipes, id)))).flat()
     const recipeSnapshots = await Promise.all(recipePromises)
 
-    const allFoodRecipes = recipeSnapshots.map(doc => ({ id: doc.id, ...doc.data() } as FoodRecipes))
+    const allFoodRecipes = recipeSnapshots
+    .filter(doc => doc.exists()).
+        map(docE =>  ({
+            id: docE.id,
+            ...docE.data()
+        } as FoodRecipes))
 
     const recipeSchedulerData: RecipeSchedulerReturn = {
         id: id,
         recipeByDay: recipeScheduler.recipeByDay.map((day) => {
             return {
                 day: day.day,
-                recipes: day.recipes.map(id => allFoodRecipes.find(recipe => recipe.id === id)!)
+                recipes: day.recipes.map(id => allFoodRecipes.find(recipe => recipe.id === id)).filter(r => r !== undefined)
             }
         })
     }
-
     return recipeSchedulerData
 }
 

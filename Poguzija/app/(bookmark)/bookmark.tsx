@@ -35,7 +35,7 @@ export default function BookmarkScreen() {
             const { foodRecipesData, newLastIndex } = await GetMySavedFoodRecipes()
             setFood(foodRecipesData)
             setLastVisible(newLastIndex)
-            setHasMore(foodRecipesData.length > 0)
+            setHasMore(newLastIndex !== -1)
             setRefreshing(false)
             setLoading(false)
         } catch (error) {

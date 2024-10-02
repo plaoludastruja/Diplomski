@@ -1,4 +1,4 @@
-import { getDocs, query, collection, orderBy, getDoc, doc, addDoc, QueryDocumentSnapshot, serverTimestamp, where, updateDoc, increment, limit, startAfter } from "firebase/firestore/lite"
+import { getDocs, query, collection, orderBy, getDoc, doc, addDoc, QueryDocumentSnapshot, serverTimestamp, where, updateDoc, increment, limit, startAfter, deleteDoc } from "firebase/firestore/lite"
 import { DatabaseCollection, FoodRecipes } from "../model/model"
 import { db } from "./firebase"
 import { GetCurrentUser } from "./AuthService"
@@ -44,6 +44,12 @@ async function GetFoodRecipe(id: string): Promise<FoodRecipes> {
 
 function AddFoodRecipe(newRecipe: Partial<FoodRecipes>) {
     addDoc(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), newRecipe)
+}
+
+async function DeleteFoodRecipe(recipeId: string) {
+    const user = await GetCurrentUser()
+    if (!user) return
+    deleteDoc(doc(db, DatabaseCollection.recipes, recipeId))
 }
 
 async function GetMyFoodRecipes(lastVisible: QueryDocumentSnapshot | null) {
@@ -110,6 +116,7 @@ export {
     GetAllFoodRecipes,
     GetFoodRecipe,
     AddFoodRecipe,
+    DeleteFoodRecipe,
     GetMyFoodRecipes,
     UpdateSavedCount,
     UpdateRecipeRating,

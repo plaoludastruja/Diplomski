@@ -33,10 +33,12 @@ async function GetMySavedFoodRecipes(lastIndex: number = 0): Promise<{foodRecipe
     }
     const recipePromises = nextBatchIds.map(id => getDoc(doc(db, DatabaseCollection.recipes, id)))
     const recipeSnapshots = await Promise.all(recipePromises)
-    const foodRecipesData = recipeSnapshots.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-    } as FoodRecipes))
+    const foodRecipesData = recipeSnapshots
+        .filter(doc => doc.exists()).
+            map(docE =>  ({
+                id: docE.id,
+                ...docE.data()
+            } as FoodRecipes))
     const newLastIndex = lastIndex + batchSize < bookmark.savedFoodRecipesIds.length ? lastIndex + batchSize : -1
     return { foodRecipesData, newLastIndex }
 }
