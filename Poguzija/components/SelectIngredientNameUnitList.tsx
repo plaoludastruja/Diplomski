@@ -1,37 +1,65 @@
 import { Text, StyleSheet, View, Modal, Pressable, TextInput, FlatList } from 'react-native'
 import React, { Component, FC, useEffect, useState } from 'react'
-import { Category, IngredientNameUnit, data } from '../model/model'
+import { IngredientNameUnit, MyComponentProps } from '../model/model'
+import { MaterialIcons } from '@expo/vector-icons'
 import { COLORS, SIZES } from '../constants/Colors'
 import { GetIngredientNameUnitCategory } from '../service/IngredientService'
-import constructWithOptions from 'styled-components/dist/constructors/constructWithOptions'
-import { MaterialIcons } from '@expo/vector-icons'
 import { TranslationKeys } from '../locales/_translationKeys'
 import { useTranslation } from 'react-i18next'
 
-export const SelectIngredientList = ({ alreadySelected, visible, onClose }) => {
+export const SelectIngredientNameUnitList = ({ modalDataType, visible, onAdd, onClose }) => {
     const {t} = useTranslation()
-    const [data, setData] = useState<IngredientNameUnit[]>()
     const [search, setSearch] = useState('')
+    const [data, setData] = useState<IngredientNameUnit[]>([])
     const [dataFilter, setDataFilter] = useState<IngredientNameUnit[]>([])
+    const [addButtonVisible, setAddButtonVisible] = useState(false)
 
-    const handlePress = (type: string, name: string) => {
-        setData(prevIngredients => prevIngredients?.map(ing => ing.type === type ? { ...ing, data: ing.data.map(item => item.name === name ? { ...item, isSelected: !item.isSelected } : item )}: ing ))
-        setDataFilter(prevIngredients => prevIngredients?.map(ing => ing.type === type ? { ...ing, data: ing.data.map(item => item.name === name ? { ...item, isSelected: !item.isSelected } : item )}: ing ))
+    useEffect(() => {
+        if(visible)
+            fetchData()
+    }, [visible])
+
+    const fetchData = () => {
+        if(modalDataType === 'ingredient'){
+            GetIngredientsList()
+        }else if(modalDataType === 'unit'){
+            GetUnitsList()
+        }
     }
 
+    const GetIngredientsList = () => {
+        const ingredients = GetIngredientNameUnitCategory('ingredient')
+        setData(ingredients)
+        setDataFilter(ingredients)
+    }
+
+    const GetUnitsList = () => {
+        const units = GetIngredientNameUnitCategory('unit')
+        setData(units)
+        setDataFilter(units)
+    }
+
+    const handlePress = (ingredient) => {
+        onAdd(ingredient)
+        handleClose()
+    }
     const handleClose = () => {
-        const ingredientyData = data
-        const searchFields = ingredientyData?.map(i => i.data.filter(j => j.isSelected).map(j => j.name)).flat()
-        onClose(searchFields)
         setSearch('')
+        setData([])
         setDataFilter([])
+        setAddButtonVisible(false)
+        onClose()
     }
 
     const filterData = (search: string) => {
         const filteredData = search === '' ? data : data.map(item => {
-            const filteredInnerData = item.data.filter(dataItem => 
-                t(TranslationKeys.IngredientItem[dataItem.name as keyof typeof TranslationKeys.IngredientItem]).toLowerCase().includes(search.toLowerCase())
-            )
+            const filteredInnerData = item.data.filter(itemData => {
+                if(modalDataType === 'ingredient'){
+                    return t(TranslationKeys.IngredientItem[itemData.name as keyof typeof TranslationKeys.IngredientItem]).toLowerCase().includes(search.toLowerCase())
+                }else if(modalDataType === 'unit'){
+                    return t(TranslationKeys.UnitItem[itemData.name as keyof typeof TranslationKeys.UnitItem]).toLowerCase().includes(search.toLowerCase())
+                }
+            })
             if (filteredInnerData.length > 0) {
                 return {
                     ...item,
@@ -41,25 +69,7 @@ export const SelectIngredientList = ({ alreadySelected, visible, onClose }) => {
             return null
         }).filter(item => item !== null)
         setDataFilter(filteredData)
-    }
-
-    useEffect(() => {
-        if(alreadySelected && data){
-            const alreadySelectedData = data.map(sel => ({...sel,
-                data: sel.data.map(item => ({...item,
-                isSelected: alreadySelected.includes(item.name),
-            }))}))
-            setData(alreadySelectedData)
-            setDataFilter(alreadySelectedData)
-        }else{
-            fetchData()
-        }
-    },[alreadySelected])
-
-    const fetchData = () => {
-        const ingredients = GetIngredientNameUnitCategory('ingredient')
-        setData(ingredients)
-        setDataFilter(ingredients)
+        setAddButtonVisible(filteredData.length === 0 && search !== '')
     }
 
     return (
@@ -83,24 +93,31 @@ export const SelectIngredientList = ({ alreadySelected, visible, onClose }) => {
                             }}
                         />
                     </Pressable>
+                    { addButtonVisible && <Pressable style={ styles.buttonModal } onPress={() => handlePress({ name: search})} >
+                        <Text style={ styles.textStyle }>{t(TranslationKeys.Button.ADD)}</Text>
+                    </Pressable>}
                     <FlatList
                         data={dataFilter}
                         showsVerticalScrollIndicator={false}
                         keyboardShouldPersistTaps="always"
                         style={styles.flex}
                         keyExtractor={item => item.type}
-                        renderItem={({ item }) => 
-                            <Pressable>
-                                <Pressable><Text style={styles.subtitleText}>{t(TranslationKeys.IngredientType[item.type as keyof typeof TranslationKeys.IngredientType]) || item.type}</Text></Pressable>
+                        renderItem={({ item }) =>
+                            <View>
+                                <Pressable>
+                                    { modalDataType === 'ingredient' && <Text style={styles.subtitleText}>{t(TranslationKeys.IngredientType[item.type as keyof typeof TranslationKeys.IngredientType]) || item.type}</Text> }
+                                    { modalDataType === 'unit' && <Text style={styles.subtitleText}>{t(TranslationKeys.UnitType[item.type as keyof typeof TranslationKeys.UnitType]) || item.type}</Text> }
+                                </Pressable>
                                 { item.data?.map((itemData, index) => (
                                     <Pressable
-                                        style={ itemData.isSelected ? styles.buttonModalSelected : styles.buttonModal }
-                                        onPress={ () => handlePress(item.type, itemData.name) }
+                                        style={ styles.buttonModal }
+                                        onPress={ () => handlePress(itemData) }
                                         key={itemData.name}>
-                                        <Text style={styles.textStyle}>{t(TranslationKeys.IngredientItem[itemData.name as keyof typeof TranslationKeys.IngredientItem]) || itemData.name}</Text>
+                                        { modalDataType === 'ingredient' && <Text style={styles.textStyle}>{t(TranslationKeys.IngredientItem[itemData.name as keyof typeof TranslationKeys.IngredientItem]) || itemData.name}</Text> }
+                                        { modalDataType === 'unit' && <Text style={styles.textStyle}>{t(TranslationKeys.UnitItem[itemData.name as keyof typeof TranslationKeys.UnitItem]) || itemData.name}</Text> }
                                     </Pressable>
                                 ))}
-                            </Pressable>
+                            </View>
                         }
                     />
                 </Pressable>
@@ -145,19 +162,12 @@ const styles = StyleSheet.create({
         elevation: 2,
         backgroundColor: COLORS.tint,
     },
-    buttonModalSelected: {
-        borderRadius: 20,
-        padding: 10,
-        marginVertical: 0.2 * SIZES.base,
-        width: '100%',
-        elevation: 2,
-        backgroundColor: COLORS.dark,
-    },
     textStyle: {
         width: '100%',
         color: COLORS.white,
         fontWeight: 'bold',
         textAlign: 'center',
+        fontSize: SIZES.large,
     },
     inputContainer: {
         flexDirection: 'row',
@@ -191,4 +201,3 @@ const styles = StyleSheet.create({
         marginTop: SIZES.small
     },
 })
-

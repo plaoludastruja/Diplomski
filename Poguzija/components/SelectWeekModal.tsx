@@ -2,10 +2,6 @@ import { Text, StyleSheet, View, Modal, Pressable, TextInput, FlatList } from 'r
 import React, { Component, FC, useEffect, useState } from 'react'
 import { Category, Day, SelectedIngredient } from '../model/model'
 import { COLORS, SIZES } from '../constants/Colors'
-import { GetCategoryData } from '../service/HelperService'
-import { GetIngredients } from '../service/IngredientService'
-import constructWithOptions from 'styled-components/dist/constructors/constructWithOptions'
-import { MaterialIcons } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
 import { TranslationKeys } from '../locales/_translationKeys'
 
@@ -26,7 +22,7 @@ export const SelectWeekModal = ({ visible, onClose }) => {
                                 style={ styles.buttonModal }
                                 onPress={ () => onClose(key) }
                                 key={key}>
-                                <Text style={styles.textStyle}>{t(TranslationKeys.Day[key])}</Text>
+                                <Text style={styles.textStyle}>{t(TranslationKeys.Day[key as keyof typeof TranslationKeys.Day]) || key}</Text>
                             </Pressable>
                         ))}
                 </View>

@@ -2,11 +2,11 @@ import { Text, StyleSheet, View, Modal, Pressable, TextInput, FlatList } from 'r
 import React, { Component, FC, useEffect, useState } from 'react'
 import { Category } from '../model/model'
 import { COLORS, SIZES } from '../constants/Colors'
-import { GetCategoryData } from '../service/HelperService'
 import { TranslationKeys } from '../locales/_translationKeys'
 import { useTranslation } from 'react-i18next'
+import { GetIngredientNameUnitCategory } from '../service/IngredientService'
 
-export const SelectCategoryModal = ({ alreadySelected, visible, onClose }) => {
+export const SelectCategoryList = ({ alreadySelected, visible, onClose }) => {
     const {t} = useTranslation()
     const [category, setCategory] = useState<Category[]>()
     const handlePress = (type: string, name: string) => {
@@ -15,7 +15,7 @@ export const SelectCategoryModal = ({ alreadySelected, visible, onClose }) => {
 
     const handleClose = () => {
         const categoryData = category
-        const searchFields = categoryData?.map(i => i.data.filter(j => j.isSelected).map(j => j.name)).flat();
+        const searchFields = categoryData?.map(i => i.data.filter(j => j.isSelected).map(j => j.name)).flat()
         onClose(searchFields)
     }
 
@@ -27,7 +27,7 @@ export const SelectCategoryModal = ({ alreadySelected, visible, onClose }) => {
                 }))}))
             setCategory(alreadySelectedData)
         }else{
-            const categoryData = GetCategoryData()
+            const categoryData = GetIngredientNameUnitCategory('category')
             setCategory(categoryData)
         }
     },[alreadySelected])
@@ -39,27 +39,27 @@ export const SelectCategoryModal = ({ alreadySelected, visible, onClose }) => {
             visible={visible}
             onRequestClose={ () => handleClose() }>
             <Pressable style={styles.centeredView} onPress={ () => handleClose() }>
-                <View style={styles.modalView}>
+                <Pressable style={styles.modalView}>
                     <FlatList
                         data={category}
                         showsVerticalScrollIndicator={false}
                         style={styles.flex}
                         renderItem={({ item }) => 
-                            <View>
-                                <Pressable><Text style={styles.subtitleText}>{t(TranslationKeys.CategoryType[item.type])}</Text></Pressable>
+                            <Pressable>
+                                <Pressable><Text style={styles.subtitleText}>{t(TranslationKeys.CategoryType[item.type as keyof typeof TranslationKeys.CategoryType]) || item.type}</Text></Pressable>
                                 { item.data?.map((categoryData, index) => (
                                     <Pressable
                                         style={ categoryData.isSelected ? styles.buttonModalSelected : styles.buttonModal }
                                         onPress={ () => handlePress(item.type, categoryData.name) }
                                         key={categoryData.name}>
-                                        <Text style={styles.textStyle}>{t(TranslationKeys.CategoryItem[categoryData.name])}</Text>
+                                        <Text style={styles.textStyle}>{t(TranslationKeys.CategoryItem[categoryData.name as keyof typeof TranslationKeys.CategoryItem]) || categoryData.name}</Text>
                                     </Pressable>
                                 ))}
-                            </View>
+                            </Pressable>
                         }                          
                         keyExtractor={item => item.type}
                     />
-                </View>
+                </Pressable>
             </Pressable>
         </Modal>
     )

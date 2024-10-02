@@ -30,7 +30,7 @@ async function AddMeasurementUnitsData() {
     const measurementUnits = [
         'as needed', 'piece', 'teaspoon', 'tablespoon', 'cup', 'ounce', 'pound', 'gram', 'kilogram', 'milliliter', 'liter',
         'dash', 'pinch', 'drop', 'pint', 'quart', 'gallon', 'fluid ounce', 'shot', 'jigger', 'can',
-        'bottle', 'package', 'slice', 'piece', 'stick', 'bunch', 'stalk', 'head', 'bulb', 'clove',
+        'bottle', 'package', 'slice', 'stick', 'bunch', 'stalk', 'head', 'bulb', 'clove',
         'leaf', 'sprig', 'chop'
     ]
     const newMeasurementUnitsArray = measurementUnits.map((unit, index) => ({
@@ -42,27 +42,73 @@ async function AddMeasurementUnitsData() {
 }
 
 function GetCategoryData() {
-    const categories = {
-        'MEAL_TYPE': ['BREAKFAST', 'LUNCH', 'DINNER', 'BRUNCH', 'DESSERT', 'SNACK'],
-        'NATIONAL_COUSINE': ['SERBIAN', 'ASIAN', 'GREEK', 'TURKISH', 'AMERICAN', 'ITALIAN', 'LATIN'],
-        'POPULAR_CATEGORY': ['BUDGET_FRIENDLY', 'QUICK', 'EASY', 'BBQ', 'FISH', 'MEAT', 'SANDWICHES', 'HEALTY', 'VEGETERIAN', 'VEGE', 'FASTING', 'SALAD', 'PASTA', 'SMOOTHIE', 'SWEET', 'FRUITY', 'VEGETABLE', 'DRINK' ],
+    return {
+        'MEAL_TYPE': [
+            'BREAKFAST', 
+            'LUNCH', 
+            'DINNER', 
+            'BRUNCH', 
+            'DESSERT', 
+            'SNACK'
+        ],
+        'NATIONAL_COUSINE': [
+            'SERBIAN', 
+            'ASIAN', 
+            'GREEK', 
+            'TURKISH', 
+            'AMERICAN', 
+            'ITALIAN', 
+            'LATIN'
+        ],
+        'POPULAR_CATEGORY': [
+            'BUDGET_FRIENDLY', 
+            'QUICK', 
+            'EASY', 
+            'BBQ', 
+            'FISH', 
+            'MEAT', 
+            'SANDWICHES', 
+            'HEALTY', 
+            'VEGETERIAN', 
+            'VEGE', 
+            'FASTING', 
+            'SALAD', 
+            'PASTA', 
+            'SMOOTHIE', 
+            'SWEET', 
+            'FRUITY', 
+            'VEGETABLE', 
+            'DRINK', 
+            'DOUGH' 
+        ],
     }
-    const categoriesArray: Category[] = []
-    for (const [type, names] of Object.entries(categories)) {
-        const data = names.map(name => ({
-            name: name,
-            isSelected: false
-        }))
-        categoriesArray.push({
-            type: type,
-            data: data
-        })
-    }
-    return categoriesArray;
 }
 
+function GetMeasurementUnitsData() {
+    return {
+        'CUPS': [
+            'HALF',
+        ],
+        'COMMON': [
+            'AS_NEEDED'
+        ]
+    }
+}
+
+function GetIngredientsData() {
+    return {
+        'SPICES': [
+            'SALT'
+        ],
+        'MEAT': [
+            'FISH'
+        ]
+    }
+}
+
+
 export {
-    AddIngredientsData,
-    AddMeasurementUnitsData,
+    GetIngredientsData,
+    GetMeasurementUnitsData,
     GetCategoryData,
 }

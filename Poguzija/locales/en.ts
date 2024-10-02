@@ -119,5 +119,22 @@ export const en = {
         fruity: 'Fruits',
         vegatable: 'Vegetable',
         drink: 'Drink',
+        dough: 'Dough',
+    },
+    ingredientType:{
+        spices: 'Spices',
+        meat: 'Meat',
+    },
+    unitType:{
+        cups: 'Cups',
+        common: 'Common',
+    },
+    ingredientItem:{
+        salt: 'Salt',
+        fish: 'Fish',
+    },
+    unitItem:{
+        half: 'Half',
+        asNeeded: 'As needed',
     }
 }

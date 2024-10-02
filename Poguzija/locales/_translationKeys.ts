@@ -131,5 +131,26 @@ export namespace TranslationKeys {
         FRUITY = 'categoryItem.fruity',
         VEGETABLE = 'categoryItem.vegetable',
         DRINK = 'categoryItem.drink',
+        DOUGH = 'categoryItem.dough'
+    }
+
+    export enum IngredientType {
+        SPICES = 'ingredientType.spices',
+        MEAT = 'ingredientType.meat',
+    }
+
+    export enum IngredientItem {
+        SALT = 'ingredientItem.salt',
+        FISH = 'ingredientItem.fish',
+    }
+
+    export enum UnitType {
+        CUPS = 'unitType.cups',
+        COMMON = 'unitType.common',
+    }
+
+    export enum UnitItem {
+        HALF = 'unitItem.half',
+        AS_NEEDED = 'unitItem.asNeeded',
     }
 }

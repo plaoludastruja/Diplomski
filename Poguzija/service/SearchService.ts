@@ -18,11 +18,11 @@ async function GetSearchResults(searchParams: string[], lastVisible: QueryDocume
     const allResults  = searchSnapshot.flatMap(snapshot => snapshot.docs.map(doc => doc.data()))
     const filteredResults = allResults.filter(doc => 
         searchParamsData.every(searchParam => doc.searchFields.includes(searchParam))
-    );
+    )
     foodRecipesData = filteredResults.filter((result, index, self) => 
         index === self.findIndex(r => r.id === result.id)
     )
-    const newLastVisible = searchSnapshot.flatMap(snapshot => snapshot.docs).slice(-1)[0] || null;
+    const newLastVisible = searchSnapshot.flatMap(snapshot => snapshot.docs).slice(-1)[0] || null
 
     return { foodRecipesData, newLastVisible }
 }

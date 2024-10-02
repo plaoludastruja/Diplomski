@@ -34,7 +34,7 @@ export default function SettingsScreen() {
                 <Text style={styles.subtitleText}>{t(TranslationKeys.Settings.SELECT_LANGUAGE)}:</Text>
                 { Object.keys(languageResources).map((languageKey, index) => (
                     <Pressable key={index} style={styles.ingredientItem} onPress={() => handleSelectedLanguage(languageKey)}>
-                        <Text style={[styles.textInput, { width: "auto" }]}>{t(TranslationKeys.Settings[languageKey])}</Text>
+                        <Text style={[styles.textInput, { width: "auto" }]}>{t(TranslationKeys.Settings[languageKey as keyof typeof TranslationKeys.Settings] || languageKey)}</Text>
                         {selectedLanguage === languageKey && <FontAwesome name="check" style={styles.icon} />}
                     </Pressable>
                 ))}

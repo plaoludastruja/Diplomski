@@ -87,6 +87,11 @@ export interface Category {
     data: { name: string, isSelected: boolean}[]
 }
 
+export interface IngredientNameUnit {
+    type: string
+    data: { name: string, isSelected: boolean}[]
+}
+
 export interface SelectedIngredient {
     name: string, 
     isSelected: boolean

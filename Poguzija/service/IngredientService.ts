@@ -1,24 +1,34 @@
-import { getDocs, query, collection } from "firebase/firestore/lite"
-import { DatabaseCollection } from "../model/model"
-import { db } from "./firebase"
+import { Category, IngredientNameUnit } from "../model/model"
+import { GetCategoryData, GetIngredientsData, GetMeasurementUnitsData } from "./HelperService"
 
-async function GetIngredients() {
-    const data = await getDocs(query(collection(db, DatabaseCollection.ingredients)))
-    const ingredientsData = data.docs.map(doc => {
-        return { ingredients: doc.data().ingredients }
-    })[0].ingredients.sort((a, b) => a.name.localeCompare(b.name))
-    return ingredientsData
-}
+function GetIngredientNameUnitCategory(type: string) {
+    let ingredientNameUnitCategory: any
+    switch(type){
+        case 'ingredient': 
+            ingredientNameUnitCategory = GetIngredientsData()
+            break
+        case 'unit': 
+            ingredientNameUnitCategory = GetMeasurementUnitsData()
+            break
+        case 'category': 
+            ingredientNameUnitCategory = GetCategoryData()
+            break
+    }
 
-async function GetUnits() {
-    const data = await getDocs(query(collection(db, DatabaseCollection.units)))
-    const unitsData = data.docs.map(doc => {
-        return { units: doc.data().units }
-    })[0].units.sort((a, b) => a.name.localeCompare(b.name))
-    return unitsData
+    const ingredientNameUnitCategoryArray: IngredientNameUnit[] = []
+    for (const [type, names] of Object.entries(ingredientNameUnitCategory)) {
+        const data = names.map((name: string) => ({
+            name: name,
+            isSelected: false
+        }))
+        ingredientNameUnitCategoryArray.push({
+            type: type,
+            data: data
+        })
+    }
+    return ingredientNameUnitCategoryArray
 }
 
 export {
-    GetIngredients,
-    GetUnits,
+    GetIngredientNameUnitCategory,
 }

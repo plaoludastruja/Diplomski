@@ -3,10 +3,9 @@ import React, { Component, FC, useEffect, useState } from 'react'
 import { Ingredient, MyComponentProps } from '../model/model'
 import { MaterialIcons } from '@expo/vector-icons'
 import { COLORS, SIZES } from '../constants/Colors'
-import SelectIngredientList from './SelectIngredientList'
-import { GetIngredients, GetUnits } from '../service/IngredientService'
 import { TranslationKeys } from '../locales/_translationKeys'
 import { useTranslation } from 'react-i18next'
+import { SelectIngredientNameUnitList } from './SelectIngredientNameUnitList'
 
 const AddIngredientsModal = ({ visible, dataEdit, onAdd, onClose }) => {
     const {t} = useTranslation()
@@ -52,14 +51,14 @@ const AddIngredientsModal = ({ visible, dataEdit, onAdd, onClose }) => {
                 <Pressable style={styles.modalView}>
                     <Pressable style={styles.nameInput} onPress={() => {if(!dataEdit?.name) openModal('ingredient')}}>
                         <MaterialIcons name="search" style={styles.icon} />
-                        <TextInput value={name} placeholder={t(TranslationKeys.Ingredient.NAME)} editable={false} style={styles.textInput} />
+                        <TextInput value={t(TranslationKeys.IngredientItem[name as keyof typeof TranslationKeys.IngredientItem]) || name} placeholder={t(TranslationKeys.Ingredient.NAME)} editable={false} style={styles.textInput} />
                     </Pressable>
                     <View style={styles.amountAndUnitContainer}>
                         <View style={[styles.amountAndUnitInput, styles.amountInput]}>
                             <TextInput value={amount} placeholder={t(TranslationKeys.Ingredient.AMOUNT)} style={styles.textInput} keyboardType='numeric' onChangeText={text => setAmount(text)} />
                         </View>
                         <Pressable style={[styles.amountAndUnitInput, styles.unitInput]} onPress={() => openModal('unit')}>
-                            <TextInput value={unit} placeholder={t(TranslationKeys.Ingredient.UNIT)} editable={false} style={styles.textInput} onChangeText={text => setUnit(text)} />   
+                            <TextInput value={t(TranslationKeys.UnitItem[unit as keyof typeof TranslationKeys.UnitItem]) || unit} placeholder={t(TranslationKeys.Ingredient.UNIT)} editable={false} style={styles.textInput} onChangeText={text => setUnit(text)} />   
                         </Pressable>
                     </View>
                     <Pressable style={ styles.button } onPress={ handleOnAdd }>
@@ -68,7 +67,7 @@ const AddIngredientsModal = ({ visible, dataEdit, onAdd, onClose }) => {
                 </Pressable>
             </Pressable>
 
-            <SelectIngredientList 
+            <SelectIngredientNameUnitList 
                 modalDataType={ modalDataType }
                 visible={ modalVisible } 
                 onAdd={ (item) => { if(modalDataType === 'ingredient'){setName(item.name)} else if(modalDataType === 'unit'){setUnit(item.name)} }} 

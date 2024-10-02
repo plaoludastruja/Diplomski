@@ -24,7 +24,7 @@ export default function SchedulerRecipe( { recipesWeek, day }: { recipesWeek: Fo
     return (
         <View style={styles.container}>
             <View style={styles.addContainer}>
-                <Text style={styles.subtitleText}>{t(TranslationKeys.Day[day.toUpperCase()])}</Text>
+                <Text style={styles.subtitleText}>{t(TranslationKeys.Day[day.toUpperCase() as keyof typeof TranslationKeys.Day]) || day}</Text>
                 { false && user && <Pressable style={styles.addButton} >
                     <MaterialIcons name="add" style={styles.icon} onPress={ onAddToScheduler } />
                 </Pressable>}

@@ -144,7 +144,9 @@ export default function FoodRecipesItem() {
 
                 <BottomSheet
                     snapPoints={['35', '65', '95']}
-                    backgroundStyle={{ backgroundColor: COLORS.dark }} >
+                    backgroundStyle={{ backgroundColor: COLORS.dark }}
+                    handleIndicatorStyle={{ backgroundColor: COLORS.white }}
+                    >
                     <BottomSheetScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
                         <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.NAME)}</Text>
                         <View style={styles.inputContainer}>
@@ -197,7 +199,7 @@ export default function FoodRecipesItem() {
                         <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.INGREDIENTS)}</Text>
                         {food?.ingredients?.map((ingredient, index) => (
                             <View key={index} style={styles.ingredientItem}>
-                                <Text style={[styles.textInput, { width: "auto" }]}>   {ingredient.name}   -   {ingredient.amount} {ingredient.unit}</Text>
+                                <Text style={[styles.textInput, { width: "auto" }]}>   {t(TranslationKeys.IngredientItem[ingredient.name as keyof typeof TranslationKeys.IngredientItem]) || ingredient.name}   -   {ingredient.amount}  {t(TranslationKeys.UnitItem[ingredient.unit as keyof typeof TranslationKeys.UnitItem]).toLowerCase() || ingredient.unit}</Text>
                             </View>
                         ))}
 

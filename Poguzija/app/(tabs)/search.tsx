@@ -9,8 +9,8 @@ import { Pressable } from 'react-native'
 import { COLORS, SIZES } from '../../constants/Colors'
 import LoadingScreen from '../../components/LoadingScreen'
 import GestureRecognizer from 'react-native-swipe-gestures'
-import { SelectIngredientModal } from '../../components/SelectIngredientModal'
-import { SelectCategoryModal } from '../../components/SelectCategoryModal'
+import { SelectIngredientList } from '../../components/SelectIngredientList'
+import { SelectCategoryList } from '../../components/SelectCategoryList'
 import { QueryDocumentSnapshot } from 'firebase/firestore/lite'
 import { TranslationKeys } from '../../locales/_translationKeys'
 import { useTranslation } from 'react-i18next'
@@ -155,7 +155,7 @@ export default function SearchScreen() {
                     contentContainerStyle={[{alignContent: 'flex-start'}]}
                     renderItem={({ item }) => 
                         <Pressable style={ styles.buttonModalSelected } onPress={() => onDeleteSelected('category', item)}>
-                            <Text style={styles.textStyle}>{t(TranslationKeys.CategoryItem[item])}</Text>
+                            <Text style={styles.textStyle}>{t(TranslationKeys.CategoryItem[item as keyof typeof TranslationKeys.CategoryItem]) || item}</Text>
                             <MaterialIcons name="close" style={styles.iconButton} />
                         </Pressable>}
                     keyExtractor={(item) => item}
@@ -168,7 +168,7 @@ export default function SearchScreen() {
                     contentContainerStyle={[{alignContent: 'flex-start'}]}
                     renderItem={({ item }) => 
                         <Pressable style={ styles.buttonModalSelected } onPress={() => onDeleteSelected('ingredient', item)} >
-                            <Text style={styles.textStyle}> {item}</Text>
+                            <Text style={styles.textStyle}>{t(TranslationKeys.IngredientItem[item as keyof typeof TranslationKeys.IngredientItem]) || item}</Text>
                             <MaterialIcons name="close" style={styles.iconButton} />
                         </Pressable>}
                     keyExtractor={(item) => item}
@@ -193,12 +193,12 @@ export default function SearchScreen() {
                 </View>
             </GestureRecognizer>}
 
-            <SelectCategoryModal
+            <SelectCategoryList
                 alreadySelected={categoryData}
                 visible={categoryModalVisible}
                 onClose={(selectedCategories: string[]) => handleCloseCategoryModal(selectedCategories)} />
 
-            <SelectIngredientModal
+            <SelectIngredientList
                 alreadySelected={ingredientData}
                 visible={ingredientModalVisible}
                 onClose={(selectedIngredients: string[]) => handleCloseIngredientModal(selectedIngredients)} />

@@ -119,5 +119,22 @@ export const sr = {
         fruity: 'Voćno',
         vegetable: 'Povrće',
         drink: 'Piće',
+        dough: 'Tijesto',
+    },
+    ingredientType:{
+        spices: 'Začini',
+        meat: 'Meso',
+    },
+    unitType:{
+        cups: 'Šolje',
+        common: 'Standardno',
+    },
+    ingredientItem:{
+        salt: 'So',
+        fish: 'Riba',
+    },
+    unitItem:{
+        half: 'Pola',
+        asNeeded: 'Po potrebi',
     }
 }

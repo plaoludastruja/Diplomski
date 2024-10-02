@@ -11,7 +11,7 @@ import AddIngredientsModal from '../../components/AddIngredientsModal'
 import BottomSheet, { BottomSheetFlatList, BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import { AddFoodRecipe } from '../../service/RecipesService'
 import { UserContext } from '../_layout'
-import { SelectCategoryModal } from '../../components/SelectCategoryModal'
+import { SelectCategoryList } from '../../components/SelectCategoryList'
 import { UploadFoodRecipesImages } from '../../service/ImageService'
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 import { useTranslation } from 'react-i18next'
@@ -182,8 +182,8 @@ export default function AddRecipeScreen() {
     }
 
     const handleTimeChange = (newTime) => {
-        setCookingTime(newTime);
-    };
+        setCookingTime(newTime)
+    }
 
     const renderItem = ({ item }: { item: string }) => {
         return (
@@ -219,6 +219,7 @@ export default function AddRecipeScreen() {
                 <BottomSheet
                     snapPoints={useMemo(() => snapPoints, [snapPoints])}
                     backgroundStyle={{ backgroundColor: COLORS.dark }}
+                    handleIndicatorStyle={{ backgroundColor: COLORS.white }}
                     keyboardBehavior='extend'
                 >
                     <BottomSheetScrollView
@@ -278,7 +279,7 @@ export default function AddRecipeScreen() {
                         <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.INGREDIENTS)}</Text>
                         {selectedIngredients?.map((ingredient, index) => (
                             <Pressable key={index} style={styles.ingredientItem} onPress={() => handlePressToEdit(ingredient)}>
-                                <Text style={[styles.textInput, { width: "auto" }]}>   {ingredient.name}   -   {ingredient.amount} {ingredient.unit}</Text>
+                                <Text style={[styles.textInput, { width: "auto" }]}>   {t(TranslationKeys.IngredientItem[ingredient.name as keyof typeof TranslationKeys.IngredientItem]) || ingredient.name}   -   {ingredient.amount}  {t(TranslationKeys.UnitItem[ingredient.unit as keyof typeof TranslationKeys.UnitItem]).toLowerCase() || ingredient.unit}</Text>
                                 <Pressable onPress={() => handleDeleteIngredient(ingredient)}>
                                     <MaterialIcons name="delete" style={styles.icon} />
                                 </Pressable>
@@ -301,7 +302,7 @@ export default function AddRecipeScreen() {
                         ))}
                         <TextInput
                             style={styles.input}
-                            placeholder={t(TranslationKeys.Recipe[stepsPlaceholder])}
+                            placeholder={t(TranslationKeys.Recipe[stepsPlaceholder as keyof typeof TranslationKeys.Recipe]) || stepsPlaceholder}
                             value={step}
                             autoComplete='off'
                             onChangeText={(text) => setStep(text)}
@@ -322,7 +323,7 @@ export default function AddRecipeScreen() {
                     onAdd={handleAddIngredient}
                     onClose={handleCloseIngredientModal} />
 
-                <SelectCategoryModal
+                <SelectCategoryList
                     alreadySelected={null}
                     visible={categoryModalVisible}
                     onClose={(selectedCategories: string[]) => handleCloseCategoryModal(selectedCategories)} />

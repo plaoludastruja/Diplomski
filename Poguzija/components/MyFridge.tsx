@@ -75,7 +75,7 @@ export default function MyFridge() {
             <ScrollView style={styles.flex} horizontal={false} showsVerticalScrollIndicator={false}>
             {selectedIngredients?.map((ingredient, index) => (
                 <Pressable key={index} style={styles.ingredientItem} onPress={() => handlePressToEdit(ingredient)}>
-                    <Text style={[styles.textInput, { width: "auto" }]}>   {ingredient.name}   -   {ingredient.amount} {ingredient.unit}</Text>
+                    <Text style={[styles.textInput, { width: "auto" }]}>   {t(TranslationKeys.IngredientItem[ingredient.name as keyof typeof TranslationKeys.IngredientItem]) || ingredient.name}   -   {ingredient.amount}  {t(TranslationKeys.UnitItem[ingredient.unit as keyof typeof TranslationKeys.UnitItem] || ingredient.unit).toLowerCase()}</Text>
                     <Pressable onPress={() => handleDeleteIngredient(index)}>
                         <MaterialIcons name="delete" style={styles.icon} />
                     </Pressable>
