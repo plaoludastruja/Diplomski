@@ -15,11 +15,12 @@ export interface FoodRecipes {
     title: string
     description: string
     author: string
-    cookingTime: string
+    cookingTime: {hours: string, minutes: string}
     servingSize: string
     ingredients: Ingredient[]
     steps: Step[]
     images: string[]
+    categories: string[]
     searchFields: string[]
     savedCount: number
     rating: Rating

@@ -60,6 +60,18 @@ export default function FoodRecipesItem() {
     const screenWidth = Dimensions.get('window').width
     const screenHeight = Dimensions.get('window').height
 
+    const timeDisplay = () => {
+        if (food?.cookingTime.hours !== '' && food?.cookingTime.minutes !== '') {
+            return `${food?.cookingTime.hours} h ${food?.cookingTime.minutes} min`
+        } else if (food?.cookingTime.hours !== '') {
+            return `${food?.cookingTime.hours} h 0 min`
+        } else if (food?.cookingTime.minutes !== '') {
+            return `${food?.cookingTime.minutes} min`
+        } else {
+            return '0 min'
+        }
+    }
+
     const handleAddToBookmarks = () => {
         if (isRecipeBookmarked) {
             RemoveFromMyBookmark(foodRecipesItemId)
@@ -129,7 +141,12 @@ export default function FoodRecipesItem() {
         ]
 
     const handleEditRecipe = () => {
-
+        router.replace({
+            pathname: `/(addRecipe)/addRecipe`,
+            params: {
+                addEditRecipeId: foodRecipesItemId
+            }
+        })
     }
 
     const handleDeleteRecipe = () => {
@@ -226,7 +243,7 @@ export default function FoodRecipesItem() {
                             <BottomSheetTextInput
                                 style={styles.textInput}
                                 placeholder={t(TranslationKeys.Recipe.TIME_TO_PREPARE)}
-                                value={food?.cookingTime}
+                                value={timeDisplay()}
                                 editable={false}
                             />
                         </View>

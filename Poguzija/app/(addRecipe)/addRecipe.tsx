@@ -3,27 +3,33 @@ import { useContext, useEffect, useMemo, useState } from 'react'
 import { View, TextInput, Pressable, Text, StyleSheet, Image, Platform, ScrollView, KeyboardAvoidingView, Alert, Dimensions, Modal, FlatList, Button } from 'react-native'
 import { FoodRecipes, Ingredient, Step, StorageFolder } from '../../model/model'
 const PlaceholderImage = require('../../assets/images/icon.png')
-import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialIcons, MaterialCommunityIcons, FontAwesome6 } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
 import Carousel from 'react-native-snap-carousel'
 import { COLORS, SIZES } from '../../constants/Colors'
 import AddIngredientsModal from '../../components/AddIngredientsModal'
 import BottomSheet, { BottomSheetFlatList, BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
-import { AddFoodRecipe } from '../../service/RecipesService'
+import { AddFoodRecipe, EditFoodRecipe, GetFoodRecipe } from '../../service/RecipesService'
 import { UserContext } from '../_layout'
 import { SelectCategoryList } from '../../components/SelectCategoryList'
 import { UploadFoodRecipesImages } from '../../service/ImageService'
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 import { useTranslation } from 'react-i18next'
 import { TranslationKeys } from '../../locales/_translationKeys'
+import { router, useLocalSearchParams } from 'expo-router'
+import LoadingScreen from '../../components/LoadingScreen'
+import { TimeInput } from '../../components/TimeInput'
 
 export default function AddRecipeScreen() {
+    const { addEditRecipeId } = useLocalSearchParams<{ addEditRecipeId: string }>()
     const { user } = useContext(UserContext)
     const {t} = useTranslation()
 
     const screenWidth = Dimensions.get('window').width
     const screenHeight = Dimensions.get('window').height
     const [snapPoints, setSnapPoints] = useState(['66', '95'])
+    const [loading, setLoading] = useState(true)
+    const [isEdit, setIsEdit] = useState(addEditRecipeId !== undefined)
 
     const [categoryModalVisible, setCategoryModalVisible] = useState(false)
     const [categoryNumber, setCategoryNumber] = useState<number>(0)
@@ -39,7 +45,8 @@ export default function AddRecipeScreen() {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [servingSize, setServingSize] = useState('')
-    const [cookingTime, setCookingTime] = useState('')
+    const [cookingTime, setCookingTime] = useState({hours: '', minutes: ''})
+    const [cookingTimeAll, setCookingTimeAll] = useState('')
     const [refreshTime, setRefreshTime] = useState(false)
     const [author, setAuthor] = useState('')
 
@@ -47,11 +54,34 @@ export default function AddRecipeScreen() {
     const [step, setStep] = useState('')
     const [stepsPlaceholder, setStepsPlaceholder] = useState('ADD_FIRST_STEP')
 
+    useEffect(() => {
+        if(isEdit){
+            fetchData()
+        }
+    }, [])
+
+    const fetchData = async () => {
+        const recipe = await GetFoodRecipe(addEditRecipeId)
+        setTitle(recipe.title)
+        setDescription(recipe.description)
+        setServingSize(recipe.servingSize)
+        setCookingTime(recipe.cookingTime)
+        setCookingTimeAll(`${recipe.cookingTime.hours}${recipe.cookingTime.minutes}`)
+        setRefreshTime(true)
+        setStepList(recipe.steps)
+        setSelectedIngredients(recipe.ingredients)
+        setCategoryFields(recipe.categories)
+        setCategoryNumber(recipe.categories.length)
+        setSelectedImageArray([...recipe.images, PlaceholderImage])
+        setSnapPoints(['35', '65', '95']) 
+        setStepsPlaceholder('ADD_NEXT_STEP')
+    }
+
+
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: false,
             quality: 0.4,
-
         })
 
         if (!result.canceled) {
@@ -61,9 +91,9 @@ export default function AddRecipeScreen() {
         }
     }
 
-    const handleCreateRecipe = async () => {
-        if(!title || !servingSize || !/\d/.test(cookingTime) || stepList.length === 0 || selectedIngredients.length === 0 || selectedImageToUpload.length === 0){
-            Toast.show({
+    const handleCreateOrEditRecipe = async () => {
+        if(!title || !servingSize || !(/\d/.test(cookingTimeAll) && Number(cookingTimeAll) !== 0) || stepList.length === 0 || selectedIngredients.length === 0 || (selectedImageToUpload.length === 0 && selectedImageArray.length === 1)){   
+                Toast.show({
                 type: ALERT_TYPE.WARNING,
                 title: t(TranslationKeys.Recipe.FILL_ALL_FIELDS)
             })
@@ -71,7 +101,7 @@ export default function AddRecipeScreen() {
         } 
         const updatedStepList = step !== '' ? [...stepList, { number: stepList.length + 1, description: step }] : stepList
         try {
-            const newRecipe: Partial<FoodRecipes> = {
+            const newRecipe: FoodRecipes = {
                 title: title,
                 description: description,
                 author: user ? user.id : '',
@@ -79,32 +109,34 @@ export default function AddRecipeScreen() {
                 servingSize: servingSize,
                 ingredients: selectedIngredients,
                 steps: updatedStepList,
+                categories: categoryFields,
                 searchFields: categoryFields,
                 savedCount: 0,
-                rating: { sum: 0, count: 0}
+                rating: { sum: 0, count: 0 },
             }
 
-            const uploadedImages = await UploadFoodRecipesImages(selectedImageToUpload)
-            newRecipe.images = uploadedImages
-            AddFoodRecipe(newRecipe)
-            setTitle('')
-            setDescription('')
-            setAuthor('')
-            setStepList([])
-            setServingSize('')
-            setCookingTime('')
-            setRefreshTime(!refreshTime)
-            setSelectedIngredients([])
-            setCategoryFields([])
-            setCategoryNumber(0)
-            setSelectedImageArray([PlaceholderImage])
-            setSelectedImageToUpload([])
-            setSnapPoints(['66', '95'])
-            
-            Toast.show({
-                type: ALERT_TYPE.SUCCESS,
-                title: t(TranslationKeys.Recipe.RECIPE_CREATED)
-            })
+            if(isEdit){
+                newRecipe.images = [...selectedImageArray.slice(0, -1)]
+                if(selectedImageToUpload.length !== 0){
+                    const uploadedImages = await UploadFoodRecipesImages(selectedImageToUpload)
+                    newRecipe.images.concat(uploadedImages)
+                }
+                await EditFoodRecipe(addEditRecipeId, newRecipe)
+                router.replace(`/foodRecipesItem/${addEditRecipeId}`)
+                Toast.show({
+                    type: ALERT_TYPE.SUCCESS,
+                    title: t(TranslationKeys.Recipe.RECIPE_EDITED)
+                })
+            }else{
+                const uploadedImages = await UploadFoodRecipesImages(selectedImageToUpload)
+                newRecipe.images = uploadedImages
+                const createdRecipeId = await AddFoodRecipe(newRecipe)
+                router.replace(`/foodRecipesItem/${createdRecipeId}`)
+                Toast.show({
+                    type: ALERT_TYPE.SUCCESS,
+                    title: t(TranslationKeys.Recipe.RECIPE_CREATED)
+                })
+            }
         } catch (error) {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
@@ -119,8 +151,8 @@ export default function AddRecipeScreen() {
                 { text: t(TranslationKeys.Button.CANCEL), style: 'cancel' },
                 {
                     text: t(TranslationKeys.Button.DELETE), onPress: () => {
-                        const updatedItems = selectedImageArray.filter((item) => item !== image)
-                        setSelectedImageArray([...updatedItems])
+                        const updatedItems = selectedImageToUpload.filter((item) => item !== image)
+                        setSelectedImageArray([...updatedItems, PlaceholderImage])
                         setSelectedImageToUpload([...updatedItems])
                     },
                 },
@@ -192,8 +224,9 @@ export default function AddRecipeScreen() {
         })
     }
 
-    const handleTimeChange = (newTime) => {
-        setCookingTime(newTime)
+    const handleTimeChange = (newTime: {hours: '', minutes: '', all: ''}) => {
+        setCookingTime({hours: newTime.hours, minutes: newTime.minutes})
+        setCookingTimeAll(newTime.all)
     }
 
     const renderItem = ({ item }: { item: string }) => {
@@ -240,7 +273,7 @@ export default function AddRecipeScreen() {
                     >
                         <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.NAME)}</Text>
                         <View style={styles.inputContainer}>
-                            <MaterialIcons name="receipt" style={styles.icon} />
+                            <FontAwesome6 name="bread-slice" style={styles.icon} />
                             <TextInput
                                 style={styles.textInput}
                                 placeholder={t(TranslationKeys.Recipe.NAME)}
@@ -254,7 +287,7 @@ export default function AddRecipeScreen() {
 
                         <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.DESCRIPTION)}</Text>
                         <View style={styles.inputContainer}>
-                            <MaterialCommunityIcons name="pencil" style={styles.icon} />
+                            <MaterialIcons name="description" style={styles.icon} />
                             <TextInput
                                 style={styles.textInput}
                                 placeholder={t(TranslationKeys.Recipe.DESCRIPTION)}
@@ -328,8 +361,9 @@ export default function AddRecipeScreen() {
                                 blurOnSubmit={false}
                             />
                         </View>
-                        <Pressable style={styles.button} onPress={handleCreateRecipe}>
-                            <Text style={styles.buttonText}>{t(TranslationKeys.Recipe.CREATE_RECIPE)}</Text>
+                        <Pressable style={styles.button} onPress={handleCreateOrEditRecipe}>
+                            {!isEdit && <Text style={styles.buttonText}>{t(TranslationKeys.Recipe.CREATE_RECIPE)}</Text>}
+                            {isEdit && <Text style={styles.buttonText}>{t(TranslationKeys.Recipe.EDIT_RECIPE)}</Text>}
                         </Pressable>
                     </BottomSheetScrollView>
                 </BottomSheet>
@@ -341,54 +375,11 @@ export default function AddRecipeScreen() {
                     onClose={handleCloseIngredientModal} />
 
                 <SelectCategoryList
-                    alreadySelected={null}
+                    alreadySelected={categoryFields}
                     visible={categoryModalVisible}
                     onClose={(selectedCategories: string[]) => handleCloseCategoryModal(selectedCategories)} />
             </View>
         </BackgroundSafeAreaView>
-    )
-}
-
-const TimeInput = ({ time, onTimeChange, refresh }) => {
-    const [hours, setHours] = useState('')
-    const [minutes, setMinutes] = useState('')
-
-    useEffect(() => {
-        setHours('')
-        setMinutes('')
-    }, [refresh])
-    const handleHoursChange = (text) => {
-        setHours(text)
-        onTimeChange(`${text} h ${minutes} min`)
-    }
-
-    const handleMinutesChange = (text) => {
-        setMinutes(text)
-        onTimeChange(`${hours} h ${text} min`)
-    }
-
-    return (
-        <View style={styles.inputContainer}>
-            <MaterialIcons name="timelapse" style={styles.icon} />
-            <TextInput
-                style={styles.smallTextInput}
-                value={hours}
-                onChangeText={handleHoursChange}
-                maxLength={2}
-                keyboardType='numeric'
-                placeholder="00"
-            />
-            <Text style={styles.textInputTime}>h</Text>
-            <TextInput
-                style={styles.smallTextInput}
-                value={minutes}
-                onChangeText={handleMinutesChange}
-                maxLength={2}
-                keyboardType='numeric'
-                placeholder="00"
-            />
-            <Text style={styles.textInputTime}>min</Text>
-        </View>
     )
 }
 

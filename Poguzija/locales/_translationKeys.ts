@@ -18,6 +18,7 @@ export namespace TranslationKeys {
         ADD_INGREDIENT = 'recipe.addIngredient',
         CREATE_RECIPE = 'recipe.createRecipe',
         EDIT_RECIPE = 'recipe.editRecipe',
+        RECIPE_EDITED = 'recipe.recipeEdited',
         DELETE_RECIPE = 'recipe.deleteRecipe',
         RECIPE_DELETED = 'recipe.recipeDeleted',
     }

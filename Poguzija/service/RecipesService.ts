@@ -27,7 +27,7 @@ async function GetFoodRecipe(id: string): Promise<FoodRecipes> {
         steps: [],
         images: [],
         searchFields: [],
-        cookingTime: "",
+        cookingTime: {hours: '', minutes: ''},
         savedCount: 0,
         rating: {
             sum: 0,
@@ -42,8 +42,28 @@ async function GetFoodRecipe(id: string): Promise<FoodRecipes> {
     return foodRecipeItem
 }
 
-function AddFoodRecipe(newRecipe: Partial<FoodRecipes>) {
-    addDoc(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), newRecipe)
+async function AddFoodRecipe(newRecipe: FoodRecipes) {
+    CreateSearchFields(newRecipe)
+    const ref = await addDoc(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), newRecipe)
+    console.log(JSON.stringify(ref.id))
+    return ref.id
+}
+
+async function EditFoodRecipe(recipeId: string, newRecipe: FoodRecipes) {
+    const user = await GetCurrentUser()
+    if (!user) return
+    CreateSearchFields(newRecipe)
+    await updateDoc(doc(db, DatabaseCollection.recipes, recipeId),{
+        title: newRecipe.title,
+        description: newRecipe.description,
+        cookingtime: newRecipe.cookingTime,
+        servingSize: newRecipe.servingSize,
+        ingredients: newRecipe.ingredients,
+        steps: newRecipe.steps,
+        images: newRecipe.images,
+        categories: newRecipe.categories,
+        searchFields: newRecipe.searchFields
+    })
 }
 
 async function DeleteFoodRecipe(recipeId: string) {
@@ -84,13 +104,17 @@ async function UpdateRecipeRating(id: string, rating: number) {
     })
 }
 
+function CreateSearchFields(foodRecipe: FoodRecipes) {
+    const ingredientNames = foodRecipe?.ingredients?.map(ingredient => ingredient.name.toUpperCase())
+    const searchFieldsData = foodRecipe?.searchFields?.map(categoryField => categoryField.toUpperCase())
+    const titleFields = foodRecipe?.title?.toUpperCase().split(/[\s-\.,!?]/).filter(t => t.length >= 4)
+    const titleFieldsData = Array.from(new Set(titleFields))
+    const searchFields = [...searchFieldsData, ...ingredientNames, ...titleFieldsData]
+    foodRecipe.searchFields = searchFields
+}
+
 const foodRecipesConverter = {
     toFirestore: (foodRecipe: FoodRecipes) => {
-        const ingredientNames = foodRecipe.ingredients.map(ingredient => ingredient.name.toUpperCase())
-        const searchFieldsData = foodRecipe.searchFields.map(categoryField => categoryField.toUpperCase())
-        const titleFields = foodRecipe.title.toUpperCase().split(/[\s-\.,!?]/).filter(t => t.length >= 4)
-        const titleFieldsData = Array.from(new Set(titleFields))
-        const searchFields = [...searchFieldsData, ...ingredientNames, ...titleFieldsData]
         return {
             title: foodRecipe.title,
             description: foodRecipe.description,
@@ -100,7 +124,8 @@ const foodRecipesConverter = {
             ingredients: foodRecipe.ingredients,
             steps: foodRecipe.steps,
             images: foodRecipe.images || null,
-            searchFields: searchFields,
+            categories: foodRecipe.categories,
+            searchFields: foodRecipe.searchFields,
             savedCount: foodRecipe.savedCount,
             rating: foodRecipe.rating,
             createdAt: serverTimestamp()
@@ -116,6 +141,7 @@ export {
     GetAllFoodRecipes,
     GetFoodRecipe,
     AddFoodRecipe,
+    EditFoodRecipe,
     DeleteFoodRecipe,
     GetMyFoodRecipes,
     UpdateSavedCount,
