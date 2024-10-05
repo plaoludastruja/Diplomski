@@ -86,11 +86,39 @@ function GetCategoryData() {
 
 function GetMeasurementUnitsData() {
     return {
-        'CUPS': [
-            'HALF',
-        ],
         'COMMON': [
-            'AS_NEEDED'
+            'PIECE',
+            'AS_NEEDED',
+            'AS_DESIRED',
+        ],
+        'MASS': [
+            'KILOGRAM',
+            'GRAM',
+        ],
+        'LIQUID': [
+            'LITER',
+            'DECILITER',
+            'MILILITER',
+            'DROP',
+        ],
+        'CUPS_SPOONS': [
+            'BIG_CUP',
+            'SMALL_CUP',
+            'SHOT_CUP',
+            'SPOONFUL',
+            'TABLESPOON',
+            'TEASPOON',
+            'HANDFUL',
+            'PINCH'
+        ],
+        'SPECIAL': [
+            'SLICE',
+            'BOTTLE',
+            'CAN',
+            'PACKAGE',
+            'HEAD',
+            'LEAF',
+            'CLOVE',
         ]
     }
 }

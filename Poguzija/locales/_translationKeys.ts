@@ -138,6 +138,41 @@ export namespace TranslationKeys {
         DOUGH = 'categoryItem.dough'
     }
 
+    export enum UnitType {
+        COMMON = 'unitType.common',
+        MASS = 'unitType.mass',
+        LIQUID = 'unitType.liquid',
+        CUPS_SPOONS = 'unitType.cupsSpoons',
+        SPECIAL = 'unitType.special',
+    }
+
+    export enum UnitItem {
+        PIECE = 'unitItem.piece',
+        AS_NEEDED = 'unitItem.asNeeded',
+        AS_DESIRED = 'unitItem.asDesired',
+        KILOGRAM = 'unitItem.kilogram',
+        GRAM = 'unitItem.gram',
+        LITER = 'unitItem.liter',
+        DECILITER = 'unitItem.deciliter',
+        MILILITER = 'unitItem.mililiter',
+        DROP = 'unitItem.drop',
+        BIG_CUP = 'unitItem.bigCup',
+        SMALL_CUP = 'unitItem.smallCup',
+        SHOT_CUP = 'unitItem.shotCup',
+        SPOONFUL = 'unitItem.spoonful',
+        TABLESPOON = 'unitItem.tablespoon',
+        TEASPOON = 'unitItem.teaspoon',
+        HANDFUL = 'unitItem.handful',
+        PINCH = 'unitItem.pinch',
+        SLICE = 'unitItem.slice',
+        BOTTLE = 'unitItem.bottle',
+        CAN = 'unitItem.can',
+        PACKAGE = 'unitItem.package',
+        HEAD = 'unitItem.head',
+        LEAF = 'unitItem.leaf',
+        CLOVE = 'unitItem.clove',
+    }
+
     export enum IngredientType {
         SPICES = 'ingredientType.spices',
         MEAT = 'ingredientType.meat',
@@ -146,15 +181,5 @@ export namespace TranslationKeys {
     export enum IngredientItem {
         SALT = 'ingredientItem.salt',
         FISH = 'ingredientItem.fish',
-    }
-
-    export enum UnitType {
-        CUPS = 'unitType.cups',
-        COMMON = 'unitType.common',
-    }
-
-    export enum UnitItem {
-        HALF = 'unitItem.half',
-        AS_NEEDED = 'unitItem.asNeeded',
     }
 }
