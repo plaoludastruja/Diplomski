@@ -18,7 +18,7 @@ async function GetOrAddUser(user: User, authUser: AuthUser) {
     SetCurrentUser(userAdded)
     return userAdded
 }
-
+//TODO possible changes
 async function AddUser(user: User, authUser: AuthUser): Promise<MyUser> {
     const myUser: MyUser = {
         id: authUser.uid,

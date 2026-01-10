@@ -1,5 +1,5 @@
 import { View, StyleSheet } from 'react-native'
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { COLORS, SIZES } from '../constants/Colors'
 import { MyComponentProps } from '../model/model'

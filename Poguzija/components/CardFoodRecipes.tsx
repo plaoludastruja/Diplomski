@@ -1,5 +1,5 @@
 import { View, Image, StyleSheet, Pressable, Text, Alert, GestureResponderEvent } from 'react-native'
-import React, { FC, useContext, useEffect, useState } from 'react'
+import { FC, useContext, useEffect, useState } from 'react'
 import { COLORS, SIZES } from '../constants/Colors'
 import { FoodRecipes } from '../model/model'
 import { useRouter } from 'expo-router'

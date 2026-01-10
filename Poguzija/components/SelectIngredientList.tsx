@@ -1,6 +1,6 @@
 import { Text, StyleSheet, View, Modal, Pressable, TextInput, FlatList } from 'react-native'
-import React, { Component, FC, useEffect, useState } from 'react'
-import { Category, IngredientNameUnit, data } from '../model/model'
+import { Component, FC, useEffect, useState } from 'react'
+import { Category, IngredientNameUnit } from '../model/model'
 import { COLORS, SIZES } from '../constants/Colors'
 import { GetIngredientNameUnitCategory } from '../service/IngredientService'
 import constructWithOptions from 'styled-components/dist/constructors/constructWithOptions'

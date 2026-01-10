@@ -1,5 +1,5 @@
 import { Text, StyleSheet, View, Image, Pressable, TextInput } from 'react-native'
-import React, { Component, FC, useContext, useEffect, useState } from 'react'
+import { Component, FC, useContext, useEffect, useState } from 'react'
 import { Ingredient, MyComponentProps, MyUser } from '../model/model'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'

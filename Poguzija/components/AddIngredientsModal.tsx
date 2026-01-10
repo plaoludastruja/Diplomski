@@ -1,5 +1,5 @@
 import { Text, StyleSheet, View, Modal, Pressable, TextInput } from 'react-native'
-import React, { Component, FC, useEffect, useState } from 'react'
+import { Component, FC, useEffect, useState } from 'react'
 import { Ingredient, MyComponentProps } from '../model/model'
 import { MaterialIcons } from '@expo/vector-icons'
 import { COLORS, SIZES } from '../constants/Colors'
