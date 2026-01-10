@@ -11,8 +11,8 @@ export const languageResources = {
 
 i18n.use(initReactI18next).init({
     compatibilityJSON: 'v3',
-    lng: SecureStore.getItem('currentLanguage') || 'en',
-    fallbackLng: 'en',
+    lng: SecureStore.getItem('currentLanguage') || 'EN',
+    fallbackLng: 'EN',
     resources: languageResources,
 })
 

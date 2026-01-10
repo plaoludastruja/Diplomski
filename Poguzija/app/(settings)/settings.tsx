@@ -11,7 +11,7 @@ import { languageResources } from "../../locales/_i18n"
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons"
 
 export default function SettingsScreen() {
-    const [selectedLanguage, setSelectedLanguage] = useState(SecureStore.getItem('currentLanguage') || 'en')
+    const [selectedLanguage, setSelectedLanguage] = useState(SecureStore.getItem('currentLanguage') || 'EN')
     const [selectedTheme, setSelectedTheme] = useState(SecureStore.getItem('currentTheme') || 'DARK_THEME')
     const {t} = useTranslation()
 

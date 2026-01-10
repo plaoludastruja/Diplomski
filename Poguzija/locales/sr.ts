@@ -104,7 +104,7 @@ export const sr = {
         american: 'Američka',
         italian: 'Italijanska',
         latin: 'Latinoamerička',
-        budgerFriendly: 'Jeftino',
+        budgetFriendly: 'Jeftino',
         quick: 'Brzo',
         easy: 'Lako',
         healty: 'Zdravo',

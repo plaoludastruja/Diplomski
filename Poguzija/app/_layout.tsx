@@ -108,6 +108,5 @@ function RootLayoutNav() {
             </UserContext.Provider>
             </ThemeProvider>
         </GestureHandlerRootView>
-                
     )
 }

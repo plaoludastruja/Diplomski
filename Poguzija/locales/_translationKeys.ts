@@ -116,7 +116,7 @@ export namespace TranslationKeys {
         AMERICAN = 'categoryItem.american',
         ITALIAN = 'categoryItem.italian',
         LATIN = 'categoryItem.latin',
-        BUDGET_FRIENDLY = 'categoryItem.budgerFriendly',
+        BUDGET_FRIENDLY = 'categoryItem.budgetFriendly',
         QUICK = 'categoryItem.quick',
         EASY = 'categoryItem.easy',
         HEALTY = 'categoryItem.healty',
@@ -173,13 +173,170 @@ export namespace TranslationKeys {
         CLOVE = 'unitItem.clove',
     }
 
+    /*export enum IngredientType {
+        VEGETABLE = 'ingredientType.vegetable',
+        FRUIT = 'ingredientType.fruit',
+        MEAT = 'ingredientType.meat',
+        FISH = 'ingredientType.fish',
+        DAIRY = 'ingredientType.dairy',
+        MILK = 'ingredientType.milk',
+        GRAINS = 'ingredientType.grains',
+        NUTS = 'ingredientType.nuts',
+        OILS = 'ingredientType.oils',
+        SWEETENERS = 'ingredientType.sweeteners',
+        FLOUR = 'ingredientType.spices',
+        SPICES = 'ingredientType.spices',
+        KONZERVE = 'ingredientType.spices',
+        MUSHROOMS = 'ingredientType.spices',
+        EGGS = 'ingredientType.meat',
+        LIQUIDS = 'ingredientType.liquids',
+        GOTOVI = 'ingredientType.spices',
+        PASTA = 'ingredientType.spices',
+        SUSENE = 'ingredientType.spices',
+        HELTHY = 'ingredientType.spices',
+        SPREADS = 'ingredientType.spices',
+        SAUCE = 'ingredientType.meat',
+        SEAFOOD = 'ingredientType.seaf',
+        READY_PRODUCTS = 'ingredientType.ready_products',
+        LEGUMES = 'ingredientType.legumes',
+        POULTRY = 'ingredientType.poultry',
+        BAKERY = 'ingredientType.bakery',
+    }*/
+
     export enum IngredientType {
         SPICES = 'ingredientType.spices',
+        HERBS = 'ingredientType.herbs',
+        VEGETABLES = 'ingredientType.vegetables',
+        ROOT_VEGETABLES = 'ingredientType.rootVegetables',
+        LEAFY_GREENS = 'ingredientType.leafyGreens',
+        FRUITS = 'ingredientType.fruits',
+        CITRUS_FRUITS = 'ingredientType.citrusFruits',
+        BERRIES = 'ingredientType.berries',
+        DRIED_FRUITS = 'ingredientType.driedFruits',
         MEAT = 'ingredientType.meat',
+        POULTRY = 'ingredientType.poultry',
+        FISH = 'ingredientType.fish',
+        SEAFOOD = 'ingredientType.seafood',
+        MILK_PRODUCTS = 'ingredientType.milkProducts',
+        CHEESE = 'ingredientType.cheese',
+        YOGURT = 'ingredientType.yogurt',
+        EGGS = 'ingredientType.eggs',
+        CEREALS = 'ingredientType.cereals',
+        FLOUR = 'ingredientType.flour',
+        BREAD = 'ingredientType.bread',
+        PASTA = 'ingredientType.pasta',
+        LEGUMES = 'ingredientType.legumes',
+        NUTS = 'ingredientType.nuts',
+        SEEDS = 'ingredientType.seeds',
+        OILS = 'ingredientType.oils',
+        SAUCES = 'ingredientType.sauces',
+        SWEETENERS = 'ingredientType.sweeteners',
+        BEVERAGES = 'ingredientType.beverages',
+        FROZEN_PRODUCTS = 'ingredientType.frozenProducts',
+        CANNED_FOOD = 'ingredientType.cannedFood',
+        READY_MEALS = 'ingredientType.readyMeals',
+        BAKING_INGREDIENTS = 'ingredientType.bakingIngredients',
+        ADDITIVES = 'ingredientType.additives',
+        SNACKS = 'ingredientType.snacks',
+        CONDIMENTS = 'ingredientType.condiments',
+        MUSHROOMS = 'ingredientType.mushrooms',
+        GRAINS = 'ingredientType.grains'
     }
-
+    
     export enum IngredientItem {
+        // Spices
         SALT = 'ingredientItem.salt',
+        PEPPER = 'ingredientItem.pepper',
+        PAPRIKA = 'ingredientItem.paprika',
+        CINNAMON = 'ingredientItem.cinnamon',
+        TURMERIC = 'ingredientItem.turmeric',
+        CUMIN = 'ingredientItem.cumin',
+        CORIANDER = 'ingredientItem.coriander',
+        GINGER = 'ingredientItem.ginger',
+        CLOVES = 'ingredientItem.cloves',
+        NUTMEG = 'ingredientItem.nutmeg',
+        BAY_LEAF = 'ingredientItem.bay_leaf',
+        
+        // Liquids
+        WATER = 'ingredientItem.water',
+        MILK = 'ingredientItem.milk',
+        OLIVE_OIL = 'ingredientItem.olive_oil',
+        VEGETABLE_OIL = 'ingredientItem.vegetable_oil',
+        VINEGAR = 'ingredientItem.vinegar',
+        SOY_SAUCE = 'ingredientItem.soy_sauce',
+        HONEY = 'ingredientItem.honey',
+        LEMON_JUICE = 'ingredientItem.lemon_juice',
+        
+        // Meat
+        BEEF = 'ingredientItem.beef',
+        PORK = 'ingredientItem.pork',
+        CHICKEN = 'ingredientItem.chicken',
+        LAMB = 'ingredientItem.lamb',
+        TURKEY = 'ingredientItem.turkey',
+        
+        // Poultry
+        CHICKEN_BREAST = 'ingredientItem.chicken_breast',
+        CHICKEN_THIGH = 'ingredientItem.chicken_thigh',
+        CHICKEN_WING = 'ingredientItem.chicken_wing',
+        DUCK = 'ingredientItem.duck',
+        
+        // Fish & Seafood
         FISH = 'ingredientItem.fish',
+        SALMON = 'ingredientItem.salmon',
+        TUNA = 'ingredientItem.tuna',
+        SHRIMP = 'ingredientItem.shrimp',
+        CRAB = 'ingredientItem.crab',
+        
+        // Vegetables
+        CARROT = 'ingredientItem.carrot',
+        POTATO = 'ingredientItem.potato',
+        ONION = 'ingredientItem.onion',
+        GARLIC = 'ingredientItem.garlic',
+        TOMATO = 'ingredientItem.tomato',
+        CUCUMBER = 'ingredientItem.cucumber',
+        LETTUCE = 'ingredientItem.lettuce',
+        SPINACH = 'ingredientItem.spinach',
+        
+        // Fruits
+        APPLE = 'ingredientItem.apple',
+        BANANA = 'ingredientItem.banana',
+        ORANGE = 'ingredientItem.orange',
+        LEMON = 'ingredientItem.lemon',
+        STRAWBERRY = 'ingredientItem.strawberry',
+        GRAPE = 'ingredientItem.grape',
+        MANGO = 'ingredientItem.mango',
+        PINEAPPLE = 'ingredientItem.pineapple',
+        
+        // Dairy
+        CHEESE = 'ingredientItem.cheese',
+        YOGURT = 'ingredientItem.yogurt',
+        BUTTER = 'ingredientItem.butter',
+        CREAM = 'ingredientItem.cream',
+        
+        // Cereals & Grains
+        RICE = 'ingredientItem.rice',
+        WHEAT = 'ingredientItem.wheat',
+        OATS = 'ingredientItem.oats',
+        BARLEY = 'ingredientItem.barley',
+        
+        // Nuts & Legumes
+        ALMONDS = 'ingredientItem.almonds',
+        WALNUTS = 'ingredientItem.walnuts',
+        PEANUTS = 'ingredientItem.peanuts',
+        CHICKPEAS = 'ingredientItem.chickpeas',
+        LENTILS = 'ingredientItem.lentils',
+        
+        // Bakery
+        BREAD = 'ingredientItem.bread',
+        PASTA = 'ingredientItem.pasta',
+        CAKE = 'ingredientItem.cake',
+        CROISSANT = 'ingredientItem.croissant',
+        
+        // Ready Products
+        FROZEN_PIZZA = 'ingredientItem.frozen_pizza',
+        INSTANT_NOODLES = 'ingredientItem.instant_noodles',
+        CHIPS = 'ingredientItem.chips',
+        CANNED_BEANS = 'ingredientItem.canned_beans',
+        FROZEN_FRIES = 'ingredientItem.frozen_fries'
     }
 }

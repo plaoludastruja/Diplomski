@@ -125,11 +125,161 @@ function GetMeasurementUnitsData() {
 
 function GetIngredientsData() {
     return {
-        'SPICES': [
-            'SALT'
+        SPICES: [
+            'SALT',
+            'PEPPER',
+            'PAPRIKA',
+            'CHILI',
+            'CINNAMON',
+            'CUMIN',
+            'TURMERIC',
+            'NUTMEG',
+            'CORIANDER',
+            'CURRY',
+            'BAY_LEAF',
+            'OREGANO',
+            'THYME',
+            'BASIL',
+            'ROSEMARY',
+            'GARLIC_POWDER',
+            'GINGER',
+            'VANILLA',
+            'SAFFRON'
         ],
-        'MEAT': [
-            'FISH'
+        VEGETABLE: [
+            'CARROT',
+            'POTATO',
+            'ONION',
+            'GARLIC',
+            'TOMATO',
+            'CUCUMBER',
+            'PEPPER_VEGETABLE',
+            'SPINACH',
+            'BROCCOLI',
+            'CAULIFLOWER',
+            'ZUCCHINI',
+            'EGGPLANT',
+            'CABBAGE',
+            'LETTUCE',
+            'BEETROOT',
+            'PARSLEY_ROOT'
+        ],
+        FRUIT: [
+            'APPLE',
+            'BANANA',
+            'ORANGE',
+            'LEMON',
+            'LIME',
+            'PEACH',
+            'PLUM',
+            'PEAR',
+            'STRAWBERRY',
+            'RASPBERRY',
+            'BLUEBERRY',
+            'CHERRY',
+            'WATERMELON',
+            'MELON',
+            'GRAPES',
+            'KIWI'
+        ],
+        MEAT: [
+            'CHICKEN_BREAST',
+            'CHICKEN_LEG',
+            'CHICKEN_WING',
+            'BEEF',
+            'PORK',
+            'LAMB',
+            'TURKEY',
+            'SAUSAGE',
+            'HAM',
+            'BACON'
+        ],
+        FISH: [
+            'SALMON',
+            'TUNA',
+            'MACKEREL',
+            'SARDINE',
+            'TROUT',
+            'COD',
+            'ANCHOVY'
+        ],
+        MILK: [
+            'MILK',
+            'YOGURT',
+            'CREAM',
+            'SOUR_CREAM',
+            'CHEESE',
+            'COTTAGE_CHEESE',
+            'BUTTER',
+            'KEFIR'
+        ],
+        CEREALS: [
+            'RICE',
+            'PASTA',
+            'FLOUR',
+            'CORNMEAL',
+            'OATS',
+            'BREAD',
+            'BULGUR',
+            'COUSCOUS',
+            'NOODLES'
+        ],
+        NUTS: [
+            'WALNUT',
+            'ALMOND',
+            'HAZELNUT',
+            'PEANUT',
+            'CASHEW',
+            'PISTACHIO',
+            'COCONUT'
+        ],
+        LEGUMES: [
+            'LENTILS',
+            'CHICKPEAS',
+            'BEANS',
+            'PEAS',
+            'SOYBEANS'
+        ],
+        BAKED_GOODS: [
+            'BAGUETTE',
+            'CROISSANT',
+            'TOAST',
+            'BUN',
+            'ROLL',
+            'DONUT'
+        ],
+        CONDIMENTS: [
+            'MAYONNAISE',
+            'KETCHUP',
+            'MUSTARD',
+            'SOY_SAUCE',
+            'VINEGAR',
+            'OIL',
+            'OLIVE_OIL'
+        ],
+        READY_MEALS: [
+            'FROZEN_PIZZA',
+            'FROZEN_FRIES',
+            'INSTANT_SOUP',
+            'CANNED_BEANS',
+            'CANNED_CORN',
+            'INSTANT_NOODLES'
+        ],
+        SWEETS: [
+            'CHOCOLATE',
+            'CANDY',
+            'BISCUIT',
+            'ICE_CREAM',
+            'JAM',
+            'HONEY'
+        ],
+        BEVERAGES: [
+            'WATER',
+            'JUICE',
+            'TEA',
+            'COFFEE',
+            'MILK_DRINK',
+            'SODA'
         ]
     }
 }

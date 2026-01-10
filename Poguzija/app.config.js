@@ -36,7 +36,8 @@ export default {
       "expo-router",
       "@react-native-google-signin/google-signin",
       "expo-font",
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-localization"
     ],
     experiments: {
       typedRoutes: true
