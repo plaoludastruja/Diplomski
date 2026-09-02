@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, Modal, Pressable, TextInput, FlatList } from 'react-native'
+import { Text, StyleSheet, View, Modal, Pressable, TextInput } from 'react-native'
 import { useState } from 'react'
 import { COLORS, SIZES } from '../constants/Colors'
 import { StarRating } from './StartRating'

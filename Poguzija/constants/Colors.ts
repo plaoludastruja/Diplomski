@@ -47,3 +47,8 @@ export const FONTS = {
   regular: "InterRegular",
   light: "InterLight",
 }
+
+export const THEMES = {
+  DARK_THEME: "DARK_THEME",
+  LIGHT_THEME: "LIGHT_THEME"
+}

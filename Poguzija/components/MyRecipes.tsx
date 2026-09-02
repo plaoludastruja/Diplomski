@@ -1,4 +1,4 @@
-import { StyleSheet, FlatList, RefreshControl } from 'react-native'
+import { StyleSheet, RefreshControl } from 'react-native'
 import { useContext, useEffect, useState } from 'react'
 import { FoodRecipes } from '../model/model'
 import { COLORS, SIZES } from '../constants/Colors'
@@ -7,6 +7,7 @@ import CardFoodRecipes from './CardFoodRecipes'
 import { GetMyFoodRecipes } from '../service/RecipesService'
 import LoadingScreen from './LoadingScreen'
 import { QueryDocumentSnapshot } from 'firebase/firestore/lite'
+import { FlashList } from '@shopify/flash-list'
 
 export default function MyRecipes() {
     const { user } = useContext(UserContext)
@@ -59,7 +60,7 @@ export default function MyRecipes() {
     if (loading) return <LoadingScreen />
 
     return (
-        <FlatList
+        <FlashList
             data={food}
             renderItem={({ item }) => <CardFoodRecipes data={item} route={''} />}
             keyExtractor={(item) => item.id}

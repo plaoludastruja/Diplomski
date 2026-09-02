@@ -1,4 +1,4 @@
-import { GoogleSignin } from '@react-native-google-signin/google-signin'
+import { GoogleSignin, isSuccessResponse } from '@react-native-google-signin/google-signin'
 import * as SecureStore from 'expo-secure-store'
 import { GoogleAuthProvider, signInWithCredential } from 'firebase/auth'
 import { auth } from './firebase'
@@ -7,11 +7,19 @@ import { MyUser } from '../model/model'
 
 async function SignIn(): Promise<MyUser> {
     try {
+        let user
         await GoogleSignin.hasPlayServices()
-        const user = await GoogleSignin.signIn()
+        const response = await GoogleSignin.signIn()
+        if (isSuccessResponse(response)) {
+            user = response.data
+        }else {
+            return
+        }
         const credential = GoogleAuthProvider.credential(user.idToken)
         await signInWithCredential(auth, credential)
         if (!auth.currentUser) return
+        console.log(user)
+        console.log(auth)
         return await GetOrAddUser(user, auth.currentUser)
     } catch (e) {
         throw e

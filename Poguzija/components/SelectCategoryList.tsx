@@ -1,10 +1,11 @@
-import { Text, StyleSheet, View, Modal, Pressable, TextInput, FlatList } from 'react-native'
+import { Text, StyleSheet, View, Modal, Pressable, TextInput } from 'react-native'
 import { Component, FC, useEffect, useState } from 'react'
 import { Category } from '../model/model'
 import { COLORS, SIZES } from '../constants/Colors'
 import { TranslationKeys } from '../locales/_translationKeys'
 import { useTranslation } from 'react-i18next'
 import { GetIngredientNameUnitCategory } from '../service/IngredientService'
+import { FlashList } from '@shopify/flash-list'
 
 export const SelectCategoryList = ({ alreadySelected, visible, onClose }) => {
     const {t} = useTranslation()
@@ -40,7 +41,7 @@ export const SelectCategoryList = ({ alreadySelected, visible, onClose }) => {
             onRequestClose={ () => handleClose() }>
             <Pressable style={styles.centeredView} onPress={ () => handleClose() }>
                 <Pressable style={styles.modalView}>
-                    <FlatList
+                    <FlashList
                         data={category}
                         showsVerticalScrollIndicator={false}
                         style={styles.flex}

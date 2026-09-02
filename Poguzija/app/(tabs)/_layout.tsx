@@ -4,10 +4,6 @@ import { Pressable, useColorScheme } from 'react-native'
 import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import { COLORS, SIZES } from '../../constants/Colors'
 
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-
 export default function TabLayout() {
     const colorScheme = useColorScheme()
     const router = useRouter()
@@ -19,9 +15,10 @@ export default function TabLayout() {
                 tabBarShowLabel: false,
                 headerShown: false,
                 tabBarStyle: {
-                    backgroundColor: COLORS.white,
+                    backgroundColor: COLORS.light,
                     borderTopEndRadius: SIZES.tabIcon,
                     borderTopStartRadius: SIZES.tabIcon,
+                    paddingTop: SIZES.base
                 }
             }}
         >
@@ -30,21 +27,7 @@ export default function TabLayout() {
                 options={{
                     title: 'Hrana',
                     tabBarIcon: ({ color }) => <Ionicons name="fast-food" size={SIZES.tabIcon} color={color} />,
-                    headerShown: false,
-                    headerRight: () => (
-                        <Link href="/modal" asChild>
-                            <Pressable>
-                                {({ pressed }) => (
-                                    <FontAwesome
-                                        name="info-circle"
-                                        size={25}
-                                        color={COLORS.gray}
-                                        style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                                    />
-                                )}
-                            </Pressable>
-                        </Link>
-                    ),
+                    headerShown: false
                 }}
             />
             <Tabs.Screen

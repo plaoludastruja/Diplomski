@@ -1,0 +1,431 @@
+import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useContext, useEffect, useState } from 'react'
+import { View, Pressable, Text, StyleSheet, Image, Dimensions } from 'react-native'
+import Carousel from 'react-native-snap-carousel'
+import { FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
+import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
+import { LinearGradient } from 'expo-linear-gradient'
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
+import { useTranslation } from 'react-i18next'
+import SelectDropdown from 'react-native-select-dropdown'
+import { UserContext, SchedulerContext } from '../app/_layout'
+import BackgroundSafeAreaView from '../components/BackgroundSafeAreaView'
+import LoadingScreen from '../components/LoadingScreen'
+import { SelectWeekModal } from '../components/SelectWeekModal'
+import { COLORS, SIZES } from '../constants/Colors'
+import { TranslationKeys } from '../locales/_translationKeys'
+import { FoodRecipes, Day } from '../model/model'
+import { IsRecipeBookmarked, RemoveFromMyBookmark, AddToMyBookmark } from '../service/BookmarkService'
+import { GetFoodRecipe, UpdateSavedCount, DeleteFoodRecipe } from '../service/RecipesService'
+import { AddToMyScheduler } from '../service/SchedulerService'
+
+
+export default function FoodRecipesItemScreen() {
+    const { foodRecipesItemId } = useLocalSearchParams<{ foodRecipesItemId: string }>()
+    const { user } = useContext(UserContext)
+    const { setRefreshScheduler } = useContext(SchedulerContext)
+    const [food, setFood] = useState<FoodRecipes>()
+    const [loading, setLoading] = useState(true)
+    const [bookmarkIconType, setBookmarkIconType] = useState<string>('bookmark-o')
+    const [isRecipeBookmarked, setIsRecipeBookmarked] = useState(false)
+    const [savedCount, setSavedCount] = useState(0)
+    const [selectWeekModalVisible, setSelectWeekModalVisible] = useState(false)
+    const {t} = useTranslation()
+
+    const router = useRouter()
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    const fetchData = async () => {
+        try {
+            const foodRecipesData = await GetFoodRecipe(foodRecipesItemId)
+            const isRecipeBookmarkedData = await IsRecipeBookmarked(foodRecipesItemId)
+            setFood(foodRecipesData)
+            if (isRecipeBookmarkedData) {
+                setBookmarkIconType('bookmark')
+                setIsRecipeBookmarked(true)
+            } else {
+                setBookmarkIconType('bookmark-o')
+                setIsRecipeBookmarked(false)
+            }
+            setSavedCount(foodRecipesData.savedCount || 0)
+            setLoading(false)
+        } catch (error) {
+            console.error('Error fetching data:', error)
+        }
+    }
+
+    const screenWidth = Dimensions.get('window').width
+    const screenHeight = Dimensions.get('window').height
+
+    const timeDisplay = () => {
+        if (food?.cookingTime.hours !== '' && food?.cookingTime.minutes !== '') {
+            return `${food?.cookingTime.hours} h ${food?.cookingTime.minutes} min`
+        } else if (food?.cookingTime.hours !== '') {
+            return `${food?.cookingTime.hours} h 0 min`
+        } else if (food?.cookingTime.minutes !== '') {
+            return `${food?.cookingTime.minutes} min`
+        } else {
+            return '0 min'
+        }
+    }
+
+    const handleAddToBookmarks = () => {
+        if (isRecipeBookmarked) {
+            RemoveFromMyBookmark(foodRecipesItemId)
+            UpdateSavedCount(foodRecipesItemId, false)
+            setSavedCount(savedCount === 0 ? 0 : savedCount - 1)
+            setBookmarkIconType('bookmark-o')
+            setIsRecipeBookmarked(false)
+        } else {
+            AddToMyBookmark(foodRecipesItemId)
+            UpdateSavedCount(foodRecipesItemId, true)
+            setSavedCount(savedCount + 1)
+            setBookmarkIconType('bookmark')
+            setIsRecipeBookmarked(true)
+        }
+    }
+
+    const handleAddToScheduler = () => {
+        setSelectWeekModalVisible(true)
+    }
+
+    const onDaySelected = async (day: keyof typeof Day | null) => {
+        setSelectWeekModalVisible(false)
+        if (day) {
+            const recipe = await AddToMyScheduler(food, day)
+            if(recipe){
+                setRefreshScheduler(true)
+                Toast.show({
+                    type: ALERT_TYPE.SUCCESS,
+                    title: t(TranslationKeys.Scheduler.RECIPE_ADDED_TO_SCHEDULER)
+                })
+            }else{
+                Toast.show({
+                    type: ALERT_TYPE.WARNING,
+                    title: t(TranslationKeys.Scheduler.RECIPE_ALREADY_ADDED_TO_SCHEDULER) + ' ' +  t(TranslationKeys.Day[day]).toLowerCase()
+                })
+            }
+            
+        }
+    }
+
+    const handleOpenComments = () => {
+        router.push(`/comments/${foodRecipesItemId}`)
+    }
+
+    const renderItem = ({ item }: { item: string }) => {
+        return (
+            <View style={[styles.images, { width: screenWidth, height: 2 * screenHeight / 3 }]} >
+                <Image source={{ uri: item }} style={[styles.image, { width: screenWidth, height: 2 * screenHeight / 3 }]} />
+                <LinearGradient
+                    colors={['rgba(0, 0, 0, 0.8)', 'rgba(255, 255, 255, 0)']}
+                    start={{ x: 0.5, y: - 0.2 }}
+                    end={{ x: 0.5, y: 0.15 }}
+                    style={[styles.gradientTop, { ...StyleSheet.absoluteFillObject }]} />
+                <LinearGradient
+                    colors={['rgba(255, 255, 255, 0)', 'rgba(0, 0, 0, 0.8)']}
+                    start={{ x: 0.5, y: 0.8 }}
+                    end={{ x: 0.5, y: 1.1 }}
+                    style={[styles.gradientBottom, { ...StyleSheet.absoluteFillObject }]} />
+            </View>
+        )
+    }
+
+    const emojisWithIcons =
+        [
+            { title: t(TranslationKeys.Recipe.EDIT_RECIPE), code: 'edit' },
+            { title: t(TranslationKeys.Recipe.DELETE_RECIPE), code: 'delete' },
+        ]
+
+    const handleEditRecipe = () => {
+        router.replace({
+            pathname: `/(addRecipe)/addRecipe`,
+            params: {
+                addEditRecipeId: foodRecipesItemId
+            }
+        })
+    }
+
+    const handleDeleteRecipe = () => {
+        DeleteFoodRecipe(foodRecipesItemId)
+        Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: t(TranslationKeys.Recipe.RECIPE_DELETED)
+        })
+    }
+
+    if (loading) return <LoadingScreen />
+
+    return (
+        <BackgroundSafeAreaView>
+            <View style={styles.scrollViewContent}>
+                <View style={[styles.flex, { flexDirection: 'row' }]}>
+                    <Carousel
+                        data={food?.images}
+                        renderItem={renderItem}
+                        sliderWidth={screenWidth}
+                        itemWidth={screenWidth}
+                        layout="default"
+                    />
+
+                    {user &&
+                        <View style={styles.bookmarkContainer}>
+                            <Text style={styles.savedCount}>{savedCount}</Text>
+                            <FontAwesome name={bookmarkIconType} color={COLORS.white} size={1.2 * SIZES.tabIcon} onPress={handleAddToBookmarks} />
+                            <Ionicons name='calendar-outline' color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base }} onPress={handleAddToScheduler} />
+                            {user.id === food?.author &&
+                                <SelectDropdown
+                                data={emojisWithIcons}
+                                onSelect={(selectedItem, index) => {
+                                    switch(selectedItem.code){
+                                        case 'edit': { handleEditRecipe(); break;}
+                                        case 'delete': { handleDeleteRecipe(); break;}
+                                    }
+                                }}
+                                renderButton={(selectedItem, isOpened) => {
+                                    return (
+                                        <View>
+                                            <Ionicons name="options" color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base / 2, }} />
+                                        </View>
+                                    )
+                                }}
+                                renderItem={(item, index, isSelected) => {
+                                    return (
+                                        <View style={{ ...styles.dropdownItemStyle }}>
+                                            <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
+                                        </View>
+                                    )
+                                }}
+                                showsVerticalScrollIndicator={false}
+                                dropdownStyle={styles.dropdownMenuStyle}
+                            />}
+                        </View>}
+                </View>
+
+                <BottomSheet
+                    snapPoints={['35', '65', '95']}
+                    backgroundStyle={{ backgroundColor: COLORS.dark }}
+                    handleIndicatorStyle={{ backgroundColor: COLORS.white }}
+                    >
+                    <BottomSheetScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
+                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.NAME)}</Text>
+                        <View style={styles.inputContainer}>
+                            <MaterialIcons name="receipt" style={styles.icon} />
+                            <BottomSheetTextInput
+                                style={styles.textInput}
+                                multiline={true}
+                                placeholder={t(TranslationKeys.Recipe.NAME)}
+                                value={food?.title}
+                                autoComplete='off'
+                                editable={false}
+                            />
+                        </View>
+
+                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.DESCRIPTION)}</Text>
+                        <View style={styles.inputContainer}>
+                            <MaterialCommunityIcons name="pencil" style={styles.icon} />
+                            <BottomSheetTextInput
+                                style={styles.textInput}
+                                multiline={true}
+                                placeholder={t(TranslationKeys.Recipe.DESCRIPTION)}
+                                value={food?.description}
+                                autoComplete='off'
+                                editable={false}
+                            />
+                        </View>
+
+                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.TIME_TO_PREPARE)}</Text>
+                        <View style={styles.inputContainer}>
+                            <MaterialIcons name="people" style={styles.icon} />
+                            <BottomSheetTextInput
+                                style={styles.textInput}
+                                placeholder={t(TranslationKeys.Recipe.TIME_TO_PREPARE)}
+                                value={timeDisplay()}
+                                editable={false}
+                            />
+                        </View>
+
+                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.SERVING_SIZE)}</Text>
+                        <View style={styles.inputContainer}>
+                            <MaterialIcons name="people" style={styles.icon} />
+                            <BottomSheetTextInput
+                                style={styles.textInput}
+                                placeholder={t(TranslationKeys.Recipe.SERVING_SIZE)}
+                                value={food?.servingSize}
+                                editable={false}
+                            />
+                        </View>
+
+                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.INGREDIENTS)}</Text>
+                        {food?.ingredients?.map((ingredient, index) => (
+                            <View key={index} style={styles.ingredientItem}>
+                                <Text style={[styles.textInput, { width: "auto" }]}>   {t(TranslationKeys.IngredientItem[ingredient.name as keyof typeof TranslationKeys.IngredientItem]) || ingredient.name}   -   {ingredient.amount}  {t(TranslationKeys.UnitItem[ingredient.unit as keyof typeof TranslationKeys.UnitItem]).toLowerCase() || ingredient.unit}</Text>
+                            </View>
+                        ))}
+
+                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.INSTRUCTIONS)}</Text>
+                        {food?.steps?.map((step, index) => (
+                            <View style={styles.ingredientItem} key={step.number} >
+                                <BottomSheetTextInput
+                                    style={styles.input}
+                                    multiline={true}
+                                    value={`${step.number}. ${step.description}`}
+                                    editable={false}
+                                />
+                            </View>
+                        ))}
+                        <Pressable style={styles.button} onPress={handleOpenComments}>
+                            <Text style={styles.buttonText}>{t(TranslationKeys.Review.SHOW_REVIEWS)}</Text>
+                        </Pressable>
+                    </BottomSheetScrollView>
+                </BottomSheet>
+
+            </View>
+            <SelectWeekModal visible={selectWeekModalVisible} onClose={(day: string | null) => onDaySelected(day)} />
+        </BackgroundSafeAreaView>
+    )
+}
+
+const styles = StyleSheet.create({
+    flex: {
+        flex: 1,
+        width: '100%',
+        justifyContent: 'center',
+    },
+    scrollViewContent: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    images: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: SIZES.extraLarge
+    },
+    image: {
+        borderTopLeftRadius: SIZES.extraLarge,
+        borderTopRightRadius: SIZES.extraLarge,
+        marginTop: SIZES.extraLarge
+    },
+    gradientTop: {
+        borderTopLeftRadius: SIZES.extraLarge,
+        borderTopRightRadius: SIZES.extraLarge,
+        marginTop: SIZES.small
+    },
+    gradientBottom: {
+        borderTopLeftRadius: SIZES.extraLarge,
+        borderTopRightRadius: SIZES.extraLarge,
+        marginBottom: - SIZES.small
+    },
+    input: {
+        width: '95%',
+        minHeight: 60,
+        backgroundColor: COLORS.white,
+        borderRadius: SIZES.extraLarge,
+        paddingVertical: SIZES.base,
+        color: COLORS.tint,
+        fontSize: SIZES.large
+    },
+    button: {
+        textAlign: 'center',
+        justifyContent: 'center',
+        width: '85%',
+        backgroundColor: COLORS.tint,
+        borderRadius: SIZES.extraLarge,
+        padding: SIZES.base,
+        marginVertical: SIZES.base,
+        elevation: 2,
+    },
+    buttonText: {
+        color: COLORS.white,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontSize: SIZES.large,
+    },
+    inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '95%',
+        minHeight: 60,
+        backgroundColor: COLORS.white,
+        borderRadius: SIZES.extraLarge,
+        marginBottom: SIZES.small,
+        padding: SIZES.small,
+        color: COLORS.tint,
+        fontSize: SIZES.large,
+    },
+    textInput: {
+        width: '88%',
+        marginRight: 10,
+        color: COLORS.tint,
+        fontSize: SIZES.large,
+    },
+    icon: {
+        marginRight: 10,
+        color: COLORS.lightDark,
+        fontSize: SIZES.extraLarge
+    },
+    subtitleText: {
+        width: '85%',
+        color: COLORS.tint,
+        fontSize: SIZES.extraLarge,
+        fontWeight: 'bold',
+        marginBottom: SIZES.base,
+        marginTop: SIZES.small
+    },
+    ingredientItem: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '95%',
+        minHeight: 60,
+        backgroundColor: COLORS.white,
+        borderRadius: SIZES.extraLarge,
+        marginBottom: SIZES.small,
+        padding: SIZES.small,
+        paddingStart: SIZES.medium,
+        color: COLORS.tint,
+        fontSize: SIZES.large,
+    },
+    bookmarkContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: 'auto',
+        position: 'absolute',
+        top: SIZES.extraLarge,
+        right: SIZES.extraLarge,
+        paddingTop: SIZES.base,
+    },
+    savedCount: {
+        color: COLORS.white,
+        fontSize: SIZES.large,
+        fontWeight: 'bold',
+        marginEnd: SIZES.base,
+        textAlignVertical: 'center'
+    }, 
+    dropdownMenuStyle: {
+        width: 'auto',
+        padding: SIZES.base,
+        paddingEnd:0,
+        marginStart: -145,
+        marginTop: -30,
+        borderRadius: SIZES.base,
+        borderTopEndRadius: 0,
+    },
+    dropdownItemStyle: {
+        paddingHorizontal: SIZES.medium,
+        alignItems: 'flex-end',
+        paddingVertical: SIZES.base,
+        width: '100%'
+    },
+    dropdownItemTxtStyle: {
+        flex: 1,
+        width: '100%',
+        textAlign: 'right',
+        fontSize: SIZES.large,
+        fontWeight: '500',
+        color: COLORS.lightDark,
+    },
+})

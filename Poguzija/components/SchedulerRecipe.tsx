@@ -11,12 +11,12 @@ import { useTranslation } from 'react-i18next'
 
 
 
-export default function SchedulerRecipe( { recipesWeek, day }: { recipesWeek: FoodRecipes[], day: string } ) {
+export default function SchedulerRecipe({ recipesWeek, day }: { recipesWeek: FoodRecipes[], day: string }) {
     const screenWidth = Dimensions.get('window').width
     const router = useRouter()
     const { user } = useContext(UserContext)
-    const {t} = useTranslation()
-    
+    const { t } = useTranslation()
+
     const onAddToScheduler = () => {
         router.push(`/addToScheduler/${day}`)
     }
@@ -25,18 +25,23 @@ export default function SchedulerRecipe( { recipesWeek, day }: { recipesWeek: Fo
         <View style={styles.container}>
             <View style={styles.addContainer}>
                 <Text style={styles.subtitleText}>{t(TranslationKeys.Day[day.toUpperCase() as keyof typeof TranslationKeys.Day]) || day}</Text>
-                { false && user && <Pressable style={styles.addButton} >
-                    <MaterialIcons name="add" style={styles.icon} onPress={ onAddToScheduler } />
+                {false && user && <Pressable style={styles.addButton} >
+                    <MaterialIcons name="add" style={styles.icon} onPress={onAddToScheduler} />
                 </Pressable>}
             </View>
             <View style={styles.line} />
-            <ScrollView horizontal={true} style={styles.flex}>
-                { recipesWeek.map((recipe, index) => 
-                    <View key={index} style={{ width: 0.8 * screenWidth }}>
-                        <CardFoodRecipes data={recipe} route={'scheduler/' + day }/>
-                    </View>
-                )}
-            </ScrollView>
+            {recipesWeek.length === 0 ?
+                <View style={styles.flex}>
+                    <Text>Nema nista za ovaj dan TODO</Text>
+                </View> :
+                <ScrollView horizontal={true} style={styles.flex}>
+                    {recipesWeek.map((recipe, index) =>
+                        <View key={index} style={{ width: 0.8 * screenWidth }}>
+                            <CardFoodRecipes data={recipe} route={'scheduler/' + day} />
+                        </View>
+                    )}
+                </ScrollView>
+            }
         </View>
     )
 }

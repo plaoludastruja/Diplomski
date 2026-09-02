@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, Modal, Pressable, TextInput, FlatList } from 'react-native'
+import { Text, StyleSheet, View, Modal, Pressable, TextInput } from 'react-native'
 import { Component, FC, useEffect, useState } from 'react'
 import { IngredientNameUnit, MyComponentProps } from '../model/model'
 import { MaterialIcons } from '@expo/vector-icons'
@@ -6,6 +6,7 @@ import { COLORS, SIZES } from '../constants/Colors'
 import { GetIngredientNameUnitCategory } from '../service/IngredientService'
 import { TranslationKeys } from '../locales/_translationKeys'
 import { useTranslation } from 'react-i18next'
+import { FlashList } from '@shopify/flash-list'
 
 export const SelectIngredientNameUnitList = ({ modalDataType, visible, onAdd, onClose }) => {
     const {t} = useTranslation()
@@ -96,7 +97,7 @@ export const SelectIngredientNameUnitList = ({ modalDataType, visible, onAdd, on
                     { addButtonVisible && <Pressable style={ styles.buttonModal } onPress={() => handlePress({ name: search})} >
                         <Text style={ styles.textStyle }>{t(TranslationKeys.Button.ADD)}</Text>
                     </Pressable>}
-                    <FlatList
+                    <FlashList
                         data={dataFilter}
                         showsVerticalScrollIndicator={false}
                         keyboardShouldPersistTaps="always"

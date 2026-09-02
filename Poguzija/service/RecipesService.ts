@@ -5,12 +5,12 @@ import { GetCurrentUser } from "./AuthService"
 import 'react-native-get-random-values'
 
 
-async function GetAllFoodRecipes(lastVisible: QueryDocumentSnapshot | null) {
+async function GetAllFoodRecipes(lastVisible: QueryDocumentSnapshot | undefined) {
     let data
     if (!lastVisible) {
-        data = await getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), orderBy('createdAt', "desc"), limit(5)))
+        data = await getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), orderBy('createdAt', "desc"), limit(15)))
     } else {
-        data = await getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), orderBy('createdAt', "desc"), startAfter(lastVisible), limit(5)))
+        data = await getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), orderBy('createdAt', "desc"), startAfter(lastVisible), limit(15)))
     }
     const foodRecipesData = data.docs.map(doc => (doc.data()))
     const newLastVisible = data.docs[data.docs.length - 1] || null
