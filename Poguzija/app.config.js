@@ -37,7 +37,10 @@ export default {
       "@react-native-google-signin/google-signin",
       "expo-font",
       "expo-secure-store",
-      "expo-localization"
+      "expo-localization",
+      "expo-splash-screen",
+      "expo-status-bar",
+      "expo-web-browser"
     ],
     experiments: {
       typedRoutes: true
