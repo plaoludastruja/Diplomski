@@ -60,6 +60,13 @@ export const en = {
         suggestRecipe: 'Suggest a meal',
         randomRecipe: 'Suggest a random meal',
     },
+    tab: {
+        food: 'Food',
+        search: 'Search',
+        createRecipe: 'Create recipe',
+        mealPlan: 'Meal plan',
+        myFridge: 'My fridge',
+    },
     button: {
         save: 'Save',
         cancel: 'Cancel',
@@ -197,8 +204,318 @@ export const en = {
         mushrooms: "Mushrooms",
         grains: "Grains"
     },
-    ingredientItem:{
-        salt: 'So',
-        fish: 'Riba',
+    ingredientItem: {
+        // Spices
+        salt: 'Salt',
+        pepper: 'Pepper',
+        paprika: 'Paprika',
+        chiliPowder: 'Chili powder',
+        cinnamon: 'Cinnamon',
+        turmeric: 'Turmeric',
+        cumin: 'Cumin',
+        coriander: 'Coriander',
+        ginger: 'Ginger',
+        cloves: 'Cloves',
+        nutmeg: 'Nutmeg',
+        bayLeaf: 'Bay leaf',
+        curryPowder: 'Curry powder',
+        saffron: 'Saffron',
+        cardamom: 'Cardamom',
+        allspice: 'Allspice',
+        garlicPowder: 'Garlic powder',
+        onionPowder: 'Onion powder',
+
+        // Herbs
+        basil: 'Basil',
+        parsley: 'Parsley',
+        dill: 'Dill',
+        oregano: 'Oregano',
+        thyme: 'Thyme',
+        rosemary: 'Rosemary',
+        mint: 'Mint',
+        chives: 'Chives',
+        tarragon: 'Tarragon',
+        sage: 'Sage',
+
+        // Vegetables
+        carrot: 'Carrot',
+        potato: 'Potato',
+        onion: 'Onion',
+        garlic: 'Garlic',
+        tomato: 'Tomato',
+        cucumber: 'Cucumber',
+        bellPepper: 'Bell pepper',
+        zucchini: 'Zucchini',
+        eggplant: 'Eggplant',
+        broccoli: 'Broccoli',
+        cauliflower: 'Cauliflower',
+        cabbage: 'Cabbage',
+        celery: 'Celery',
+        pumpkin: 'Pumpkin',
+        corn: 'Corn',
+
+        // Root vegetables
+        beetroot: 'Beetroot',
+        radish: 'Radish',
+        turnip: 'Turnip',
+        sweetPotato: 'Sweet potato',
+        parsnip: 'Parsnip',
+        horseradish: 'Horseradish',
+        celeryRoot: 'Celery root',
+
+        // Leafy greens
+        lettuce: 'Lettuce',
+        spinach: 'Spinach',
+        kale: 'Kale',
+        arugula: 'Arugula',
+        chard: 'Chard',
+
+        // Fruits
+        apple: 'Apple',
+        banana: 'Banana',
+        pear: 'Pear',
+        peach: 'Peach',
+        plum: 'Plum',
+        watermelon: 'Watermelon',
+        melon: 'Melon',
+        grape: 'Grape',
+        kiwi: 'Kiwi',
+        mango: 'Mango',
+        pineapple: 'Pineapple',
+        apricot: 'Apricot',
+        fig: 'Fig',
+
+        // Citrus fruits
+        lemon: 'Lemon',
+        lime: 'Lime',
+        orange: 'Orange',
+        grapefruit: 'Grapefruit',
+        tangerine: 'Tangerine',
+
+        // Berries
+        strawberry: 'Strawberry',
+        raspberry: 'Raspberry',
+        blueberry: 'Blueberry',
+        blackberry: 'Blackberry',
+        cranberry: 'Cranberry',
+        currant: 'Currant',
+
+        // Dried fruits
+        raisins: 'Raisins',
+        driedApricot: 'Dried apricot',
+        prunes: 'Prunes',
+        driedFigs: 'Dried figs',
+        dates: 'Dates',
+
+        // Meat
+        beef: 'Beef',
+        pork: 'Pork',
+        lamb: 'Lamb',
+        veal: 'Veal',
+        sausage: 'Sausage',
+        bacon: 'Bacon',
+        ham: 'Ham',
+        groundMeat: 'Ground meat',
+
+        // Poultry
+        chicken: 'Chicken',
+        chickenBreast: 'Chicken breast',
+        chickenThigh: 'Chicken thigh',
+        chickenWing: 'Chicken wing',
+        turkey: 'Turkey',
+        duck: 'Duck',
+
+        // Fish
+        fish: 'Fish',
+        salmon: 'Salmon',
+        tuna: 'Tuna',
+        trout: 'Trout',
+        sardine: 'Sardine',
+        mackerel: 'Mackerel',
+        cod: 'Cod',
+        anchovy: 'Anchovy',
+
+        // Seafood
+        shrimp: 'Shrimp',
+        crab: 'Crab',
+        mussels: 'Mussels',
+        squid: 'Squid',
+        octopus: 'Octopus',
+        oysters: 'Oysters',
+
+        // Milk products
+        milk: 'Milk',
+        cream: 'Cream',
+        sourCream: 'Sour cream',
+        butter: 'Butter',
+        kefir: 'Kefir',
+        condensedMilk: 'Condensed milk',
+
+        // Cheese
+        cheese: 'Cheese',
+        whiteCheese: 'White cheese',
+        yellowCheese: 'Yellow cheese',
+        cottageCheese: 'Cottage cheese',
+        mozzarella: 'Mozzarella',
+        parmesan: 'Parmesan',
+        feta: 'Feta',
+        creamCheese: 'Cream cheese',
+
+        // Yogurt
+        yogurt: 'Yogurt',
+        greekYogurt: 'Greek yogurt',
+        probioticYogurt: 'Probiotic yogurt',
+
+        // Eggs
+        egg: 'Egg',
+        eggWhite: 'Egg white',
+        eggYolk: 'Egg yolk',
+        quailEgg: 'Quail egg',
+
+        // Cereals
+        oatmeal: 'Oatmeal',
+        cornFlakes: 'Corn flakes',
+        muesli: 'Muesli',
+        bran: 'Bran',
+
+        // Flour
+        wheatFlour: 'Wheat flour',
+        cornFlour: 'Corn flour',
+        riceFlour: 'Rice flour',
+        wholeWheatFlour: 'Whole wheat flour',
+        almondFlour: 'Almond flour',
+
+        // Bread
+        bread: 'Bread',
+        whiteBread: 'White bread',
+        wholeWheatBread: 'Whole wheat bread',
+        baguette: 'Baguette',
+        toastBread: 'Toast bread',
+        pitaBread: 'Pita bread',
+        croissant: 'Croissant',
+
+        // Pasta
+        spaghetti: 'Spaghetti',
+        penne: 'Penne',
+        fusilli: 'Fusilli',
+        lasagnaSheets: 'Lasagna sheets',
+        noodles: 'Noodles',
+        macaroni: 'Macaroni',
+
+        // Legumes
+        beans: 'Beans',
+        chickpeas: 'Chickpeas',
+        lentils: 'Lentils',
+        peas: 'Peas',
+        soybeans: 'Soybeans',
+
+        // Nuts
+        walnut: 'Walnut',
+        almond: 'Almond',
+        hazelnut: 'Hazelnut',
+        peanut: 'Peanut',
+        cashew: 'Cashew',
+        pistachio: 'Pistachio',
+        pecan: 'Pecan',
+
+        // Seeds
+        sunflowerSeeds: 'Sunflower seeds',
+        pumpkinSeeds: 'Pumpkin seeds',
+        sesameSeeds: 'Sesame seeds',
+        chiaSeeds: 'Chia seeds',
+        flaxseed: 'Flaxseed',
+        poppySeeds: 'Poppy seeds',
+
+        // Oils
+        oliveOil: 'Olive oil',
+        vegetableOil: 'Vegetable oil',
+        sesameOil: 'Sesame oil',
+        coconutOil: 'Coconut oil',
+
+        // Sauces
+        soySauce: 'Soy sauce',
+        tomatoSauce: 'Tomato sauce',
+        pesto: 'Pesto',
+        mayonnaise: 'Mayonnaise',
+        ketchup: 'Ketchup',
+        mustard: 'Mustard',
+        bbqSauce: 'BBQ sauce',
+        worcestershireSauce: 'Worcestershire sauce',
+
+        // Sweeteners
+        sugar: 'Sugar',
+        brownSugar: 'Brown sugar',
+        honey: 'Honey',
+        mapleSyrup: 'Maple syrup',
+        stevia: 'Stevia',
+        powderedSugar: 'Powdered sugar',
+
+        // Beverages
+        water: 'Water',
+        coffee: 'Coffee',
+        tea: 'Tea',
+        juice: 'Juice',
+        soda: 'Soda',
+        wine: 'Wine',
+
+        // Frozen products
+        frozenPeas: 'Frozen peas',
+        frozenFries: 'Frozen fries',
+        frozenVegetables: 'Frozen vegetables',
+        frozenPizza: 'Frozen pizza',
+        iceCream: 'Ice cream',
+
+        // Canned food
+        cannedBeans: 'Canned beans',
+        cannedCorn: 'Canned corn',
+        cannedTomatoes: 'Canned tomatoes',
+        cannedTuna: 'Canned tuna',
+        cannedPeas: 'Canned peas',
+
+        // Ready meals
+        instantNoodles: 'Instant noodles',
+        instantSoup: 'Instant soup',
+        cannedSoup: 'Canned soup',
+
+        // Baking ingredients
+        bakingPowder: 'Baking powder',
+        bakingSoda: 'Baking soda',
+        yeast: 'Yeast',
+        vanillaExtract: 'Vanilla extract',
+        cocoaPowder: 'Cocoa powder',
+        gelatin: 'Gelatin',
+
+        // Additives
+        foodColoring: 'Food coloring',
+        preservatives: 'Preservatives',
+        citricAcid: 'Citric acid',
+        xanthanGum: 'Xanthan gum',
+
+        // Snacks
+        chips: 'Chips',
+        popcorn: 'Popcorn',
+        pretzels: 'Pretzels',
+        crackers: 'Crackers',
+
+        // Condiments
+        vinegar: 'Vinegar',
+        lemonJuice: 'Lemon juice',
+        pickles: 'Pickles',
+        olives: 'Olives',
+        capers: 'Capers',
+
+        // Mushrooms
+        mushroom: 'Mushroom',
+        porcini: 'Porcini',
+        oysterMushroom: 'Oyster mushroom',
+        shiitake: 'Shiitake',
+
+        // Grains
+        rice: 'Rice',
+        wheat: 'Wheat',
+        oats: 'Oats',
+        barley: 'Barley',
+        quinoa: 'Quinoa',
+        buckwheat: 'Buckwheat',
     },
 }

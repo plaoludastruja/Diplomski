@@ -60,6 +60,13 @@ export const sr = {
         suggestRecipe: 'Predloži jelo',
         randomRecipe: 'Predloži nasumično jelo',
     },
+    tab: {
+        food: 'Hrana',
+        search: 'Pretraga',
+        createRecipe: 'Kreirajte recept',
+        mealPlan: 'Plan jela',
+        myFridge: 'Moj frižider',
+    },
     button: {
         save: 'Sačuvaj',
         cancel: 'Otkaži',
@@ -158,12 +165,357 @@ export const sr = {
         leaf: 'List',
         clove: 'Čen',
     },
-    ingredientType:{
+    ingredientType: {
         spices: 'Začini',
+        herbs: 'Začinsko bilje',
+        vegetables: 'Povrće',
+        rootVegetables: 'Korjenasto povrće',
+        leafyGreens: 'Lisnato povrće',
+        fruits: 'Voće',
+        citrusFruits: 'Citrusno voće',
+        berries: 'Bobičasto voće',
+        driedFruits: 'Suvo voće',
         meat: 'Meso',
-    },
-    ingredientItem:{
-        salt: 'So',
+        poultry: 'Živinsko meso',
         fish: 'Riba',
+        seafood: 'Plodovi mora',
+        milkProducts: 'Mliječni proizvodi',
+        cheese: 'Sir',
+        yogurt: 'Jogurt',
+        eggs: 'Jaja',
+        cereals: 'Pahuljice',
+        flour: 'Brašno',
+        bread: 'Hljeb',
+        pasta: 'Tjestenina',
+        legumes: 'Mahunarke',
+        nuts: 'Orašasti plodovi',
+        seeds: 'Sjemenke',
+        oils: 'Ulja',
+        sauces: 'Sosovi',
+        sweeteners: 'Zaslađivači',
+        beverages: 'Napici',
+        frozenProducts: 'Smrznuti proizvodi',
+        cannedFood: 'Konzervirana hrana',
+        readyMeals: 'Gotova jela',
+        bakingIngredients: 'Sastojci za pečenje',
+        additives: 'Aditivi',
+        snacks: 'Grickalice',
+        condiments: 'Začinski dodaci',
+        mushrooms: 'Pečurke',
+        grains: 'Žitarice',
+    },
+    ingredientItem: {
+        // Začini
+        salt: 'So',
+        pepper: 'Biber',
+        paprika: 'Aleva paprika',
+        chiliPowder: 'Čili prah',
+        cinnamon: 'Cimet',
+        turmeric: 'Kurkuma',
+        cumin: 'Kim',
+        coriander: 'Korijander',
+        ginger: 'Đumbir',
+        cloves: 'Karanfilić',
+        nutmeg: 'Muškatni oraščić',
+        bayLeaf: 'Lovorov list',
+        curryPowder: 'Kari',
+        saffron: 'Šafran',
+        cardamom: 'Kardamom',
+        allspice: 'Piment',
+        garlicPowder: 'Bijeli luk u prahu',
+        onionPowder: 'Crni luk u prahu',
+
+        // Začinsko bilje
+        basil: 'Bosiljak',
+        parsley: 'Peršun',
+        dill: 'Kopar',
+        oregano: 'Origano',
+        thyme: 'Majčina dušica',
+        rosemary: 'Ruzmarin',
+        mint: 'Nana',
+        chives: 'Vlašac',
+        tarragon: 'Estragon',
+        sage: 'Žalfija',
+
+        // Povrće
+        carrot: 'Šargarepa',
+        potato: 'Krompir',
+        onion: 'Crni luk',
+        garlic: 'Bijeli luk',
+        tomato: 'Paradajz',
+        cucumber: 'Krastavac',
+        bellPepper: 'Paprika',
+        zucchini: 'Tikvica',
+        eggplant: 'Patlidžan',
+        broccoli: 'Brokoli',
+        cauliflower: 'Karfiol',
+        cabbage: 'Kupus',
+        celery: 'Celer',
+        pumpkin: 'Bundeva',
+        corn: 'Kukuruz',
+
+        // Korjenasto povrće
+        beetroot: 'Cvekla',
+        radish: 'Rotkvica',
+        turnip: 'Repa',
+        sweetPotato: 'Slatki krompir',
+        parsnip: 'Paškanat',
+        horseradish: 'Ren',
+        celeryRoot: 'Korijen celera',
+
+        // Lisnato povrće
+        lettuce: 'Zelena salata',
+        spinach: 'Spanać',
+        kale: 'Kelj',
+        arugula: 'Rukola',
+        chard: 'Blitva',
+
+        // Voće
+        apple: 'Jabuka',
+        banana: 'Banana',
+        pear: 'Kruška',
+        peach: 'Breskva',
+        plum: 'Šljiva',
+        watermelon: 'Lubenica',
+        melon: 'Dinja',
+        grape: 'Grožđe',
+        kiwi: 'Kivi',
+        mango: 'Mango',
+        pineapple: 'Ananas',
+        apricot: 'Kajsija',
+        fig: 'Smokva',
+
+        // Citrusno voće
+        lemon: 'Limun',
+        lime: 'Limeta',
+        orange: 'Narandža',
+        grapefruit: 'Grejpfrut',
+        tangerine: 'Mandarina',
+
+        // Bobičasto voće
+        strawberry: 'Jagoda',
+        raspberry: 'Malina',
+        blueberry: 'Borovnica',
+        blackberry: 'Kupina',
+        cranberry: 'Brusnica',
+        currant: 'Ribizla',
+
+        // Suvo voće
+        raisins: 'Suvo grožđe',
+        driedApricot: 'Suva kajsija',
+        prunes: 'Suva šljiva',
+        driedFigs: 'Suva smokva',
+        dates: 'Urme',
+
+        // Meso
+        beef: 'Govedina',
+        pork: 'Svinjetina',
+        lamb: 'Jagnjetina',
+        veal: 'Teletina',
+        sausage: 'Kobasica',
+        bacon: 'Slanina',
+        ham: 'Šunka',
+        groundMeat: 'Mljeveno meso',
+
+        // Živinsko meso
+        chicken: 'Piletina',
+        chickenBreast: 'Pileća prsa',
+        chickenThigh: 'Pileći batak',
+        chickenWing: 'Pileće krilce',
+        turkey: 'Ćuretina',
+        duck: 'Pačetina',
+
+        // Riba
+        fish: 'Riba',
+        salmon: 'Losos',
+        tuna: 'Tuna',
+        trout: 'Pastrmka',
+        sardine: 'Sardina',
+        mackerel: 'Skuša',
+        cod: 'Bakalar',
+        anchovy: 'Inćun',
+
+        // Plodovi mora
+        shrimp: 'Škampi',
+        crab: 'Rakovica',
+        mussels: 'Dagnje',
+        squid: 'Lignje',
+        octopus: 'Hobotnica',
+        oysters: 'Kamenice',
+
+        // Mliječni proizvodi
+        milk: 'Mlijeko',
+        cream: 'Pavlaka',
+        sourCream: 'Kisela pavlaka',
+        butter: 'Maslac',
+        kefir: 'Kefir',
+        condensedMilk: 'Kondenzovano mlijeko',
+
+        // Sir
+        cheese: 'Sir',
+        whiteCheese: 'Bijeli sir',
+        yellowCheese: 'Žuti sir',
+        cottageCheese: 'Svježi sir',
+        mozzarella: 'Mocarela',
+        parmesan: 'Parmezan',
+        feta: 'Feta sir',
+        creamCheese: 'Krem sir',
+
+        // Jogurt
+        yogurt: 'Jogurt',
+        greekYogurt: 'Grčki jogurt',
+        probioticYogurt: 'Probiotski jogurt',
+
+        // Jaja
+        egg: 'Jaje',
+        eggWhite: 'Bjelance',
+        eggYolk: 'Žumance',
+        quailEgg: 'Prepeličije jaje',
+
+        // Pahuljice
+        oatmeal: 'Ovsena kaša',
+        cornFlakes: 'Kukuruzne pahuljice',
+        muesli: 'Musli',
+        bran: 'Mekinje',
+
+        // Brašno
+        wheatFlour: 'Pšenično brašno',
+        cornFlour: 'Kukuruzno brašno',
+        riceFlour: 'Pirinčano brašno',
+        wholeWheatFlour: 'Integralno brašno',
+        almondFlour: 'Bademovo brašno',
+
+        // Hljeb
+        bread: 'Hljeb',
+        whiteBread: 'Bijeli hljeb',
+        wholeWheatBread: 'Integralni hljeb',
+        baguette: 'Baget',
+        toastBread: 'Tost hljeb',
+        pitaBread: 'Pita hljeb',
+        croissant: 'Kroasan',
+
+        // Tjestenina
+        spaghetti: 'Špageti',
+        penne: 'Pene',
+        fusilli: 'Fuzili',
+        lasagnaSheets: 'Lazanje',
+        noodles: 'Rezanci',
+        macaroni: 'Makarone',
+
+        // Mahunarke
+        beans: 'Pasulj',
+        chickpeas: 'Slanutak',
+        lentils: 'Sočivo',
+        peas: 'Grašak',
+        soybeans: 'Soja',
+
+        // Orašasti plodovi
+        walnut: 'Orah',
+        almond: 'Badem',
+        hazelnut: 'Lješnik',
+        peanut: 'Kikiriki',
+        cashew: 'Indijski orah',
+        pistachio: 'Pistaći',
+        pecan: 'Pekan orah',
+
+        // Sjemenke
+        sunflowerSeeds: 'Suncokretove sjemenke',
+        pumpkinSeeds: 'Bundevine sjemenke',
+        sesameSeeds: 'Susam',
+        chiaSeeds: 'Chia sjemenke',
+        flaxseed: 'Laneno sjeme',
+        poppySeeds: 'Mak',
+
+        // Ulja
+        oliveOil: 'Maslinovo ulje',
+        vegetableOil: 'Suncokretovo ulje',
+        sesameOil: 'Sezamovo ulje',
+        coconutOil: 'Kokosovo ulje',
+
+        // Sosovi
+        soySauce: 'Soja sos',
+        tomatoSauce: 'Sos od paradajza',
+        pesto: 'Pesto',
+        mayonnaise: 'Majonez',
+        ketchup: 'Kečap',
+        mustard: 'Senf',
+        bbqSauce: 'BBQ sos',
+        worcestershireSauce: 'Vorčester sos',
+
+        // Zaslađivači
+        sugar: 'Šećer',
+        brownSugar: 'Braon šećer',
+        honey: 'Med',
+        mapleSyrup: 'Javorov sirup',
+        stevia: 'Stevija',
+        powderedSugar: 'Šećer u prahu',
+
+        // Napici
+        water: 'Voda',
+        coffee: 'Kafa',
+        tea: 'Čaj',
+        juice: 'Sok',
+        soda: 'Gazirano piće',
+        wine: 'Vino',
+
+        // Smrznuti proizvodi
+        frozenPeas: 'Smrznuti grašak',
+        frozenFries: 'Smrznuti pomfrit',
+        frozenVegetables: 'Smrznuto povrće',
+        frozenPizza: 'Smrznuta pica',
+        iceCream: 'Sladoled',
+
+        // Konzervirana hrana
+        cannedBeans: 'Konzervirani pasulj',
+        cannedCorn: 'Konzervirani kukuruz',
+        cannedTomatoes: 'Konzervirani paradajz',
+        cannedTuna: 'Konzervirana tuna',
+        cannedPeas: 'Konzervirani grašak',
+
+        // Gotova jela
+        instantNoodles: 'Instant rezanci',
+        instantSoup: 'Instant supa',
+        cannedSoup: 'Konzervirana supa',
+
+        // Sastojci za pečenje
+        bakingPowder: 'Prašak za pecivo',
+        bakingSoda: 'Soda bikarbona',
+        yeast: 'Kvasac',
+        vanillaExtract: 'Ekstrakt vanile',
+        cocoaPowder: 'Kakao prah',
+        gelatin: 'Želatin',
+
+        // Aditivi
+        foodColoring: 'Boja za hranu',
+        preservatives: 'Konzervansi',
+        citricAcid: 'Limunska kiselina',
+        xanthanGum: 'Ksantan guma',
+
+        // Grickalice
+        chips: 'Čips',
+        popcorn: 'Kokice',
+        pretzels: 'Perece',
+        crackers: 'Krekeri',
+
+        // Začinski dodaci
+        vinegar: 'Sirće',
+        lemonJuice: 'Limunov sok',
+        pickles: 'Kiseli krastavci',
+        olives: 'Masline',
+        capers: 'Kapari',
+
+        // Pečurke
+        mushroom: 'Šampinjon',
+        porcini: 'Vrganj',
+        oysterMushroom: 'Bukovača',
+        shiitake: 'Šitake',
+
+        // Žitarice
+        rice: 'Pirinač',
+        wheat: 'Pšenica',
+        oats: 'Ovas',
+        barley: 'Ječam',
+        quinoa: 'Kinoa',
+        buckwheat: 'Heljda',
     },
 }
