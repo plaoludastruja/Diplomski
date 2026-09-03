@@ -55,6 +55,10 @@ export namespace TranslationKeys {
         SAVED = 'bookmark.saved',
     }
 
+    export enum Error {
+        LOADING_FAILED = 'error.loadingFailed',
+    }
+
     export enum Search {
         SELECT_CATEGORY = 'search.selectCategory',
         SELECT_INGREDIENT = 'search.selectIngredient',

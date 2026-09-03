@@ -6,11 +6,15 @@ import { LoadingScreen } from "../components/LoadingScreen"
 import { SchedulerRecipe } from "../components/SchedulerRecipe"
 import { RecipeSchedulerReturn } from "../model/model"
 import { GetRecipesScheduler } from "../service/SchedulerService"
+import { ALERT_TYPE, Toast } from "react-native-alert-notification"
+import { useTranslation } from "react-i18next"
+import { TranslationKeys } from "../locales/_translationKeys"
 
 
 export default function SchedulerScreen() {
     const { user } = useContext(UserContext)
     const { refreshScheduler, setRefreshScheduler } = useContext(SchedulerContext)
+    const { t } = useTranslation()
     const [loading, setLoading] = useState(true)
     const [recipesWeek, setRecipesWeek] = useState<RecipeSchedulerReturn>()
     const [refreshing, setRefreshing] = useState(false)
@@ -31,12 +35,16 @@ export default function SchedulerScreen() {
             const recipesWeekData = await GetRecipesScheduler()
             setRecipesWeek(recipesWeekData)
         } catch (error) {
-            console.error('Error fetching data:', error)
+            console.error('[SchedulerScreen] fetchData failed:', error)
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: t(TranslationKeys.Error.LOADING_FAILED)
+            })
         } finally {
             setLoading(false)
             setRefreshing(false)
         }
-    }, [])
+    }, [t])
 
     const handleRefresh = useCallback(() => {
         setRefreshing(true)

@@ -1,5 +1,5 @@
 import { StyleSheet, RefreshControl } from 'react-native'
-import { useContext, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { FoodRecipes } from '../model/model'
 import { COLORS, SIZES } from '../constants/Colors'
 import { UserContext } from '../app/_layout'
@@ -8,9 +8,13 @@ import { GetMyFoodRecipes } from '../service/RecipesService'
 import { LoadingScreen } from './LoadingScreen'
 import { QueryDocumentSnapshot } from 'firebase/firestore/lite'
 import { FlashList } from '@shopify/flash-list'
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
+import { useTranslation } from 'react-i18next'
+import { TranslationKeys } from '../locales/_translationKeys'
 
 export const MyRecipes = () => {
     const { user } = useContext(UserContext)
+    const { t } = useTranslation()
     const [food, setFood] = useState<FoodRecipes[]>([])
     const [refreshing, setRefreshing] = useState(false)
     const [loading, setLoading] = useState(true)
@@ -33,10 +37,15 @@ export const MyRecipes = () => {
             setFood(foodRecipesData)
             setLastVisible(newLastVisible)
             setHasMore(foodRecipesData.length > 0)
+        } catch (error) {
+            console.error('[MyRecipes] fetchData failed:', error)
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: t(TranslationKeys.Error.LOADING_FAILED)
+            })
+        } finally {
             setRefreshing(false)
             setLoading(false)
-        } catch (error) {
-            console.error('Error fetching data:', error)
         }
     }
     
@@ -45,24 +54,35 @@ export const MyRecipes = () => {
         fetchData()
     }
 
-    const handleEndReached = async () => {
-        if(hasMore){
+    const handleEndReached = useCallback(async () => {
+        if (!hasMore) return
+        try {
             const { foodRecipesData, newLastVisible } = await GetMyFoodRecipes(lastVisible)
             if (foodRecipesData.length > 0) {
                 setFood([...food, ...foodRecipesData])
                 setLastVisible(newLastVisible)
-            }else{
+            } else {
                 setHasMore(false)
             }
+        } catch (error) {
+            console.error('[MyRecipes] handleEndReached failed:', error)
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: t(TranslationKeys.Error.LOADING_FAILED)
+            })
         }
-    }
+    }, [hasMore, lastVisible, food, t])
     
+    const renderItem = useCallback(({ item }: { item: FoodRecipes }) => (
+        <CardFoodRecipes data={item} route={''} />
+    ), [])
+
     if (loading) return <LoadingScreen />
 
     return (
         <FlashList
             data={food}
-            renderItem={({ item }) => <CardFoodRecipes data={item} route={''} />}
+            renderItem={renderItem}
             keyExtractor={(item) => item.id}
             showsVerticalScrollIndicator={false}
             style={styles.flex}

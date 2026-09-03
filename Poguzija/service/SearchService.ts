@@ -16,8 +16,8 @@ async function GetSearchResults(searchParams: string[], lastVisible: QueryDocume
     
     const searchSnapshot = await Promise.all(searchPromises)
     const allResults  = searchSnapshot.flatMap(snapshot => snapshot.docs.map(doc => doc.data()))
-    const filteredResults = allResults.filter(doc => 
-        searchParamsData.every(searchParam => doc.searchFields.includes(searchParam))
+    const filteredResults = allResults.filter(doc =>
+        searchParamsData.every(searchParam => doc.searchFields?.includes(searchParam))
     )
     foodRecipesData = filteredResults.filter((result, index, self) => 
         index === self.findIndex(r => r.id === result.id)

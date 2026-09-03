@@ -10,6 +10,7 @@ import { LoadingScreen } from './LoadingScreen'
 import { ScrollView } from 'react-native-gesture-handler'
 import { TranslationKeys } from '../locales/_translationKeys'
 import { useTranslation } from 'react-i18next'
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 
 export const MyFridge = () => {
     const { user } = useContext(UserContext)
@@ -61,9 +62,14 @@ export const MyFridge = () => {
             const fridgeData = await GetMyFridge()
             setFridge(fridgeData)
             setSelectedIngredients(fridgeData?.ingredients)
-            setLoading(false)
         } catch (error) {
-            console.error('Error fetching data:', error)
+            console.error('[MyFridge] fetchData failed:', error)
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: t(TranslationKeys.Error.LOADING_FAILED)
+            })
+        } finally {
+            setLoading(false)
         }
     }
 

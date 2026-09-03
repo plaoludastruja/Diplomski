@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import { StyleSheet, Text, View } from "react-native"
 import { useTranslation } from "react-i18next"
 import { UserContext } from "../app/_layout"
@@ -10,6 +10,7 @@ import { TranslationKeys } from "../locales/_translationKeys"
 import { FoodRecipes } from "../model/model"
 import { GetMySavedFoodRecipes } from "../service/BookmarkService"
 import { FlashList } from "@shopify/flash-list"
+import { ALERT_TYPE, Toast } from "react-native-alert-notification"
 
 export default function BookmarkScreen() {
     const { user } = useContext(UserContext)
@@ -38,7 +39,11 @@ export default function BookmarkScreen() {
             setLastVisible(newLastIndex)
             setHasMore(newLastIndex !== -1)
         } catch (error) {
-            console.error('Error fetching data:', error)
+            console.error('[BookmarkScreen] fetchData failed:', error)
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: t(TranslationKeys.Error.LOADING_FAILED)
+            })
         } finally {
             setRefreshing(false);
             setLoading(false);
@@ -50,7 +55,7 @@ export default function BookmarkScreen() {
         fetchData()
     }
 
-    const handleEndReached = async () => {
+    const handleEndReached = useCallback(async () => {
         if (!hasMore || loadingMore || refreshing) return
         try {
             setLoadingMore(true)
@@ -62,11 +67,19 @@ export default function BookmarkScreen() {
                 setHasMore(false)
             }
         } catch (error) {
-            console.error('Pagination error:', error)
+            console.error('[BookmarkScreen] handleEndReached failed:', error)
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: t(TranslationKeys.Error.LOADING_FAILED)
+            })
         } finally {
             setLoadingMore(false)
         }
-    }
+    }, [hasMore, loadingMore, refreshing, lastVisible, t])
+
+    const renderItem = useCallback(({ item }: { item: FoodRecipes }) => (
+        <CardFoodRecipes data={item} route={''} />
+    ), [])
 
     if (loading) return <LoadingScreen />
 
@@ -76,7 +89,7 @@ export default function BookmarkScreen() {
             <View style={styles.line} />
             <FlashList
                 data={food}
-                renderItem={({ item }) => <CardFoodRecipes data={item} route={''} />}
+                renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 showsVerticalScrollIndicator={false}
                 style={styles.flex}

@@ -34,7 +34,7 @@ export const sr = {
         createReview: 'Objavite recenziju',
     }, 
     scheduler: {
-        recipeAddedToScheduler: 'Recept je dodat u Vaš nedelji planer',
+        recipeAddedToScheduler: 'Recept je dodat u vaš sedmični planer',
         recipeAlreadyAddedToScheduler: 'Recept je već dodat za',
     },
     days: {
@@ -48,7 +48,10 @@ export const sr = {
     },
     bookmark: {
         saved: 'Sačuvani recepti',
-    }, 
+    },
+    error: {
+        loadingFailed: 'Neuspjelo učitavanje podataka. Pokušajte ponovo.',
+    },
     search: {
         selectCategory: 'Odaberi kategorije',
         selectIngredient: 'Odaberi sastojke',

@@ -48,7 +48,10 @@ export const en = {
     }, 
     bookmark: {
         saved: 'Saved recipes',
-    }, 
+    },
+    error: {
+        loadingFailed: 'Failed to load data. Please try again.',
+    },
     search: {
         selectCategory: 'Select category',
         selectIngredient: 'Select ingredient',
@@ -95,11 +98,11 @@ export const en = {
     categoryType: {
         mealType: 'Meal type',
         popularCategory: 'Popular category',
-        nationalCousine: 'National cousine'
+        nationalCousine: 'National cuisine'
     },
     categoryItem: {
         breakfast: 'Breakfast',
-        lunch: 'Lucnh',
+        lunch: 'Lunch',
         dinner: 'Dinner',
         brunch: 'Brunch',
         dessert: 'Dessert',
@@ -114,12 +117,12 @@ export const en = {
         budgetFriendly: 'Budget friendly',
         quick: 'Quick',
         easy: 'Easy',
-        healty: 'Healty',
+        healty: 'Healthy',
         bbq: 'BBQ',
         fish: 'Fish',
         meat: 'Meat',
         sandwiches: 'Sandwiches',
-        vegeterian: 'Vegeterian',
+        vegeterian: 'Vegetarian',
         vege: 'Vege',
         salad: 'Salad',
         pasta: 'Pasta',
@@ -128,7 +131,7 @@ export const en = {
         sweet: 'Sweet',
         salty: 'Salty',
         fruity: 'Fruits',
-        vegatable: 'Vegetable',
+        vegetable: 'Vegetable',
         drink: 'Drink',
         dough: 'Dough',
     },
@@ -147,9 +150,9 @@ export const en = {
         gram: 'Gram',
         liter: 'Liter',
         deciliter: 'Deciliter',
-        mililiter: 'Mililiter',
+        mililiter: 'Milliliter',
         drop: 'Drop',
-        bigCup: 'Bug cup (250)',
+        bigCup: 'Big cup (250)',
         smallCup: 'Small cup (150)',
         shotCup: 'Shot cup (50)',
         spoonful: 'Spoonful',

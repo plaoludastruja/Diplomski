@@ -1,5 +1,5 @@
 import { View, Image, StyleSheet, Pressable, Text, Alert, GestureResponderEvent } from 'react-native'
-import { useContext, useEffect, useState } from 'react'
+import { memo, useContext, useEffect, useState } from 'react'
 import { COLORS, SIZES } from '../constants/Colors'
 import { FoodRecipes } from '../model/model'
 import { useRouter } from 'expo-router'
@@ -11,7 +11,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 const PlaceholderImage = require('../assets/images/icon.png')
 
-export const CardFoodRecipes = ({ data, route }: { data: FoodRecipes, route: string }) => {
+export const CardFoodRecipes = memo(({ data, route }: { data: FoodRecipes, route: string }) => {
     const router = useRouter()
     const { setRefreshScheduler } = useContext(SchedulerContext)
     const { user } = useContext(UserContext)
@@ -48,18 +48,18 @@ export const CardFoodRecipes = ({ data, route }: { data: FoodRecipes, route: str
 
     return (
         <View style={styles.cardContainer}>
-            <Image source={data.images ? { uri: data.images[0] } : PlaceholderImage} style={[styles.image]} />
+            <Image source={data.images ? { uri: data.images[0] } : PlaceholderImage} style={styles.image} />
             <Pressable style={styles.pressable} onPress={() => handlePress(data)} onLongPress={() => handleLongPress(data)} >
                 <LinearGradient 
                     colors={['rgba(0, 0, 0, 0.8)', 'rgba(255, 255, 255, 0)']}
                     start={{ x: 0.5, y: - 0.2 }}
                     end={{ x: 0.5, y: 0.15 }}
-                    style={[styles.image, { ...StyleSheet.absoluteFillObject }]} />
+                    style={[styles.image, StyleSheet.absoluteFill]} />
                 <LinearGradient 
                     colors={['rgba(255, 255, 255, 0)', 'rgba(0, 0, 0, 0.8)']} 
                     start={{ x: 0.5, y: 0.65 }}
                     end={{ x: 0.5, y: 0.9 }}
-                    style={[styles.image, { ...StyleSheet.absoluteFillObject }]} />
+                    style={[styles.image, StyleSheet.absoluteFill]} />
                 <View style={styles.textContainer}>
                     { data?.rating?.count != 0 && <StarRatingShow rating={(data?.rating?.sum / (data?.rating?.count == 0 ? 1 : data?.rating?.count)).toFixed(2)} />}
                     <Text style={styles.text}>{data.title}</Text>
@@ -71,7 +71,9 @@ export const CardFoodRecipes = ({ data, route }: { data: FoodRecipes, route: str
             </View>}
         </View>
     )
-}
+})
+
+CardFoodRecipes.displayName = 'CardFoodRecipes'
 
 const styles = StyleSheet.create({
     flex: {

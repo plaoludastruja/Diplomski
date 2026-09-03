@@ -2,7 +2,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useContext, useEffect, useState } from 'react'
 import { View, Pressable, Text, StyleSheet, Image, Dimensions } from 'react-native'
 import Carousel from 'react-native-snap-carousel'
-import { FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
+import { FontAwesome, FontAwesome6, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import { LinearGradient } from 'expo-linear-gradient'
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
@@ -51,9 +51,14 @@ export default function FoodRecipesItemScreen() {
                 setIsRecipeBookmarked(false)
             }
             setSavedCount(foodRecipesData.savedCount || 0)
-            setLoading(false)
         } catch (error) {
-            console.error('Error fetching data:', error)
+            console.error('[FoodRecipesItemScreen] fetchData failed:', error)
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: t(TranslationKeys.Error.LOADING_FAILED)
+            })
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -61,12 +66,15 @@ export default function FoodRecipesItemScreen() {
     const screenHeight = Dimensions.get('window').height
 
     const timeDisplay = () => {
-        if (food?.cookingTime.hours !== '' && food?.cookingTime.minutes !== '') {
-            return `${food?.cookingTime.hours} h ${food?.cookingTime.minutes} min`
-        } else if (food?.cookingTime.hours !== '') {
-            return `${food?.cookingTime.hours} h 0 min`
-        } else if (food?.cookingTime.minutes !== '') {
-            return `${food?.cookingTime.minutes} min`
+        if(!food?.cookingTime) {
+            return
+        }
+        else if (food?.cookingTime?.hours !== '' && food?.cookingTime?.minutes !== '') {
+            return `${food?.cookingTime?.hours} h ${food?.cookingTime?.minutes} min`
+        } else if (food?.cookingTime?.hours !== '') {
+            return `${food?.cookingTime?.hours} h`
+        } else if (food?.cookingTime?.minutes !== '') {
+            return `${food?.cookingTime?.minutes} min`
         } else {
             return '0 min'
         }
@@ -118,18 +126,18 @@ export default function FoodRecipesItemScreen() {
 
     const renderItem = ({ item }: { item: string }) => {
         return (
-            <View style={[styles.images, { width: screenWidth, height: 2 * screenHeight / 3 }]} >
+            <View style={[styles.images, { width: screenWidth, height: 2 / 3 * screenHeight }]} >
                 <Image source={{ uri: item }} style={[styles.image, { width: screenWidth, height: 2 * screenHeight / 3 }]} />
                 <LinearGradient
                     colors={['rgba(0, 0, 0, 0.8)', 'rgba(255, 255, 255, 0)']}
                     start={{ x: 0.5, y: - 0.2 }}
                     end={{ x: 0.5, y: 0.15 }}
-                    style={[styles.gradientTop, { ...StyleSheet.absoluteFillObject }]} />
+                    style={[styles.gradientTop, StyleSheet.absoluteFill]} />
                 <LinearGradient
                     colors={['rgba(255, 255, 255, 0)', 'rgba(0, 0, 0, 0.8)']}
                     start={{ x: 0.5, y: 0.8 }}
                     end={{ x: 0.5, y: 1.1 }}
-                    style={[styles.gradientBottom, { ...StyleSheet.absoluteFillObject }]} />
+                    style={[styles.gradientBottom, StyleSheet.absoluteFill]} />
             </View>
         )
     }
@@ -161,7 +169,7 @@ export default function FoodRecipesItemScreen() {
 
     return (
         <BackgroundSafeAreaView>
-            <View style={styles.scrollViewContent}>
+            <View style={[styles.scrollViewContent, styles.flex]}>
                 <View style={[styles.flex, { flexDirection: 'row' }]}>
                     <Carousel
                         data={food?.images}
@@ -213,11 +221,11 @@ export default function FoodRecipesItemScreen() {
                     <BottomSheetScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
                         <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.NAME)}</Text>
                         <View style={styles.inputContainer}>
-                            <MaterialIcons name="receipt" style={styles.icon} />
+                            <FontAwesome6 name="bread-slice" style={styles.icon} />
                             <BottomSheetTextInput
                                 style={styles.textInput}
-                                multiline={true}
                                 placeholder={t(TranslationKeys.Recipe.NAME)}
+                                multiline={true}
                                 value={food?.title}
                                 autoComplete='off'
                                 editable={false}
@@ -226,24 +234,13 @@ export default function FoodRecipesItemScreen() {
 
                         <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.DESCRIPTION)}</Text>
                         <View style={styles.inputContainer}>
-                            <MaterialCommunityIcons name="pencil" style={styles.icon} />
+                            <MaterialIcons name="description" style={styles.icon} />
                             <BottomSheetTextInput
                                 style={styles.textInput}
                                 multiline={true}
                                 placeholder={t(TranslationKeys.Recipe.DESCRIPTION)}
                                 value={food?.description}
                                 autoComplete='off'
-                                editable={false}
-                            />
-                        </View>
-
-                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.TIME_TO_PREPARE)}</Text>
-                        <View style={styles.inputContainer}>
-                            <MaterialIcons name="people" style={styles.icon} />
-                            <BottomSheetTextInput
-                                style={styles.textInput}
-                                placeholder={t(TranslationKeys.Recipe.TIME_TO_PREPARE)}
-                                value={timeDisplay()}
                                 editable={false}
                             />
                         </View>
@@ -255,6 +252,17 @@ export default function FoodRecipesItemScreen() {
                                 style={styles.textInput}
                                 placeholder={t(TranslationKeys.Recipe.SERVING_SIZE)}
                                 value={food?.servingSize}
+                                editable={false}
+                            />
+                        </View>
+
+                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.TIME_TO_PREPARE)}</Text>
+                        <View style={styles.inputContainer}>
+                            <MaterialIcons name="people" style={styles.icon} />
+                            <BottomSheetTextInput
+                                style={styles.textInput}
+                                placeholder={t(TranslationKeys.Recipe.TIME_TO_PREPARE)}
+                                value={timeDisplay()}
                                 editable={false}
                             />
                         </View>
@@ -293,11 +301,11 @@ const styles = StyleSheet.create({
     flex: {
         flex: 1,
         width: '100%',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
     scrollViewContent: {
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     images: {
         justifyContent: 'center',

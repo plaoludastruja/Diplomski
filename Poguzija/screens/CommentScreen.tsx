@@ -1,8 +1,9 @@
-import { useContext, useEffect, useState } from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import { useLocalSearchParams } from "expo-router"
 import { Pressable, View, Text, StyleSheet, RefreshControl } from "react-native"
 import { MaterialIcons } from "@expo/vector-icons"
 import { useTranslation } from "react-i18next"
+import { ALERT_TYPE, Toast } from "react-native-alert-notification"
 import { UserContext } from "../app/_layout"
 import { AddCommentModal } from "../components/AddCommentModal"
 import { BackgroundSafeAreaView } from "../components/BackgroundSafeAreaView"
@@ -32,10 +33,15 @@ export default function CommentsScreen() {
         try {
             const commentsData = await GetCommentsForRecipe(commentRecipeId)
             setComments(commentsData)
+        } catch (error) {
+            console.error('[CommentScreen] fetchData failed:', error)
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: t(TranslationKeys.Error.LOADING_FAILED)
+            })
+        } finally {
             setLoading(false)
             setRefreshing(false)
-        } catch (error) {
-            console.error('Error fetching data:', error)
         }
     }
 
@@ -63,6 +69,10 @@ export default function CommentsScreen() {
         }
     }
 
+    const renderItem = useCallback(({ item }: { item: Comment }) => (
+        <CardComment commentData={item} />
+    ), [])
+
     if (loading) return <LoadingScreen />
 
     return (
@@ -79,7 +89,7 @@ export default function CommentsScreen() {
             <View style={styles.line} />
             <FlashList
                 data={comments}
-                renderItem={({ item }) => <CardComment commentData={item} />}
+                renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 showsVerticalScrollIndicator={false}
                 style={styles.flex}

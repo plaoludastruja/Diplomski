@@ -1,7 +1,8 @@
 import { MaterialIcons } from "@expo/vector-icons"
 import { QueryDocumentSnapshot } from "firebase/firestore/lite"
-import { useState, useRef, useEffect } from "react"
+import { useCallback, useState, useRef, useEffect } from "react"
 import { useTranslation } from "react-i18next"
+import { ALERT_TYPE, Toast } from "react-native-alert-notification"
 import { Animated, View, TextInput, Pressable, StyleSheet, Text } from "react-native"
 import { BackgroundSafeAreaView } from "../components/BackgroundSafeAreaView"
 import { CardFoodRecipes } from "../components/CardFoodRecipes"
@@ -56,29 +57,33 @@ export default function SearchScreen() {
             return
         }
 
-        const { foodRecipesData, newLastVisible } = await GetSearchResults(searchParams, null)
-        setLoading(false)
-        setFood(foodRecipesData)
-        setLastVisible(newLastVisible)
-        setHasMore(foodRecipesData.length > 0)
-        console.log(foodRecipesData.length)
-        setEmptyResult(foodRecipesData.length === 0)
-
-        if (foodRecipesData.length === 0) {
-            setScrollDirection('up')
-        } else {
-            setScrollDirection('down')
+        try {
+            const { foodRecipesData, newLastVisible } = await GetSearchResults(searchParams, null)
+            setFood(foodRecipesData)
+            setLastVisible(newLastVisible)
+            setHasMore(foodRecipesData.length > 0)
+            setEmptyResult(foodRecipesData.length === 0)
+            setScrollDirection(foodRecipesData.length === 0 ? 'up' : 'down')
+        } catch (error) {
+            console.error('[SearchScreen] handleSearch failed:', error)
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: t(TranslationKeys.Error.LOADING_FAILED)
+            })
+        } finally {
+            setLoading(false)
         }
     }
 
-    const handleEndReached = async () => {
-        if (hasMore) {
-            const searchData = search.toUpperCase().split(/[\s-\.,!?]/).filter(t => t.length >= 4)
-            const searchParams = [...categoryData, ...ingredientData, ...searchData]
+    const handleEndReached = useCallback(async () => {
+        if (!hasMore) return
+        const searchData = search.toUpperCase().split(/[\s-\.,!?]/).filter(t => t.length >= 4)
+        const searchParams = [...categoryData, ...ingredientData, ...searchData]
 
-            if (searchParams.length === 0) {
-                return
-            }
+        if (searchParams.length === 0) {
+            return
+        }
+        try {
             const { foodRecipesData, newLastVisible } = await GetSearchResults(searchParams, lastVisible)
             if (foodRecipesData.length > 0) {
                 setFood([...food, ...foodRecipesData])
@@ -86,19 +91,41 @@ export default function SearchScreen() {
             } else {
                 setHasMore(false)
             }
+        } catch (error) {
+            console.error('[SearchScreen] handleEndReached failed:', error)
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: t(TranslationKeys.Error.LOADING_FAILED)
+            })
         }
-    }
+    }, [hasMore, search, categoryData, ingredientData, lastVisible, food, t])
 
-    const onDeleteSelected = (type: string, selectedItem: string) => {
+    const onDeleteSelected = useCallback((type: string, selectedItem: string) => {
         if (type === 'ingredient') {
-            const updatedItems = ingredientData.filter((item) => item !== selectedItem)
-            setIngredientData([...updatedItems])
+            setIngredientData(ingredientData => ingredientData.filter((item) => item !== selectedItem))
         }
         if (type === 'category') {
-            const updatedItems = categoryData.filter((item) => item !== selectedItem)
-            setCategoryData([...updatedItems])
+            setCategoryData(categoryData => categoryData.filter((item) => item !== selectedItem))
         }
-    }
+    }, [])
+
+    const renderCategoryItem = useCallback(({ item }: { item: string }) => (
+        <Pressable style={styles.buttonModalSelected} onPress={() => onDeleteSelected('category', item)}>
+            <Text style={styles.textStyle}>{t(TranslationKeys.CategoryItem[item as keyof typeof TranslationKeys.CategoryItem]) || item}</Text>
+            <MaterialIcons name="close" style={styles.iconButton} />
+        </Pressable>
+    ), [onDeleteSelected, t])
+
+    const renderIngredientItem = useCallback(({ item }: { item: string }) => (
+        <Pressable style={styles.buttonModalSelected} onPress={() => onDeleteSelected('ingredient', item)}>
+            <Text style={styles.textStyle}>{t(TranslationKeys.IngredientItem[item as keyof typeof TranslationKeys.IngredientItem]) || item}</Text>
+            <MaterialIcons name="close" style={styles.iconButton} />
+        </Pressable>
+    ), [onDeleteSelected, t])
+
+    const renderFoodItem = useCallback(({ item }: { item: FoodRecipes }) => (
+        <CardFoodRecipes data={item} route={''} />
+    ), [])
 
     const [scrollDirection, setScrollDirection] = useState('')
     const positionAnimation = useRef(new Animated.Value(0)).current
@@ -161,11 +188,7 @@ export default function SearchScreen() {
                         data={categoryData}
                         style={styles.flex}
                         contentContainerStyle={[{ alignContent: 'flex-start' }]}
-                        renderItem={({ item }) =>
-                            <Pressable style={styles.buttonModalSelected} onPress={() => onDeleteSelected('category', item)}>
-                                <Text style={styles.textStyle}>{t(TranslationKeys.CategoryItem[item as keyof typeof TranslationKeys.CategoryItem]) || item}</Text>
-                                <MaterialIcons name="close" style={styles.iconButton} />
-                            </Pressable>}
+                        renderItem={renderCategoryItem}
                         keyExtractor={(item) => item}
                         showsHorizontalScrollIndicator={false}
                         horizontal
@@ -174,11 +197,7 @@ export default function SearchScreen() {
                         data={ingredientData}
                         style={styles.flex}
                         contentContainerStyle={[{ alignContent: 'flex-start' }]}
-                        renderItem={({ item }) =>
-                            <Pressable style={styles.buttonModalSelected} onPress={() => onDeleteSelected('ingredient', item)} >
-                                <Text style={styles.textStyle}>{t(TranslationKeys.IngredientItem[item as keyof typeof TranslationKeys.IngredientItem]) || item}</Text>
-                                <MaterialIcons name="close" style={styles.iconButton} />
-                            </Pressable>}
+                        renderItem={renderIngredientItem}
                         keyExtractor={(item) => item}
                         showsHorizontalScrollIndicator={false}
                         horizontal
@@ -191,7 +210,7 @@ export default function SearchScreen() {
                             <FlashList
                                 ref={listRef}
                                 data={food}
-                                renderItem={({ item }) => <CardFoodRecipes data={item} route={''} />}
+                                renderItem={renderFoodItem}
                                 keyExtractor={(item) => item.id}
                                 showsVerticalScrollIndicator={false}
                                 style={styles.flex}

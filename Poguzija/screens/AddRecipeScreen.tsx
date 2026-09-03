@@ -250,7 +250,7 @@ export default function AddRecipeTab() {
 
     return (
         <BackgroundSafeAreaView>
-            <View style={styles.scrollViewContent}>
+            <View style={[styles.scrollViewContent, styles.flex]}>
                 <View style={[styles.flex, { flexDirection: 'row' }]}>
                     <Carousel
                         data={selectedImageArray}

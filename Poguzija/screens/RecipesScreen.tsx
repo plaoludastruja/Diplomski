@@ -8,9 +8,13 @@ import { LoadingScreen } from '../components/LoadingScreen'
 import { GetAllFoodRecipes } from '../service/RecipesService'
 import { FlashList } from '@shopify/flash-list'
 import { useScrollToTop } from 'expo-router'
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
+import { useTranslation } from 'react-i18next'
+import { TranslationKeys } from '../locales/_translationKeys'
 
 
 export default function RecipesScreen() {
+    const { t } = useTranslation()
     const [food, setFood] = useState<FoodRecipes[]>([])
     const [refreshing, setRefreshing] = useState(false)
     const [loading, setLoading] = useState(true)
@@ -31,7 +35,11 @@ export default function RecipesScreen() {
             setLastVisible(newLastVisible)
             setHasMore(foodRecipesData.length > 0)
         } catch (error) {
-            console.error('Error fetching data:', error)
+            console.error('[RecipesScreen] fetchData failed:', error)
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: t(TranslationKeys.Error.LOADING_FAILED)
+            })
         } finally {
             setRefreshing(false);
             setLoading(false);
@@ -44,7 +52,7 @@ export default function RecipesScreen() {
         fetchData()
     }, [])
 
-    const handleEndReached = async () => {
+    const handleEndReached = useCallback(async () => {
         if (!hasMore || loadingMore || refreshing) return
         try {
             setLoadingMore(true)
@@ -56,11 +64,19 @@ export default function RecipesScreen() {
                 setHasMore(false)
             }
         } catch (error) {
-            console.error('Pagination error:', error)
+            console.error('[RecipesScreen] handleEndReached failed:', error)
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: t(TranslationKeys.Error.LOADING_FAILED)
+            })
         } finally {
             setLoadingMore(false)
         }
-    }
+    }, [hasMore, loadingMore, refreshing, lastVisible, t])
+
+    const renderItem = useCallback(({ item }: { item: FoodRecipes }) => (
+        <CardFoodRecipes data={item} route={''} />
+    ), [])
 
     if (loading) return <LoadingScreen />
 
@@ -69,7 +85,7 @@ export default function RecipesScreen() {
             <FlashList
                 ref={listRef}
                 data={food}
-                renderItem={({ item }) => <CardFoodRecipes data={item} route={''} />}
+                renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 showsVerticalScrollIndicator={false}
                 style={styles.flex}
@@ -88,6 +104,3 @@ const styles = StyleSheet.create({
         width: '100%',
     },
 })
-
-
-

@@ -1,9 +1,10 @@
 import { Text, StyleSheet, View, Image } from 'react-native'
+import { memo } from 'react'
 import { Comment } from '../model/model'
 import { COLORS, SIZES } from '../constants/Colors'
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 
-export const CardComment = ({ commentData }: { commentData: Comment }) => {
+export const CardComment = memo(({ commentData }: { commentData: Comment }) => {
     return (
         <View style={styles.containerComment}>
             <View style={styles.containerAuthor}>
@@ -20,10 +21,10 @@ export const CardComment = ({ commentData }: { commentData: Comment }) => {
                 <Text style={styles.textInput}>       {commentData.text}</Text>
             </View>
         </View>
-        
     )
-}
+})
 
+CardComment.displayName = 'CardComment'
 
 const styles = StyleSheet.create({
     flex: {
