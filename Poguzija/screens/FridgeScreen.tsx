@@ -50,9 +50,10 @@ export default function FridgeScreen() {
     const renderTabBar = useCallback((props: any) => (
         <TabBar
             {...props}
+            activeColor={COLORS.tint}
+            inactiveColor={COLORS.tint}
             indicatorStyle={{ backgroundColor: COLORS.tint }}
-            style={{ backgroundColor: COLORS.light, color: COLORS.tint, }}
-            labelStyle={{ color: COLORS.tint, }}
+            style={{ backgroundColor: COLORS.light }}
         />
     ), [])
 

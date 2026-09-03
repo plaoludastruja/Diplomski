@@ -53,7 +53,7 @@ export default function CommentsScreen() {
 
     const onAddNewComment = (text: string, rating: number) => {
         setAddCommentModalVisible(false)
-        if(text != ''){
+        if(text !== ''){
             const comment: Partial<Comment> = {
                 authorName: user?.fullName || '',
                 authorProfilePhoto: user?.profilePhoto || '',
@@ -65,7 +65,7 @@ export default function CommentsScreen() {
             AddComment(commentRecipeId, comment)
         }
         
-        if(rating != 0){
+        if(rating !== 0){
             UpdateRecipeRating(commentRecipeId, rating)
         }
     }

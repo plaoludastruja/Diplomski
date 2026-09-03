@@ -40,7 +40,7 @@ export const ProfileInfo = () => {
     
     return (
         <View style={styles.header}>
-            {user && <FontAwesome name="bookmark-o" color={COLORS.lightDark} style={styles.image} size={1.2 * SIZES.tabIcon} onPress={handleOpenBookmarks}/>}
+            {user && <FontAwesome name="bookmark-o" color={COLORS.lightDark} style={styles.icon} size={1.2 * SIZES.tabIcon} onPress={handleOpenBookmarks}/>}
             <SelectDropdown
                 data={emojisWithIcons}
                 onSelect={(selectedItem, index) => {
@@ -88,6 +88,11 @@ const styles = StyleSheet.create({
         width: 1.2 * SIZES.tabIcon,
         height: 1.2 * SIZES.tabIcon,
         borderRadius: SIZES.large,
+        marginEnd: SIZES.base,
+    },
+    icon: {
+        alignSelf: 'center',
+        width: 1.2 * SIZES.tabIcon,
         marginEnd: SIZES.base,
     },
     dropdownMenuStyle: {
