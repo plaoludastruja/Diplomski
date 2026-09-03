@@ -3,10 +3,15 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
 import { SIZES } from '../constants/Colors'
 
-export const StarRating = ({ ratingValue, onRatingChange }) => {
+interface StarRatingProps {
+    ratingValue: number
+    onRatingChange?: (rating: number) => void
+}
+
+export const StarRating = ({ ratingValue, onRatingChange }: StarRatingProps) => {
     const [rating, setRating] = useState(ratingValue)
 
-    const handleStarPress = (newRating) => {
+    const handleStarPress = (newRating: number) => {
         setRating(newRating)
         if (onRatingChange) {
             onRatingChange(newRating)
@@ -33,10 +38,11 @@ export const StarRating = ({ ratingValue, onRatingChange }) => {
     )
 }
 
-export const StarRatingShow = ({ rating }) => {
-    const fullStars = Math.floor(rating)
-    const hasHalfStar = rating % 1 >= 0.25 && rating % 1 <= 0.75
-    const higher = rating % 1 > 0.75 && rating % 1 < 1
+export const StarRatingShow = ({ rating }: { rating: number | string }) => {
+    const numericRating = Number(rating)
+    const fullStars = Math.floor(numericRating)
+    const hasHalfStar = numericRating % 1 >= 0.25 && numericRating % 1 <= 0.75
+    const higher = numericRating % 1 > 0.75 && numericRating % 1 < 1
     return (
         <View style={styles.container}>
             {[...Array(5)].map((_, index) => {

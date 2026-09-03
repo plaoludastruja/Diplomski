@@ -1,4 +1,4 @@
-import { getDocs, query, collection, orderBy, getDoc, doc, addDoc, QueryDocumentSnapshot, serverTimestamp, where, updateDoc, increment, limit, startAfter, deleteDoc } from "firebase/firestore/lite"
+import { getDocs, query, collection, orderBy, getDoc, doc, addDoc, QueryDocumentSnapshot, serverTimestamp, where, updateDoc, increment, limit, startAfter, deleteDoc, Timestamp } from "firebase/firestore/lite"
 import { DatabaseCollection, FoodRecipes } from "../model/model"
 import { db } from "./firebase"
 import { GetCurrentUser } from "./AuthService"
@@ -21,11 +21,13 @@ async function GetFoodRecipe(id: string): Promise<FoodRecipes> {
     let foodRecipeItem: FoodRecipes = {
         id: "",
         title: "",
+        description: "",
         author: "",
         servingSize: "",
         ingredients: [],
         steps: [],
         images: [],
+        categories: [],
         searchFields: [],
         cookingTime: {hours: '', minutes: ''},
         savedCount: 0,
@@ -33,7 +35,7 @@ async function GetFoodRecipe(id: string): Promise<FoodRecipes> {
             sum: 0,
             count: 1
         },
-        createdAt: ''
+        createdAt: Timestamp.now()
     }
     const data = await getDoc(doc(db, DatabaseCollection.recipes, id).withConverter(foodRecipesConverter))
     if (data.exists()) {
@@ -72,9 +74,9 @@ async function DeleteFoodRecipe(recipeId: string) {
     deleteDoc(doc(db, DatabaseCollection.recipes, recipeId))
 }
 
-async function GetMyFoodRecipes(lastVisible: QueryDocumentSnapshot | null) {
+async function GetMyFoodRecipes(lastVisible: QueryDocumentSnapshot | null | undefined) {
     const user = await GetCurrentUser()
-    if (!user) return {}
+    if (!user) return { foodRecipesData: [] as FoodRecipes[], newLastVisible: null }
     let data
     if (!lastVisible) {
         data = await getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), where("author", "==", user.id), orderBy('createdAt', "desc"), limit(5)))

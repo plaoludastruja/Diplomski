@@ -26,7 +26,7 @@ export default function FoodRecipesItemScreen() {
     const { setRefreshScheduler } = useContext(SchedulerContext)
     const [food, setFood] = useState<FoodRecipes>()
     const [loading, setLoading] = useState(true)
-    const [bookmarkIconType, setBookmarkIconType] = useState<string>('bookmark-o')
+    const [bookmarkIconType, setBookmarkIconType] = useState<'bookmark' | 'bookmark-o'>('bookmark-o')
     const [isRecipeBookmarked, setIsRecipeBookmarked] = useState(false)
     const [savedCount, setSavedCount] = useState(0)
     const [selectWeekModalVisible, setSelectWeekModalVisible] = useState(false)
@@ -102,7 +102,7 @@ export default function FoodRecipesItemScreen() {
 
     const onDaySelected = async (day: keyof typeof Day | null) => {
         setSelectWeekModalVisible(false)
-        if (day) {
+        if (day && food) {
             const recipe = await AddToMyScheduler(food, day)
             if(recipe){
                 setRefreshScheduler(true)
@@ -172,7 +172,7 @@ export default function FoodRecipesItemScreen() {
             <View style={[styles.scrollViewContent, styles.flex]}>
                 <View style={[styles.flex, { flexDirection: 'row' }]}>
                     <Carousel
-                        data={food?.images}
+                        data={food?.images ?? []}
                         renderItem={renderItem}
                         sliderWidth={screenWidth}
                         itemWidth={screenWidth}
@@ -292,7 +292,7 @@ export default function FoodRecipesItemScreen() {
                 </BottomSheet>
 
             </View>
-            <SelectWeekModal visible={selectWeekModalVisible} onClose={(day: string | null) => onDaySelected(day)} />
+            <SelectWeekModal visible={selectWeekModalVisible} onClose={(day?: string | null) => { onDaySelected((day as keyof typeof Day) ?? null) }} />
         </BackgroundSafeAreaView>
     )
 }

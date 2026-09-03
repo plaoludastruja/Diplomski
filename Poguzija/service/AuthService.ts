@@ -5,7 +5,7 @@ import { auth } from './firebase'
 import { GetOrAddUser } from './UserService'
 import { MyUser } from '../model/model'
 
-async function SignIn(): Promise<MyUser> {
+async function SignIn(): Promise<MyUser | undefined> {
     try {
         let user
         await GoogleSignin.hasPlayServices()
@@ -41,7 +41,7 @@ function SetCurrentUser(userAdded: MyUser) {
     SecureStore.setItemAsync('signedUser', userValue)
 }
 
-async function GetCurrentUser(): Promise<MyUser> {
+async function GetCurrentUser(): Promise<MyUser | null> {
     let userValue = await SecureStore.getItemAsync('signedUser')
     return userValue != null ? JSON.parse(userValue) : null
 }

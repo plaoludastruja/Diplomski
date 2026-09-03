@@ -5,7 +5,12 @@ import { useTranslation } from 'react-i18next'
 import { TranslationKeys } from '../locales/_translationKeys'
 
 
-export const SelectWeekModal = ({ visible, onClose }) => {
+interface SelectWeekModalProps {
+    visible: boolean
+    onClose: (day?: string | null) => void
+}
+
+export const SelectWeekModal = ({ visible, onClose }: SelectWeekModalProps) => {
     const {t} = useTranslation()
 
     return (

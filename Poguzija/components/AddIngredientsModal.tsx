@@ -7,7 +7,14 @@ import { TranslationKeys } from '../locales/_translationKeys'
 import { useTranslation } from 'react-i18next'
 import { SelectIngredientNameUnitList } from './SelectIngredientNameUnitList'
 
-export const AddIngredientsModal = ({ visible, dataEdit, onAdd, onClose }) => {
+interface AddIngredientsModalProps {
+    visible: boolean
+    dataEdit: Ingredient | undefined
+    onAdd: (ingredient: Ingredient) => void
+    onClose: () => void
+}
+
+export const AddIngredientsModal = ({ visible, dataEdit, onAdd, onClose }: AddIngredientsModalProps) => {
     const {t} = useTranslation()
     const [modalVisible, setModalVisible] = useState(false)
     const [modalDataType, setModalDataType] = useState('')
@@ -16,7 +23,7 @@ export const AddIngredientsModal = ({ visible, dataEdit, onAdd, onClose }) => {
     const [amount, setAmount] = useState('')
     const [unit, setUnit] = useState('')
 
-    const openModal = (dataType) => {
+    const openModal = (dataType: 'ingredient' | 'unit') => {
         setModalDataType(dataType)
         setModalVisible(true)
     }
@@ -27,9 +34,9 @@ export const AddIngredientsModal = ({ visible, dataEdit, onAdd, onClose }) => {
     }
 
     useEffect(() => {
-        setName(dataEdit?.name)
-        setAmount(dataEdit?.amount)
-        setUnit(dataEdit?.unit)
+        setName(dataEdit?.name ?? '')
+        setAmount(dataEdit?.amount ?? '')
+        setUnit(dataEdit?.unit ?? '')
     },[dataEdit])
 
     const handleOnAdd = () => {
@@ -70,7 +77,7 @@ export const AddIngredientsModal = ({ visible, dataEdit, onAdd, onClose }) => {
             <SelectIngredientNameUnitList 
                 modalDataType={ modalDataType }
                 visible={ modalVisible } 
-                onAdd={ (item) => { if(modalDataType === 'ingredient'){setName(item.name)} else if(modalDataType === 'unit'){setUnit(item.name)} }} 
+                onAdd={ (item: { name: string }) => { if(modalDataType === 'ingredient'){setName(item.name)} else if(modalDataType === 'unit'){setUnit(item.name)} }}
                 onClose={() => closeModal()} />
             
             

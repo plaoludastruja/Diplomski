@@ -2,7 +2,7 @@ import { Category, IngredientNameUnit } from "../model/model"
 import { GetCategoryData, GetIngredientsData, GetMeasurementUnitsData } from "./HelperService"
 
 function GetIngredientNameUnitCategory(type: string) {
-    let ingredientNameUnitCategory: any
+    let ingredientNameUnitCategory: Record<string, string[]> = {}
     switch(type){
         case 'ingredient': 
             ingredientNameUnitCategory = GetIngredientsData()

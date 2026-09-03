@@ -9,7 +9,13 @@ import { TranslationKeys } from '../locales/_translationKeys'
 import { useTranslation } from 'react-i18next'
 import { FlashList } from '@shopify/flash-list'
 
-export const SelectIngredientList = ({ alreadySelected, visible, onClose }) => {
+interface SelectIngredientListProps {
+    alreadySelected: string[]
+    visible: boolean
+    onClose: (selectedIngredients: string[]) => void
+}
+
+export const SelectIngredientList = ({ alreadySelected, visible, onClose }: SelectIngredientListProps) => {
     const {t} = useTranslation()
     const [data, setData] = useState<IngredientNameUnit[]>()
     const [search, setSearch] = useState('')
@@ -23,13 +29,14 @@ export const SelectIngredientList = ({ alreadySelected, visible, onClose }) => {
     const handleClose = () => {
         const ingredientyData = data
         const searchFields = ingredientyData?.map(i => i.data.filter(j => j.isSelected).map(j => j.name)).flat()
-        onClose(searchFields)
+        onClose(searchFields ?? [])
         setSearch('')
         setDataFilter([])
     }
 
     const filterData = (search: string) => {
-        const filteredData = search === '' ? data : data.map(item => {
+        const safeData = data ?? []
+        const filteredData = search === '' ? safeData : safeData.map(item => {
             const filteredInnerData = item.data.filter(dataItem => 
                 t(TranslationKeys.IngredientItem[dataItem.name as keyof typeof TranslationKeys.IngredientItem]).toLowerCase().includes(search.toLowerCase())
             )

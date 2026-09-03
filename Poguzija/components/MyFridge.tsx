@@ -1,6 +1,6 @@
 import { Text, StyleSheet, View, Image, Pressable, TextInput } from 'react-native'
 import { useContext, useEffect, useState } from 'react'
-import { Fridge, Ingredient } from '../model/model'
+import { Ingredient } from '../model/model'
 import { MaterialIcons } from '@expo/vector-icons'
 import { COLORS, SIZES } from '../constants/Colors'
 import { UserContext } from '../app/_layout'
@@ -16,7 +16,6 @@ export const MyFridge = () => {
     const { user } = useContext(UserContext)
     const {t} = useTranslation()
     const [loading, setLoading] = useState(true)
-    const [fridge, setFridge] = useState<Fridge[]>([])
     const [ingredientsModalVisible, setIngredientsModalVisible] = useState(false)
     const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([])
     const [ingredientEdit, setIngredientEdit] = useState<Ingredient>()
@@ -44,7 +43,7 @@ export const MyFridge = () => {
 
     const handleClose = () => {
         setIngredientsModalVisible(false)
-        setIngredientEdit({})
+        setIngredientEdit(undefined)
     }
 
     useEffect(() => {
@@ -60,8 +59,7 @@ export const MyFridge = () => {
     const fetchData = async () => {
         try {
             const fridgeData = await GetMyFridge()
-            setFridge(fridgeData)
-            setSelectedIngredients(fridgeData?.ingredients)
+            setSelectedIngredients(fridgeData?.ingredients ?? [])
         } catch (error) {
             console.error('[MyFridge] fetchData failed:', error)
             Toast.show({

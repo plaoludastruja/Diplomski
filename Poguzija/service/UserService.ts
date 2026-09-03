@@ -1,5 +1,5 @@
 import { db } from './firebase'
-import { getDoc, doc, serverTimestamp, setDoc, QueryDocumentSnapshot } from 'firebase/firestore/lite'
+import { getDoc, doc, serverTimestamp, setDoc, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore/lite'
 import { DatabaseCollection, MyUser } from '../model/model'
 import { AddRecipesScheduler } from './SchedulerService'
 import { AddFridge } from './FridgeService'
@@ -27,13 +27,13 @@ async function AddUser(user: User, authUser: AuthUser): Promise<MyUser> {
         surname: user.user.familyName || '',
         fullName: user.user.name || '',
         profilePhoto: user.user.photo || '',
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp() as unknown as Timestamp
     }
     setDoc(doc(db, DatabaseCollection.users, myUser.id), myUser)
     return myUser
 }
 
-async function GetUser(id: string): Promise<MyUser> {
+async function GetUser(id: string): Promise<MyUser | undefined> {
     const data = await getDoc(doc(db, DatabaseCollection.users, id).withConverter(userConverter))
     if (data.exists()) {
         const user = data.data()

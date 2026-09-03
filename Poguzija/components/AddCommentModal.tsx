@@ -6,7 +6,13 @@ import { FontAwesome } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
 import { TranslationKeys } from '../locales/_translationKeys'
 
-export const AddCommentModal = ({ visible, onAdd, onClose }) => {
+interface AddCommentModalProps {
+    visible: boolean
+    onAdd: (text: string, rating: number) => void
+    onClose: () => void
+}
+
+export const AddCommentModal = ({ visible, onAdd, onClose }: AddCommentModalProps) => {
     const {t} = useTranslation()
     const [text, setText] = useState('')
     const [rating, setRating] = useState(0)

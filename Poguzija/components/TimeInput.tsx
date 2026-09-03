@@ -4,7 +4,13 @@ import { TextInput, View, Text, StyleSheet } from "react-native"
 import { SIZES, COLORS } from "../constants/Colors"
 
 
-export const TimeInput = ({ time, onTimeChange, refresh }) => {
+interface TimeInputProps {
+    time: { hours: string, minutes: string }
+    onTimeChange: (time: { hours: string, minutes: string, all: string }) => void
+    refresh: boolean
+}
+
+export const TimeInput = ({ time, onTimeChange, refresh }: TimeInputProps) => {
     const [hours, setHours] = useState('')
     const [minutes, setMinutes] = useState('')
 
@@ -13,12 +19,12 @@ export const TimeInput = ({ time, onTimeChange, refresh }) => {
         setMinutes(time.minutes || '')
     }, [refresh])
 
-    const handleHoursChange = (text) => {
+    const handleHoursChange = (text: string) => {
         setHours(text.replace(/[^0-9]/g, ''))
         onTimeChange({hours: text, minutes: minutes, all: `${text}${minutes}`})
     }
 
-    const handleMinutesChange = (text) => {
+    const handleMinutesChange = (text: string) => {
         setMinutes(text.replace(/[^0-9]/g, ''))
         onTimeChange({hours: hours, minutes: text, all: `${hours}${text}`})
     }

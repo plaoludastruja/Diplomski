@@ -3,7 +3,7 @@ import { useFonts } from 'expo-font'
 import { DarkTheme, DefaultTheme, SplashScreen, Stack, ThemeProvider } from 'expo-router'
 import { Dispatch, SetStateAction, createContext, useEffect, useState } from 'react'
 import { useColorScheme } from 'react-native'
-import { COLORS } from '../constants/Colors'
+import { COLORS, ALERT_COLORS } from '../constants/Colors'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { MyUser } from '../model/model'
 import { SignIn, SignOut } from '../service/AuthService'
@@ -72,7 +72,7 @@ function RootLayoutNav() {
     }, [])
     const getCurrentUserFn = async () => {
         const user = await GetCurrentUser()
-        setUser(user)
+        setUser(user ?? undefined)
     }
 
     const signInFn = async () => {
@@ -91,7 +91,7 @@ function RootLayoutNav() {
             <ThemeProvider value={theme}>
             <UserContext.Provider value={{ user, signInFn, signOutFn }}>
             <SchedulerContext.Provider value={{ refreshScheduler, setRefreshScheduler }}>
-            <AlertNotificationRoot colors={[{ card: COLORS.dark, label: COLORS.white }]}>
+            <AlertNotificationRoot colors={[ALERT_COLORS, ALERT_COLORS]}>
             <I18nextProvider i18n={i18n}>
                 <Stack >
                     <Stack.Screen name="(tabs)" options={{ headerShown: false, }} />

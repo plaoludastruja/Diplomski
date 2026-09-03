@@ -18,6 +18,7 @@ import { TranslationKeys } from '../locales/_translationKeys'
 import { Ingredient, Step, FoodRecipes } from '../model/model'
 import { UploadFoodRecipesImages } from '../service/ImageService'
 import { GetFoodRecipe, EditFoodRecipe, AddFoodRecipe } from '../service/RecipesService'
+import { Timestamp } from 'firebase/firestore/lite'
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { BottomSheetKeyboardAwareScrollView } from '../components/BottomSheetKeyboardAwareScrollView'
 
@@ -103,6 +104,7 @@ export default function AddRecipeTab() {
         const updatedStepList = step !== '' ? [...stepList, { number: stepList.length + 1, description: step }] : stepList
         try {
             const newRecipe: FoodRecipes = {
+                id: '',
                 title: title,
                 description: description,
                 author: user ? user.id : '',
@@ -110,10 +112,12 @@ export default function AddRecipeTab() {
                 servingSize: servingSize,
                 ingredients: selectedIngredients,
                 steps: updatedStepList,
+                images: [],
                 categories: categoryFields,
                 searchFields: categoryFields,
                 savedCount: 0,
                 rating: { sum: 0, count: 0 },
+                createdAt: Timestamp.now(),
             }
 
             if(isEdit){
@@ -205,7 +209,7 @@ export default function AddRecipeTab() {
 
     const handleCloseIngredientModal = () => {
         setIngredientsModalVisible(false)
-        setIngredientEdit({})
+        setIngredientEdit(undefined)
     }
 
     const handleNextStep = (text: string) => {
@@ -225,7 +229,7 @@ export default function AddRecipeTab() {
         })
     }
 
-    const handleTimeChange = (newTime: {hours: '', minutes: '', all: ''}) => {
+    const handleTimeChange = (newTime: {hours: string, minutes: string, all: string}) => {
         setCookingTime({hours: newTime.hours, minutes: newTime.minutes})
         setCookingTimeAll(newTime.all)
     }

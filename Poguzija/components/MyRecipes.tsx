@@ -18,7 +18,7 @@ export const MyRecipes = () => {
     const [food, setFood] = useState<FoodRecipes[]>([])
     const [refreshing, setRefreshing] = useState(false)
     const [loading, setLoading] = useState(true)
-    const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>()
+    const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot | null>()
     const [hasMore, setHasMore] = useState(true)
     
     useEffect(() => {

@@ -1,7 +1,7 @@
 import { View, Image, StyleSheet, Pressable, Text, Alert, GestureResponderEvent } from 'react-native'
 import { memo, useContext, useEffect, useState } from 'react'
 import { COLORS, SIZES } from '../constants/Colors'
-import { FoodRecipes } from '../model/model'
+import { FoodRecipes, Day } from '../model/model'
 import { useRouter } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient'
 import { AddToMyScheduler, RemoveFromScheduler, SwapFromScheduler } from '../service/SchedulerService'
@@ -20,7 +20,7 @@ export const CardFoodRecipes = memo(({ data, route }: { data: FoodRecipes, route
     const handlePress = async (data: FoodRecipes) => {
         router.push(`/foodRecipesItem/${data.id}`)
         if (route.split('/')[0] === 'schedulerAdd' && false){
-            await AddToMyScheduler(data, route.split('/')[1])
+            await AddToMyScheduler(data, route.split('/')[1] as keyof typeof Day)
             setRefreshScheduler(true)
             router.back()
         }

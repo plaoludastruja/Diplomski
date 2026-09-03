@@ -7,7 +7,13 @@ import { useTranslation } from 'react-i18next'
 import { GetIngredientNameUnitCategory } from '../service/IngredientService'
 import { FlashList } from '@shopify/flash-list'
 
-export const SelectCategoryList = ({ alreadySelected, visible, onClose }) => {
+interface SelectCategoryListProps {
+    alreadySelected: string[]
+    visible: boolean
+    onClose: (selectedCategories: string[]) => void
+}
+
+export const SelectCategoryList = ({ alreadySelected, visible, onClose }: SelectCategoryListProps) => {
     const {t} = useTranslation()
     const [category, setCategory] = useState<Category[]>()
     const handlePress = (type: string, name: string) => {
@@ -17,7 +23,7 @@ export const SelectCategoryList = ({ alreadySelected, visible, onClose }) => {
     const handleClose = () => {
         const categoryData = category
         const searchFields = categoryData?.map(i => i.data.filter(j => j.isSelected).map(j => j.name)).flat()
-        onClose(searchFields)
+        onClose(searchFields ?? [])
     }
 
     useEffect(() => {

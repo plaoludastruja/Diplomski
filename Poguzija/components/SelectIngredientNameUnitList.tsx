@@ -8,7 +8,14 @@ import { TranslationKeys } from '../locales/_translationKeys'
 import { useTranslation } from 'react-i18next'
 import { FlashList } from '@shopify/flash-list'
 
-export const SelectIngredientNameUnitList = ({ modalDataType, visible, onAdd, onClose }) => {
+interface SelectIngredientNameUnitListProps {
+    modalDataType: string
+    visible: boolean
+    onAdd: (item: { name: string }) => void
+    onClose: () => void
+}
+
+export const SelectIngredientNameUnitList = ({ modalDataType, visible, onAdd, onClose }: SelectIngredientNameUnitListProps) => {
     const {t} = useTranslation()
     const [search, setSearch] = useState('')
     const [data, setData] = useState<IngredientNameUnit[]>([])
@@ -40,7 +47,7 @@ export const SelectIngredientNameUnitList = ({ modalDataType, visible, onAdd, on
         setDataFilter(units)
     }
 
-    const handlePress = (ingredient) => {
+    const handlePress = (ingredient: { name: string }) => {
         onAdd(ingredient)
         handleClose()
     }

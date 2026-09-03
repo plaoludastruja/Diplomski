@@ -3,7 +3,7 @@ import { DatabaseCollection, FoodRecipes } from "../model/model"
 import { db } from "./firebase"
 import { foodRecipesConverter } from "./RecipesService"
 
-async function GetSearchResults(searchParams: string[], lastVisible: QueryDocumentSnapshot | null) {
+async function GetSearchResults(searchParams: string[], lastVisible: QueryDocumentSnapshot | null | undefined) {
     let foodRecipesData: FoodRecipes[] = []
     const searchParamsData = searchParams.map(searchParam => searchParam.toUpperCase())
     const searchPromises = searchParamsData.map(searchParam => {

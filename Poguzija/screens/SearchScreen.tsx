@@ -3,7 +3,7 @@ import { QueryDocumentSnapshot } from "firebase/firestore/lite"
 import { useCallback, useState, useRef, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { ALERT_TYPE, Toast } from "react-native-alert-notification"
-import { Animated, View, TextInput, Pressable, StyleSheet, Text } from "react-native"
+import { Animated, View, TextInput, Pressable, StyleSheet, Text, NativeSyntheticEvent, NativeScrollEvent } from "react-native"
 import { BackgroundSafeAreaView } from "../components/BackgroundSafeAreaView"
 import { CardFoodRecipes } from "../components/CardFoodRecipes"
 import { LoadingScreen } from "../components/LoadingScreen"
@@ -130,7 +130,7 @@ export default function SearchScreen() {
     const [scrollDirection, setScrollDirection] = useState('')
     const positionAnimation = useRef(new Animated.Value(0)).current
 
-    const handleScroll = (event) => {
+    const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
         const currentScrollPos = event.nativeEvent.contentOffset.y
         if (currentScrollPos > 0) {
             setScrollDirection('down')

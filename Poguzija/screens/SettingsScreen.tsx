@@ -43,14 +43,21 @@ export default function SettingsScreen() {
             <Text style={styles.subtitleText}>{t(TranslationKeys.Settings.SETTINGS)}</Text>
             <View style={styles.line} />
             <ScrollView style={styles.flex} horizontal={false} showsVerticalScrollIndicator={false}>
-                <SettingsItems title={t(TranslationKeys.Settings.SELECT_LANGUAGE)} resource={languageResources} selectedSetting={selectedLanguage} onSelectedSetting={(key) => handleSelectedLanguage(key)} />
-                <SettingsItems title={t(TranslationKeys.Settings.SELECT_THEME)} resource={THEMES} selectedSetting={selectedTheme} onSelectedSetting={(key) => handleSelectedTheme(key)} />
+                <SettingsItems title={t(TranslationKeys.Settings.SELECT_LANGUAGE)} resource={languageResources} selectedSetting={selectedLanguage} onSelectedSetting={(key: string) => handleSelectedLanguage(key)} />
+                <SettingsItems title={t(TranslationKeys.Settings.SELECT_THEME)} resource={THEMES} selectedSetting={selectedTheme} onSelectedSetting={(key: string) => handleSelectedTheme(key)} />
             </ScrollView>
         </BackgroundSafeAreaView>
     )
 }
 
-function SettingsItems({ title, resource, selectedSetting, onSelectedSetting }) {
+interface SettingsItemsProps {
+    title: string
+    resource: Record<string, unknown>
+    selectedSetting: string
+    onSelectedSetting: (key: string) => void
+}
+
+function SettingsItems({ title, resource, selectedSetting, onSelectedSetting }: SettingsItemsProps) {
     return (
         <>
             <Text style={styles.subtitleText}>{title}:</Text>
@@ -60,7 +67,13 @@ function SettingsItems({ title, resource, selectedSetting, onSelectedSetting }) 
     )
 }
 
-function SettingsItem({ resource, selectedSetting, onSelectedSetting }) {
+interface SettingsItemProps {
+    resource: Record<string, unknown>
+    selectedSetting: string
+    onSelectedSetting: (key: string) => void
+}
+
+function SettingsItem({ resource, selectedSetting, onSelectedSetting }: SettingsItemProps) {
     const { t } = useTranslation()
     return (
         Object.keys(resource).map((key, index) => (

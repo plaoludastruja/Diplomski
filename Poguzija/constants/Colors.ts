@@ -52,3 +52,13 @@ export const THEMES = {
   DARK_THEME: "DARK_THEME",
   LIGHT_THEME: "LIGHT_THEME"
 }
+
+export const ALERT_COLORS = {
+  card: COLORS.dark,
+  label: COLORS.white,
+  overlay: '#000000',
+  success: 'rgb(52,199,85)',
+  danger: 'rgb(255,59,48)',
+  warning: 'rgb(255,149,0)',
+  info: 'rgb(80,122,189)',
+}
