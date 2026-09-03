@@ -1,9 +1,9 @@
 import { useContext, useState, useEffect, useCallback } from "react"
 import { ScrollView, RefreshControl, StyleSheet } from "react-native"
 import { UserContext, SchedulerContext } from "../app/_layout"
-import BackgroundSafeAreaView from "../components/BackgroundSafeAreaView"
-import LoadingScreen from "../components/LoadingScreen"
-import SchedulerRecipe from "../components/SchedulerRecipe"
+import { BackgroundSafeAreaView } from "../components/BackgroundSafeAreaView"
+import { LoadingScreen } from "../components/LoadingScreen"
+import { SchedulerRecipe } from "../components/SchedulerRecipe"
 import { RecipeSchedulerReturn } from "../model/model"
 import { GetRecipesScheduler } from "../service/SchedulerService"
 

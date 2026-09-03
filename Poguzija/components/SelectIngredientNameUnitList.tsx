@@ -1,6 +1,6 @@
 import { Text, StyleSheet, View, Modal, Pressable, TextInput } from 'react-native'
-import { Component, FC, useEffect, useState } from 'react'
-import { IngredientNameUnit, MyComponentProps } from '../model/model'
+import { useEffect, useState } from 'react'
+import { IngredientNameUnit } from '../model/model'
 import { MaterialIcons } from '@expo/vector-icons'
 import { COLORS, SIZES } from '../constants/Colors'
 import { GetIngredientNameUnitCategory } from '../service/IngredientService'

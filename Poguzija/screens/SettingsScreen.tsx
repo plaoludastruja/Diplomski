@@ -5,7 +5,7 @@ import { ScrollView } from "react-native-gesture-handler"
 import * as SecureStore from 'expo-secure-store'
 import i18next from "i18next"
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons"
-import BackgroundSafeAreaView from "../components/BackgroundSafeAreaView"
+import { BackgroundSafeAreaView } from "../components/BackgroundSafeAreaView"
 import { COLORS, SIZES, THEMES } from "../constants/Colors"
 import { languageResources } from "../locales/_i18n"
 import { TranslationKeys } from "../locales/_translationKeys"

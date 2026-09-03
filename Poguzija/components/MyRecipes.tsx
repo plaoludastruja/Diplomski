@@ -3,13 +3,13 @@ import { useContext, useEffect, useState } from 'react'
 import { FoodRecipes } from '../model/model'
 import { COLORS, SIZES } from '../constants/Colors'
 import { UserContext } from '../app/_layout'
-import CardFoodRecipes from './CardFoodRecipes'
+import { CardFoodRecipes } from './CardFoodRecipes'
 import { GetMyFoodRecipes } from '../service/RecipesService'
-import LoadingScreen from './LoadingScreen'
+import { LoadingScreen } from './LoadingScreen'
 import { QueryDocumentSnapshot } from 'firebase/firestore/lite'
 import { FlashList } from '@shopify/flash-list'
 
-export default function MyRecipes() {
+export const MyRecipes = () => {
     const { user } = useContext(UserContext)
     const [food, setFood] = useState<FoodRecipes[]>([])
     const [refreshing, setRefreshing] = useState(false)

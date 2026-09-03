@@ -9,8 +9,8 @@ import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 import { useTranslation } from 'react-i18next'
 import { router, useLocalSearchParams } from 'expo-router'
 import { UserContext } from '../app/_layout'
-import AddIngredientsModal from '../components/AddIngredientsModal'
-import BackgroundSafeAreaView from '../components/BackgroundSafeAreaView'
+import { AddIngredientsModal } from '../components/AddIngredientsModal'
+import { BackgroundSafeAreaView } from '../components/BackgroundSafeAreaView'
 import { SelectCategoryList } from '../components/SelectCategoryList'
 import { TimeInput } from '../components/TimeInput'
 import { COLORS, SIZES } from '../constants/Colors'
@@ -19,7 +19,7 @@ import { Ingredient, Step, FoodRecipes } from '../model/model'
 import { UploadFoodRecipesImages } from '../service/ImageService'
 import { GetFoodRecipe, EditFoodRecipe, AddFoodRecipe } from '../service/RecipesService'
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
-import BottomSheetKeyboardAwareScrollView from '../components/BottomSheetKeyboardAwareScrollView'
+import { BottomSheetKeyboardAwareScrollView } from '../components/BottomSheetKeyboardAwareScrollView'
 
 export default function AddRecipeTab() {
     const { addEditRecipeId } = useLocalSearchParams<{ addEditRecipeId: string }>()

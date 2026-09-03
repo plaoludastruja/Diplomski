@@ -1,6 +1,6 @@
 import { Link, Stack } from 'expo-router'
 import { StyleSheet, Text } from 'react-native'
-import BackgroundSafeAreaView from '../components/BackgroundSafeAreaView'
+import { BackgroundSafeAreaView } from '../components/BackgroundSafeAreaView'
 import { COLORS, SIZES } from '../constants/Colors'
 import { useTranslation } from 'react-i18next'
 import { TranslationKeys } from '../locales/_translationKeys'

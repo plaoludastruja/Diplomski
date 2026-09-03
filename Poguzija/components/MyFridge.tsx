@@ -1,17 +1,17 @@
 import { Text, StyleSheet, View, Image, Pressable, TextInput } from 'react-native'
-import { Component, FC, useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Fridge, Ingredient } from '../model/model'
 import { MaterialIcons } from '@expo/vector-icons'
 import { COLORS, SIZES } from '../constants/Colors'
 import { UserContext } from '../app/_layout'
-import AddIngredientsModal from './AddIngredientsModal'
+import { AddIngredientsModal } from './AddIngredientsModal'
 import { AddToMyFridge, GetMyFridge } from '../service/FridgeService'
-import LoadingScreen from './LoadingScreen'
+import { LoadingScreen } from './LoadingScreen'
 import { ScrollView } from 'react-native-gesture-handler'
 import { TranslationKeys } from '../locales/_translationKeys'
 import { useTranslation } from 'react-i18next'
 
-export default function MyFridge() {
+export const MyFridge = () => {
     const { user } = useContext(UserContext)
     const {t} = useTranslation()
     const [loading, setLoading] = useState(true)

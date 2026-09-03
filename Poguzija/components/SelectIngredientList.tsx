@@ -1,5 +1,5 @@
 import { Text, StyleSheet, View, Modal, Pressable, TextInput } from 'react-native'
-import { Component, FC, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Category, IngredientNameUnit } from '../model/model'
 import { COLORS, SIZES } from '../constants/Colors'
 import { GetIngredientNameUnitCategory } from '../service/IngredientService'

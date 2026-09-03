@@ -2,12 +2,12 @@ import { StyleSheet } from 'react-native'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { QueryDocumentSnapshot } from 'firebase/firestore/lite'
 import { FoodRecipes } from '../model/model'
-import BackgroundSafeAreaView from '../components/BackgroundSafeAreaView'
-import CardFoodRecipes from '../components/CardFoodRecipes'
-import LoadingScreen from '../components/LoadingScreen'
+import { BackgroundSafeAreaView } from '../components/BackgroundSafeAreaView'
+import { CardFoodRecipes } from '../components/CardFoodRecipes'
+import { LoadingScreen } from '../components/LoadingScreen'
 import { GetAllFoodRecipes } from '../service/RecipesService'
 import { FlashList } from '@shopify/flash-list'
-import { useScrollToTop } from '@react-navigation/native'
+import { useScrollToTop } from 'expo-router'
 
 
 export default function RecipesScreen() {

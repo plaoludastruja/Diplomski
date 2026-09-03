@@ -1,5 +1,4 @@
 import { Text, StyleSheet, View, Modal, Pressable, TextInput } from 'react-native'
-import { Component, FC, useEffect, useState } from 'react'
 import { Category, Day, SelectedIngredient } from '../model/model'
 import { COLORS, SIZES } from '../constants/Colors'
 import { useTranslation } from 'react-i18next'

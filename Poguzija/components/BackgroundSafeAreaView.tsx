@@ -1,12 +1,13 @@
 import { View, StyleSheet } from 'react-native'
-import { FC } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { COLORS, SIZES } from '../constants/Colors'
 import { MyComponentProps } from '../model/model'
-import { useHeaderHeight } from '@react-navigation/elements'
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
+import { useHeaderHeight } from 'expo-router/react-navigation'
+import { useBottomTabBarHeight } from 'expo-router/build/react-navigation/bottom-tabs'
+import { Edge } from 'react-native-safe-area-context'
 
-const BackgroundSafeAreaView : FC<MyComponentProps> = ({  children }) => {
+
+export const BackgroundSafeAreaView = ({ children }: MyComponentProps) => {
     let headerHeight
     let tabBarHeight
     try {
@@ -20,7 +21,7 @@ const BackgroundSafeAreaView : FC<MyComponentProps> = ({  children }) => {
         tabBarHeight = 0
     }
 
-    const edges = ['left', 'right']
+    const edges: Edge[] = ['left', 'right']
     if (headerHeight === 0) edges.push('top')
     if (tabBarHeight === 0) edges.push('bottom')
         
@@ -31,8 +32,6 @@ const BackgroundSafeAreaView : FC<MyComponentProps> = ({  children }) => {
         </SafeAreaView>
     )
 }
-
-export default BackgroundSafeAreaView
 
 const styles = StyleSheet.create({
     container: {

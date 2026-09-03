@@ -19,11 +19,11 @@ const BottomSheetScrollViewComponent = createBottomSheetScrollableComponent<
     BottomSheetScrollViewMethods,
     BottomSheetScrollViewProps
 >(SCROLLABLE_TYPE.SCROLLVIEW, AnimatedScrollView);
-const BottomSheetKeyboardAwareScrollView = memo(BottomSheetScrollViewComponent);
+const BottomSheetKeyboardAwareScrollViewMemo = memo(BottomSheetScrollViewComponent);
 
-BottomSheetKeyboardAwareScrollView.displayName =
+BottomSheetKeyboardAwareScrollViewMemo.displayName =
     "BottomSheetKeyboardAwareScrollView";
 
-export default BottomSheetKeyboardAwareScrollView as (
+export const BottomSheetKeyboardAwareScrollView = BottomSheetKeyboardAwareScrollViewMemo as (
     props: BottomSheetScrollViewProps & KeyboardAwareScrollViewProps,
-) => ReturnType<typeof BottomSheetKeyboardAwareScrollView>;
+) => ReturnType<typeof BottomSheetKeyboardAwareScrollViewMemo>;

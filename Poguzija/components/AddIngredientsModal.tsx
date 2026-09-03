@@ -1,13 +1,13 @@
 import { Text, StyleSheet, View, Modal, Pressable, TextInput } from 'react-native'
-import { Component, FC, useEffect, useState } from 'react'
-import { Ingredient, MyComponentProps } from '../model/model'
+import { useEffect, useState } from 'react'
+import { Ingredient } from '../model/model'
 import { MaterialIcons } from '@expo/vector-icons'
 import { COLORS, SIZES } from '../constants/Colors'
 import { TranslationKeys } from '../locales/_translationKeys'
 import { useTranslation } from 'react-i18next'
 import { SelectIngredientNameUnitList } from './SelectIngredientNameUnitList'
 
-const AddIngredientsModal = ({ visible, dataEdit, onAdd, onClose }) => {
+export const AddIngredientsModal = ({ visible, dataEdit, onAdd, onClose }) => {
     const {t} = useTranslation()
     const [modalVisible, setModalVisible] = useState(false)
     const [modalDataType, setModalDataType] = useState('')
@@ -169,5 +169,3 @@ const styles = StyleSheet.create({
         fontSize: SIZES.large,
     },
 })
-
-export default AddIngredientsModal

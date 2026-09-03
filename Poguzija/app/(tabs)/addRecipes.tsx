@@ -1,11 +1,5 @@
-import { View } from 'react-native'
-import BackgroundSafeAreaView from '../../components/BackgroundSafeAreaView'
+import { Redirect } from 'expo-router'
 
 export default function AddRecipesTab() {
-    return (
-        <BackgroundSafeAreaView>
-            <View></View>
-        </BackgroundSafeAreaView>
-    )
+    return <Redirect href="/addRecipe" />
 }
-

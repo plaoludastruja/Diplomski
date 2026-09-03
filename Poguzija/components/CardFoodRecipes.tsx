@@ -1,5 +1,5 @@
 import { View, Image, StyleSheet, Pressable, Text, Alert, GestureResponderEvent } from 'react-native'
-import { FC, useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { COLORS, SIZES } from '../constants/Colors'
 import { FoodRecipes } from '../model/model'
 import { useRouter } from 'expo-router'
@@ -11,7 +11,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 const PlaceholderImage = require('../assets/images/icon.png')
 
-const CardFoodRecipes: FC<{ data: FoodRecipes, route: string }> = ({ data, route }): JSX.Element => {
+export const CardFoodRecipes = ({ data, route }: { data: FoodRecipes, route: string }) => {
     const router = useRouter()
     const { setRefreshScheduler } = useContext(SchedulerContext)
     const { user } = useContext(UserContext)
@@ -72,8 +72,6 @@ const CardFoodRecipes: FC<{ data: FoodRecipes, route: string }> = ({ data, route
         </View>
     )
 }
-
-export default CardFoodRecipes
 
 const styles = StyleSheet.create({
     flex: {

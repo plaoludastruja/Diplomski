@@ -1,10 +1,9 @@
 import { Text, StyleSheet, View, Image } from 'react-native'
 import { Comment } from '../model/model'
 import { COLORS, SIZES } from '../constants/Colors'
-import { FC } from 'react'
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 
-export const CardComment: FC<{ commentData: Comment}> = ({ commentData }): JSX.Element => {
+export const CardComment = ({ commentData }: { commentData: Comment }) => {
     return (
         <View style={styles.containerComment}>
             <View style={styles.containerAuthor}>

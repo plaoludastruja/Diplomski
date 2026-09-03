@@ -1,6 +1,6 @@
 import { Text, StyleSheet, View, Image, Pressable, TextInput } from 'react-native'
-import { Component, FC, useContext, useEffect, useState } from 'react'
-import { Ingredient, MyComponentProps, MyUser } from '../model/model'
+import { useContext, useEffect, useState } from 'react'
+import { Ingredient, MyUser } from '../model/model'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { COLORS, SIZES } from '../constants/Colors'
@@ -13,7 +13,7 @@ import * as SecureStore from 'expo-secure-store'
 import { useTranslation } from 'react-i18next'
 import { TranslationKeys } from '../locales/_translationKeys'
 
-const ProfileInfo = () => {
+export const ProfileInfo = () => {
     const { user, signInFn, signOutFn } = useContext(UserContext)
     const router = useRouter()
     const {t} = useTranslation()
@@ -120,5 +120,3 @@ const styles = StyleSheet.create({
         color: COLORS.lightDark,
     },
 })
-
-export default ProfileInfo

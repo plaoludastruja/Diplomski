@@ -2,7 +2,7 @@ import { Dimensions, Pressable, ScrollView, StyleSheet, Text, View } from 'react
 import { MaterialIcons } from '@expo/vector-icons'
 import { SIZES, COLORS } from '../constants/Colors'
 import { FoodRecipes, RecipeByDay } from '../model/model'
-import CardFoodRecipes from './CardFoodRecipes'
+import { CardFoodRecipes } from './CardFoodRecipes'
 import { useRouter } from 'expo-router'
 import { useContext } from 'react'
 import { UserContext } from '../app/_layout'
@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next'
 
 
 
-export default function SchedulerRecipe({ recipesWeek, day }: { recipesWeek: FoodRecipes[], day: string }) {
+export const SchedulerRecipe = ({ recipesWeek, day }: { recipesWeek: FoodRecipes[], day: string }) => {
     const screenWidth = Dimensions.get('window').width
     const router = useRouter()
     const { user } = useContext(UserContext)
