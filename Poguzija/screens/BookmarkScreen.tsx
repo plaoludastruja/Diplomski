@@ -105,7 +105,7 @@ export default function BookmarkScreen() {
 const styles = StyleSheet.create({
     flex: {
         flex: 1,
-        width: '95%'
+        width: '95%',
     },
     line: {
         backgroundColor: COLORS.tint,

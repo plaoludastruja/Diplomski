@@ -3,7 +3,6 @@ import { getAuth } from "firebase/auth"
 import { getStorage } from "firebase/storage"
 import { getFirestore } from 'firebase/firestore/lite'
 
-
 // TODO: Replace the following with your app's Firebase project configuration
 const firebaseConfig = {
     apiKey: "AIzaSyB-nLesxYZ-QvNS2Mbb4oWmYg6XTFuEheE",

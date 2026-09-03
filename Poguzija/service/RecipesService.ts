@@ -4,7 +4,6 @@ import { db } from "./firebase"
 import { GetCurrentUser } from "./AuthService"
 import 'react-native-get-random-values'
 
-
 async function GetAllFoodRecipes(lastVisible: QueryDocumentSnapshot | undefined) {
     let data
     if (!lastVisible) {

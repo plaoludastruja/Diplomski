@@ -1,9 +1,8 @@
-import { Text, StyleSheet, View, Modal, Pressable, TextInput } from 'react-native'
+import { Text, StyleSheet, Modal, Pressable, TextInput } from 'react-native'
 import { useEffect, useState } from 'react'
-import { Category, IngredientNameUnit } from '../model/model'
+import { IngredientNameUnit } from '../model/model'
 import { COLORS, SIZES } from '../constants/Colors'
 import { GetIngredientNameUnitCategory } from '../service/IngredientService'
-import constructWithOptions from 'styled-components/dist/constructors/constructWithOptions'
 import { MaterialIcons } from '@expo/vector-icons'
 import { TranslationKeys } from '../locales/_translationKeys'
 import { useTranslation } from 'react-i18next'
@@ -51,24 +50,26 @@ export const SelectIngredientList = ({ alreadySelected, visible, onClose }: Sele
         setDataFilter(filteredData)
     }
 
-    useEffect(() => {
-        if(alreadySelected && data){
-            const alreadySelectedData = data.map(sel => ({...sel,
-                data: sel.data.map(item => ({...item,
-                isSelected: alreadySelected.includes(item.name),
-            }))}))
-            setData(alreadySelectedData)
-            setDataFilter(alreadySelectedData)
-        }else{
-            fetchData()
-        }
-    },[alreadySelected])
-
     const fetchData = () => {
         const ingredients = GetIngredientNameUnitCategory('ingredient')
         setData(ingredients)
         setDataFilter(ingredients)
     }
+
+    useEffect(() => {
+        setData(prevData => {
+            if(!alreadySelected || !prevData){
+                fetchData()
+                return prevData
+            }
+            const alreadySelectedData = prevData.map(sel => ({...sel,
+                data: sel.data.map(item => ({...item,
+                isSelected: alreadySelected.includes(item.name),
+            }))}))
+            setDataFilter(alreadySelectedData)
+            return alreadySelectedData
+        })
+    },[alreadySelected])
 
     return (
         <Modal
@@ -117,11 +118,10 @@ export const SelectIngredientList = ({ alreadySelected, visible, onClose }: Sele
     )
 }
 
-
 const styles = StyleSheet.create({
     flex: {
         flex: 1,
-        width: '100%'
+        width: '100%',
     },
     centeredView: {
         flex: 1,
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     icon: {
         marginRight: 10,
         color: COLORS.lightDark,
-        fontSize: SIZES.extraLarge
+        fontSize: SIZES.extraLarge,
     },
     subtitleText: {
         width: '85%',
@@ -196,7 +196,6 @@ const styles = StyleSheet.create({
         fontSize: SIZES.extraLarge,
         fontWeight: 'bold',
         marginBottom: 0.5 * SIZES.base,
-        marginTop: SIZES.small
+        marginTop: SIZES.small,
     },
 })
-

@@ -3,7 +3,6 @@ import { useEffect, useState } from "react"
 import { TextInput, View, Text, StyleSheet } from "react-native"
 import { SIZES, COLORS } from "../constants/Colors"
 
-
 interface TimeInputProps {
     time: { hours: string, minutes: string }
     onTimeChange: (time: { hours: string, minutes: string, all: string }) => void
@@ -17,6 +16,7 @@ export const TimeInput = ({ time, onTimeChange, refresh }: TimeInputProps) => {
     useEffect(() => {
         setHours(time.hours || '')
         setMinutes(time.minutes || '')
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- resync only on explicit refresh trigger, not on every keystroke via time prop
     }, [refresh])
 
     const handleHoursChange = (text: string) => {
@@ -54,7 +54,6 @@ export const TimeInput = ({ time, onTimeChange, refresh }: TimeInputProps) => {
     )
 }
 
-
 const styles = StyleSheet.create({
     inputContainer: {
         flexDirection: 'row',
@@ -71,7 +70,7 @@ const styles = StyleSheet.create({
     textInputTime: {
         color: COLORS.tint,
         fontSize: SIZES.large,
-        padding: SIZES.base
+        padding: SIZES.base,
     },
     smallTextInput: {
         textAlign: 'center',
@@ -81,6 +80,6 @@ const styles = StyleSheet.create({
     icon: {
         marginRight: 10,
         color: COLORS.lightDark,
-        fontSize: SIZES.extraLarge
+        fontSize: SIZES.extraLarge,
     },
 })

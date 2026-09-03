@@ -3,7 +3,6 @@ import { DatabaseCollection, Fridge, Ingredient } from "../model/model"
 import { GetCurrentUser } from "./AuthService"
 import { db } from "./firebase"
 
-
 function AddFridge(id: string) {
     const fridge: Fridge = {
         id: id,

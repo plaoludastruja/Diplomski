@@ -8,7 +8,6 @@ import { User as AuthUser } from 'firebase/auth'
 import { User } from '@react-native-google-signin/google-signin'
 import { SetCurrentUser } from './AuthService'
 
-
 async function GetOrAddUser(user: User, authUser: AuthUser) {
     let userAdded = await GetUser(authUser.uid)
     if (!userAdded) {

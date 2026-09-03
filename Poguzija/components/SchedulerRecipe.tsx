@@ -1,15 +1,13 @@
 import { Dimensions, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import { SIZES, COLORS } from '../constants/Colors'
-import { FoodRecipes, RecipeByDay } from '../model/model'
+import { FoodRecipes } from '../model/model'
 import { CardFoodRecipes } from './CardFoodRecipes'
 import { useRouter } from 'expo-router'
 import { useContext } from 'react'
 import { UserContext } from '../app/_layout'
 import { TranslationKeys } from '../locales/_translationKeys'
 import { useTranslation } from 'react-i18next'
-
-
 
 export const SchedulerRecipe = ({ recipesWeek, day }: { recipesWeek: FoodRecipes[], day: string }) => {
     const screenWidth = Dimensions.get('window').width
@@ -84,6 +82,6 @@ const styles = StyleSheet.create({
     },
     icon: {
         color: COLORS.light,
-        fontSize: SIZES.extraLarge
+        fontSize: SIZES.extraLarge,
     },
 })

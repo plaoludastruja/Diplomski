@@ -1,5 +1,5 @@
-import { Text, StyleSheet, View, Image, Pressable, TextInput } from 'react-native'
-import { useContext, useEffect, useState } from 'react'
+import { Text, StyleSheet, View, Pressable } from 'react-native'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { Ingredient } from '../model/model'
 import { MaterialIcons } from '@expo/vector-icons'
 import { COLORS, SIZES } from '../constants/Colors'
@@ -46,17 +46,7 @@ export const MyFridge = () => {
         setIngredientEdit(undefined)
     }
 
-    useEffect(() => {
-        if(user){
-            setLoading(true)
-            fetchData()
-        }else{
-            setSelectedIngredients([])
-            setLoading(false)
-        }
-    },[user])
-    
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const fridgeData = await GetMyFridge()
             setSelectedIngredients(fridgeData?.ingredients ?? [])
@@ -69,7 +59,19 @@ export const MyFridge = () => {
         } finally {
             setLoading(false)
         }
-    }
+    }, [t])
+
+    useEffect(() => {
+        if(user){
+            setLoading(true)
+            fetchData()
+        }else{
+            setSelectedIngredients([])
+            setLoading(false)
+        }
+    },[user, fetchData])
+
+    if (loading) return <LoadingScreen />
 
     return (
         <View style={styles.container}>
@@ -97,33 +99,11 @@ export const MyFridge = () => {
     )
 }
 
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         width: '100%',
         alignItems: 'center',
-    },
-    header: {
-        alignSelf: 'flex-end',
-        justifyContent: 'center',
-        alignItems: 'flex-end',
-        width: 5 * SIZES.extraLarge,
-        height: 2 * SIZES.extraLarge,
-    },
-    image: {
-        width: 1.2 * SIZES.tabIcon,
-        height: 1.2 * SIZES.tabIcon,
-        borderRadius: SIZES.large,
-        margin: SIZES.base
-    },
-    subtitleText: {
-        width: '85%',
-        color: COLORS.tint,
-        fontSize: SIZES.extraLarge,
-        fontWeight: 'bold',
-        marginBottom: 0.5 * SIZES.base,
-        alignSelf: 'flex-start'
     },
     buttonText: {
         color: COLORS.white,
@@ -145,54 +125,6 @@ const styles = StyleSheet.create({
         marginVertical: SIZES.base,
         elevation: 2,
     },
-
-    dropdownButtonStyle: {
-        width: 200,
-        height: 50,
-        backgroundColor: '#E9ECEF',
-        borderRadius: 12,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 12,
-    },
-    dropdownButtonTxtStyle: {
-        flex: 1,
-        fontSize: 18,
-        fontWeight: '500',
-        color: '#151E26',
-    },
-    dropdownButtonArrowStyle: {
-        fontSize: 28,
-    },
-    dropdownButtonIconStyle: {
-        fontSize: 28,
-        marginRight: 8,
-    },
-    dropdownMenuStyle: {
-        backgroundColor: '#E9ECEF',
-        borderRadius: 8,
-    },
-    dropdownItemStyle: {
-        width: '100%',
-        flexDirection: 'row',
-        paddingHorizontal: 12,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingVertical: 8,
-    },
-    dropdownItemTxtStyle: {
-        flex: 1,
-        fontSize: 18,
-        fontWeight: '500',
-        color: '#151E26',
-    },
-    dropdownItemIconStyle: {
-        fontSize: 28,
-        marginRight: 8,
-    },
-
-    
     ingredientItem: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -205,18 +137,15 @@ const styles = StyleSheet.create({
         color: COLORS.tint,
         fontSize: SIZES.large,
     },
-    
     textInput: {
         width: '100%',
         marginRight: 10,
         color: COLORS.white,
         fontSize: SIZES.large,
     },
-    
     icon: {
         marginRight: 10,
         color: COLORS.white,
-        fontSize: SIZES.extraLarge
+        fontSize: SIZES.extraLarge,
     },
 })
-

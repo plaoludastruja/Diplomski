@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
 import { SIZES } from '../constants/Colors'
 
@@ -50,7 +50,7 @@ export const StarRatingShow = ({ rating }: { rating: number | string }) => {
                 return (
                     <FontAwesome
                         key={starNumber}
-                        name={ starNumber <= fullStars || (starNumber == fullStars + 1 && higher) ? 'star' : (starNumber == fullStars + 1 && hasHalfStar) ? 'star-half-o' : 'star-o'}
+                        name={ starNumber <= fullStars || (starNumber === fullStars + 1 && higher) ? 'star' : (starNumber === fullStars + 1 && hasHalfStar) ? 'star-half-o' : 'star-o'}
                         size={SIZES.extraLarge}
                         color="#FFD700"
                         style={styles.star} />

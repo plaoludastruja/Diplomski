@@ -59,7 +59,6 @@ export const AddCommentModal = ({ visible, onAdd, onClose }: AddCommentModalProp
     )
 }
 
-
 const styles = StyleSheet.create({
     centeredView: {
         flex: 1,
@@ -122,11 +121,10 @@ const styles = StyleSheet.create({
     icon: {
         marginRight: 10,
         color: COLORS.lightDark,
-        fontSize: SIZES.extraLarge
+        fontSize: SIZES.extraLarge,
     },
     bottomContainer: {
         width: '100%',
         alignItems: 'center',
     },
 })
-

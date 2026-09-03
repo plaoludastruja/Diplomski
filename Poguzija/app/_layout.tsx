@@ -1,13 +1,11 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useFonts } from 'expo-font'
-import { DarkTheme, DefaultTheme, SplashScreen, Stack, ThemeProvider } from 'expo-router'
+import { DefaultTheme, SplashScreen, Stack, ThemeProvider } from 'expo-router'
 import { Dispatch, SetStateAction, createContext, useEffect, useState } from 'react'
-import { useColorScheme } from 'react-native'
 import { COLORS, ALERT_COLORS } from '../constants/Colors'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { MyUser } from '../model/model'
-import { SignIn, SignOut } from '../service/AuthService'
-import { GetCurrentUser } from '../service/AuthService'
+import { SignIn, SignOut, GetCurrentUser } from '../service/AuthService'
 import { AlertNotificationRoot } from 'react-native-alert-notification'
 import { I18nextProvider } from 'react-i18next'
 import i18n from '../locales/_i18n'
@@ -64,16 +62,17 @@ export const UserContext = createContext<UserContextType>({ user: undefined, sig
 export const SchedulerContext = createContext<SchedulerContextType>({ refreshScheduler: false, setRefreshScheduler: () => { } })
 
 function RootLayoutNav() {
-    const colorScheme = useColorScheme()
     const [user, setUser] = useState<MyUser>()
     const [refreshScheduler, setRefreshScheduler] = useState(true)
-    useEffect(() => {
-        getCurrentUserFn()
-    }, [])
+
     const getCurrentUserFn = async () => {
         const user = await GetCurrentUser()
         setUser(user ?? undefined)
     }
+
+    useEffect(() => {
+        getCurrentUserFn()
+    }, [])
 
     const signInFn = async () => {
         const user = await SignIn()
@@ -84,7 +83,6 @@ function RootLayoutNav() {
         setUser(undefined)
         SignOut()
     }
-
 
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>

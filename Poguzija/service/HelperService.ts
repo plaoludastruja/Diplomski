@@ -441,7 +441,6 @@ function GetIngredientsData() {
     }
 }
 
-
 export {
     GetIngredientsData,
     GetMeasurementUnitsData,

@@ -19,12 +19,6 @@ export default function NotFoundScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 20,
-    },
     text: {
         fontSize: SIZES.extraLarge,
         color: COLORS.tint,

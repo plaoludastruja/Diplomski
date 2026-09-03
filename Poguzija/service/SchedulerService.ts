@@ -4,7 +4,6 @@ import { db } from "./firebase"
 import { GetCurrentUser } from "./AuthService"
 import { foodRecipesConverter } from "./RecipesService"
 
-
 function AddRecipesScheduler(id: string) {
     const recipeScheduler: RecipeScheduler = {
         id: id,
@@ -122,7 +121,7 @@ async function GetRecipesSchedulerRandom() {
 }
 
 const getRandomIndexes = (length: number) => {
-    const indexes: Array<number> = []
+    const indexes: number[] = []
     while (indexes.length < 2) {
         const randomIndex = Math.floor(Math.random() * length)
         if (!indexes.includes(randomIndex)) {

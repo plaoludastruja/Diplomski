@@ -1,10 +1,9 @@
 import { useContext, useEffect, useMemo, useState } from 'react'
-import { View, TextInput, Pressable, Text, StyleSheet, Image, Platform, ScrollView, KeyboardAvoidingView, Alert, Dimensions, Modal, Button } from 'react-native'
-const PlaceholderImage = require('../assets/images/icon.png')
-import { MaterialIcons, MaterialCommunityIcons, FontAwesome6 } from '@expo/vector-icons'
+import { View, Pressable, Text, StyleSheet, Image, Alert, Dimensions } from 'react-native'
+import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
 import Carousel from 'react-native-snap-carousel'
-import BottomSheet, { BottomSheetFlatList, BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
+import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 import { useTranslation } from 'react-i18next'
 import { router, useLocalSearchParams } from 'expo-router'
@@ -19,8 +18,9 @@ import { Ingredient, Step, FoodRecipes } from '../model/model'
 import { UploadFoodRecipesImages } from '../service/ImageService'
 import { GetFoodRecipe, EditFoodRecipe, AddFoodRecipe } from '../service/RecipesService'
 import { Timestamp } from 'firebase/firestore/lite'
-import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { BottomSheetKeyboardAwareScrollView } from '../components/BottomSheetKeyboardAwareScrollView'
+
+const PlaceholderImage = require('../assets/images/icon.png')
 
 export default function AddRecipeTab() {
     const { addEditRecipeId } = useLocalSearchParams<{ addEditRecipeId: string }>()
@@ -78,7 +78,6 @@ export default function AddRecipeTab() {
         setSnapPoints(['35', '65', '95']) 
         setStepsPlaceholder('ADD_NEXT_STEP')
     }
-
 
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -389,7 +388,6 @@ showsVerticalScrollIndicator={false}
     )
 }
 
-
 const styles = StyleSheet.create({
     flex: {
         flex: 1,
@@ -403,12 +401,12 @@ const styles = StyleSheet.create({
     images: {
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: SIZES.extraLarge
+        marginBottom: SIZES.extraLarge,
     },
     image: {
         borderTopLeftRadius: SIZES.extraLarge,
         borderTopRightRadius: SIZES.extraLarge,
-        marginTop: SIZES.extraLarge
+        marginTop: SIZES.extraLarge,
     },
     input: {
         width: '95%',
@@ -417,7 +415,7 @@ const styles = StyleSheet.create({
         borderRadius: SIZES.extraLarge,
         paddingVertical: SIZES.base,
         color: COLORS.tint,
-        fontSize: SIZES.large
+        fontSize: SIZES.large,
     },
     button: {
         textAlign: 'center',
@@ -453,20 +451,10 @@ const styles = StyleSheet.create({
         color: COLORS.tint,
         fontSize: SIZES.large,
     },
-    textInputTime: {
-        color: COLORS.tint,
-        fontSize: SIZES.large,
-        padding: SIZES.base
-    },
-    smallTextInput: {
-        textAlign: 'center',
-        color: COLORS.dark,
-        fontSize: SIZES.large,
-    },
     icon: {
         marginRight: 10,
         color: COLORS.lightDark,
-        fontSize: SIZES.extraLarge
+        fontSize: SIZES.extraLarge,
     },
     subtitleText: {
         width: '85%',
@@ -474,7 +462,7 @@ const styles = StyleSheet.create({
         fontSize: SIZES.extraLarge,
         fontWeight: 'bold',
         marginBottom: 0.5 * SIZES.base,
-        marginTop: SIZES.small
+        marginTop: SIZES.small,
     },
     ingredientItem: {
         flexDirection: 'row',

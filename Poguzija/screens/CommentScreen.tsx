@@ -111,23 +111,6 @@ export default function CommentsScreen() {
 }
 
 const styles = StyleSheet.create({
-    
-    buttonText: {
-        color: COLORS.white,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        fontSize: SIZES.large,
-    },
-    button: {
-        textAlign: 'center',
-        justifyContent: 'center',
-        width: '85%',
-        backgroundColor: COLORS.tint,
-        borderRadius: SIZES.extraLarge,
-        padding: SIZES.base,
-        marginVertical: SIZES.base,
-        elevation: 2,
-    },
     container: {
         flexDirection: 'column',
         justifyContent: 'center',
@@ -137,7 +120,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         width: '95%',
-        
         padding: SIZES.base,
     },
     addButton: {
@@ -148,8 +130,8 @@ const styles = StyleSheet.create({
     },
     icon: {
         color: COLORS.white,
-        fontSize: SIZES.extraLarge
-    },    
+        fontSize: SIZES.extraLarge,
+    },
     line: {
         backgroundColor: COLORS.tint,
         height: SIZES.base,

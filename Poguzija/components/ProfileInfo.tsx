@@ -1,15 +1,12 @@
-import { Text, StyleSheet, View, Image, Pressable, TextInput } from 'react-native'
-import { useContext, useEffect, useState } from 'react'
-import { Ingredient, MyUser } from '../model/model'
-import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
+import { Text, StyleSheet, View, Image } from 'react-native'
+import { useContext, useEffect } from 'react'
+import { FontAwesome } from '@expo/vector-icons'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { COLORS, SIZES } from '../constants/Colors'
 import SelectDropdown from 'react-native-select-dropdown'
 import { UserContext } from '../app/_layout'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { useRouter } from 'expo-router'
-import i18next from 'i18next'
-import * as SecureStore from 'expo-secure-store'
 import { useTranslation } from 'react-i18next'
 import { TranslationKeys } from '../locales/_translationKeys'
 
@@ -77,7 +74,6 @@ export const ProfileInfo = () => {
     )
 }
 
-
 const styles = StyleSheet.create({
     header: {
         alignSelf: 'flex-end',
@@ -94,8 +90,6 @@ const styles = StyleSheet.create({
         borderRadius: SIZES.large,
         marginEnd: SIZES.base,
     },
-
-
     dropdownMenuStyle: {
         width: 150,
         padding: SIZES.base,
@@ -109,7 +103,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: SIZES.medium,
         alignItems: 'flex-end',
         paddingVertical: SIZES.base,
-        width: '100%'
+        width: '100%',
     },
     dropdownItemTxtStyle: {
         flex: 1,

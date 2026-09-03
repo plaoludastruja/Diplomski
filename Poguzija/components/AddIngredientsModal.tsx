@@ -85,14 +85,13 @@ export const AddIngredientsModal = ({ visible, dataEdit, onAdd, onClose }: AddIn
     )
 }
 
-
 const styles = StyleSheet.create({
     flex: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)'
-    },    
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
     modalView: {
         width: '80%',
         backgroundColor: COLORS.dark,
@@ -157,7 +156,7 @@ const styles = StyleSheet.create({
     icon: {
         marginRight: 10,
         color: COLORS.lightDark,
-        fontSize: SIZES.extraLarge
+        fontSize: SIZES.extraLarge,
     },
     button: {
         textAlign: 'center',

@@ -10,7 +10,6 @@ import { ALERT_TYPE, Toast } from "react-native-alert-notification"
 import { useTranslation } from "react-i18next"
 import { TranslationKeys } from "../locales/_translationKeys"
 
-
 export default function SchedulerScreen() {
     const { user } = useContext(UserContext)
     const { refreshScheduler, setRefreshScheduler } = useContext(SchedulerContext)
@@ -22,7 +21,6 @@ export default function SchedulerScreen() {
     useEffect(() => {
         loadData()
     }, [refreshScheduler, user])
-
 
     const loadData = async () => {
         setLoading(true)
@@ -75,6 +73,6 @@ export default function SchedulerScreen() {
 const styles = StyleSheet.create({
     flex: {
         flex: 1,
-        width: '100%'
+        width: '100%',
     },
 })

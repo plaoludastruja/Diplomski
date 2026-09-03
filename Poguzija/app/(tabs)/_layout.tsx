@@ -1,13 +1,11 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome'
-import { Link, Tabs, useRouter } from 'expo-router'
-import { Pressable, useColorScheme } from 'react-native'
+import { Tabs, useRouter } from 'expo-router'
+import { Pressable } from 'react-native'
 import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import { COLORS, SIZES } from '../../constants/Colors'
 import { useTranslation } from 'react-i18next'
 import { TranslationKeys } from '../../locales/_translationKeys'
 
 export default function TabLayout() {
-    const colorScheme = useColorScheme()
     const router = useRouter()
     const { t } = useTranslation()
     return (

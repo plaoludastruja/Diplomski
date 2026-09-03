@@ -11,8 +11,8 @@ import { ProfileInfo } from '../components/ProfileInfo'
 import { COLORS, SIZES } from '../constants/Colors'
 import i18n from '../locales/_i18n'
 import { TranslationKeys } from '../locales/_translationKeys'
-const RegisterImage = require('../assets/images/registerImage.png')
 
+const RegisterImage = require('../assets/images/registerImage.png')
 
 const renderMyRecipes = () => <MyRecipes />
 const renderMyFridge = () => <MyFridge />
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     containerRegister: {
         flex: 1,
         width: '95%',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     subtitleText: {
         width: '95%',

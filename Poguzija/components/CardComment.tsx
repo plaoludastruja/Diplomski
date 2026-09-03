@@ -27,18 +27,12 @@ export const CardComment = memo(({ commentData }: { commentData: Comment }) => {
 CardComment.displayName = 'CardComment'
 
 const styles = StyleSheet.create({
-    flex: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)'
-    },   
     containerAuthor: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
         height: 60,
-    },     
+    },
     containerComment: {
         flexDirection: 'column',
         justifyContent: 'flex-start',
@@ -49,29 +43,17 @@ const styles = StyleSheet.create({
         borderBottomStartRadius: SIZES.extraLarge,
         marginVertical: SIZES.base,
         paddingHorizontal: SIZES.small,
-    }, 
+    },
     textContainer: {
         width: '100%',
         paddingHorizontal: SIZES.small,
         paddingBottom: SIZES.medium,
-    },   
-    infoContainer1: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        height: 60,
-        backgroundColor: COLORS.dark,
-        borderRadius: SIZES.extraLarge,
-        marginBottom: SIZES.small,
-        paddingHorizontal: SIZES.small,
-        color: COLORS.tint,
-        fontSize: SIZES.large,
     },
     textInput: {
         width: '100%',
         color: COLORS.white,
         fontSize: SIZES.large,
-        textAlign: 'left'
+        textAlign: 'left',
     },
     textInputName: {
         width: '100%',

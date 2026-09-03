@@ -1,10 +1,10 @@
-import { View, Image, StyleSheet, Pressable, Text, Alert, GestureResponderEvent } from 'react-native'
-import { memo, useContext, useEffect, useState } from 'react'
+import { View, Image, StyleSheet, Pressable, Text, GestureResponderEvent } from 'react-native'
+import { memo, useContext } from 'react'
 import { COLORS, SIZES } from '../constants/Colors'
 import { FoodRecipes, Day } from '../model/model'
 import { useRouter } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient'
-import { AddToMyScheduler, RemoveFromScheduler, SwapFromScheduler } from '../service/SchedulerService'
+import { AddToMyScheduler, RemoveFromScheduler } from '../service/SchedulerService'
 import { SchedulerContext, UserContext } from '../app/_layout'
 import { StarRatingShow } from './StartRating'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
@@ -61,7 +61,7 @@ export const CardFoodRecipes = memo(({ data, route }: { data: FoodRecipes, route
                     end={{ x: 0.5, y: 0.9 }}
                     style={[styles.image, StyleSheet.absoluteFill]} />
                 <View style={styles.textContainer}>
-                    { data?.rating?.count != 0 && <StarRatingShow rating={(data?.rating?.sum / (data?.rating?.count == 0 ? 1 : data?.rating?.count)).toFixed(2)} />}
+                    { data?.rating?.count !== 0 && <StarRatingShow rating={(data?.rating?.sum / (data?.rating?.count === 0 ? 1 : data?.rating?.count)).toFixed(2)} />}
                     <Text style={styles.text}>{data.title}</Text>
                 </View>
             </Pressable>
@@ -76,11 +76,6 @@ export const CardFoodRecipes = memo(({ data, route }: { data: FoodRecipes, route
 CardFoodRecipes.displayName = 'CardFoodRecipes'
 
 const styles = StyleSheet.create({
-    flex: {
-        flex: 1,
-        width: '100%',
-        justifyContent: 'center',
-    },
     cardContainer: {
         backgroundColor: COLORS.lightDark,
         margin: SIZES.base,
@@ -94,7 +89,7 @@ const styles = StyleSheet.create({
     image: {
         position: 'absolute',
         top: 0,
-        left: 0, 
+        left: 0,
         width: '100%',
         height: '100%',
         borderRadius: SIZES.large,
@@ -104,11 +99,11 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         alignItems: 'flex-start',
         padding: SIZES.base,
-        margin: SIZES.base
+        margin: SIZES.base,
     },
     textContainerTop: {
         position: 'absolute',
-        top: 0, 
+        top: 0,
         left: 0,
         right: 0,
         //justifyContent: 'space-between',

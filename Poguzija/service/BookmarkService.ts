@@ -3,7 +3,6 @@ import { GetCurrentUser } from "./AuthService"
 import { Bookmark, DatabaseCollection, FoodRecipes } from "../model/model"
 import { db } from "./firebase"
 
-
 function AddBookmark(id: string) {
     const bookmark: Bookmark = {
         id: id,

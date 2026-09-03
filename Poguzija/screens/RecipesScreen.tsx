@@ -12,7 +12,6 @@ import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 import { useTranslation } from 'react-i18next'
 import { TranslationKeys } from '../locales/_translationKeys'
 
-
 export default function RecipesScreen() {
     const { t } = useTranslation()
     const [food, setFood] = useState<FoodRecipes[]>([])

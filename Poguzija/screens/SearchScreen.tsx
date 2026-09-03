@@ -18,8 +18,6 @@ import { FlashList } from "@shopify/flash-list"
 import { useScrollToTop } from "expo-router"
 import { FlatList } from "react-native-gesture-handler"
 
-
-
 export default function SearchScreen() {
     const { t } = useTranslation()
     const [food, setFood] = useState<FoodRecipes[]>([])
@@ -241,7 +239,7 @@ const styles = StyleSheet.create({
     relativeContainer: {
         flex: 1,
         position: 'relative',
-        width: '100%'
+        width: '100%',
     },
     flex: {
         flex: 1,
@@ -258,7 +256,6 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         zIndex: 1,
-
     },
     button: {
         textAlign: 'center',

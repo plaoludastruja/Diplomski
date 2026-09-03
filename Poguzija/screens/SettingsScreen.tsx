@@ -88,7 +88,7 @@ function SettingsItem({ resource, selectedSetting, onSelectedSetting }: Settings
 const styles = StyleSheet.create({
     flex: {
         flex: 1,
-        width: '95%'
+        width: '95%',
     },
     line: {
         backgroundColor: COLORS.tint,
@@ -126,6 +126,6 @@ const styles = StyleSheet.create({
     icon: {
         marginRight: 10,
         color: COLORS.white,
-        fontSize: SIZES.extraLarge
+        fontSize: SIZES.extraLarge,
     },
 })

@@ -1,5 +1,5 @@
 import { Text, StyleSheet, View, Modal, Pressable, TextInput } from 'react-native'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { IngredientNameUnit } from '../model/model'
 import { MaterialIcons } from '@expo/vector-icons'
 import { COLORS, SIZES } from '../constants/Colors'
@@ -22,30 +22,30 @@ export const SelectIngredientNameUnitList = ({ modalDataType, visible, onAdd, on
     const [dataFilter, setDataFilter] = useState<IngredientNameUnit[]>([])
     const [addButtonVisible, setAddButtonVisible] = useState(false)
 
-    useEffect(() => {
-        if(visible)
-            fetchData()
-    }, [visible])
+    const GetIngredientsList = useCallback(() => {
+        const ingredients = GetIngredientNameUnitCategory('ingredient')
+        setData(ingredients)
+        setDataFilter(ingredients)
+    }, [])
 
-    const fetchData = () => {
+    const GetUnitsList = useCallback(() => {
+        const units = GetIngredientNameUnitCategory('unit')
+        setData(units)
+        setDataFilter(units)
+    }, [])
+
+    const fetchData = useCallback(() => {
         if(modalDataType === 'ingredient'){
             GetIngredientsList()
         }else if(modalDataType === 'unit'){
             GetUnitsList()
         }
-    }
+    }, [modalDataType, GetIngredientsList, GetUnitsList])
 
-    const GetIngredientsList = () => {
-        const ingredients = GetIngredientNameUnitCategory('ingredient')
-        setData(ingredients)
-        setDataFilter(ingredients)
-    }
-
-    const GetUnitsList = () => {
-        const units = GetIngredientNameUnitCategory('unit')
-        setData(units)
-        setDataFilter(units)
-    }
+    useEffect(() => {
+        if(visible)
+            fetchData()
+    }, [visible, fetchData])
 
     const handlePress = (ingredient: { name: string }) => {
         onAdd(ingredient)
@@ -134,11 +134,10 @@ export const SelectIngredientNameUnitList = ({ modalDataType, visible, onAdd, on
     )
 }
 
-
 const styles = StyleSheet.create({
     flex: {
         flex: 1,
-        width: '100%'
+        width: '100%',
     },
     centeredView: {
         flex: 1,
@@ -198,7 +197,7 @@ const styles = StyleSheet.create({
     icon: {
         marginRight: 10,
         color: COLORS.lightDark,
-        fontSize: SIZES.extraLarge
+        fontSize: SIZES.extraLarge,
     },
     subtitleText: {
         width: '85%',
@@ -206,6 +205,6 @@ const styles = StyleSheet.create({
         fontSize: SIZES.extraLarge,
         fontWeight: 'bold',
         marginBottom: 0.5 * SIZES.base,
-        marginTop: SIZES.small
+        marginTop: SIZES.small,
     },
 })

@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, Modal, Pressable, TextInput } from 'react-native'
+import { Text, StyleSheet, Modal, Pressable } from 'react-native'
 import { useEffect, useState } from 'react'
 import { Category } from '../model/model'
 import { COLORS, SIZES } from '../constants/Colors'
@@ -27,16 +27,15 @@ export const SelectCategoryList = ({ alreadySelected, visible, onClose }: Select
     }
 
     useEffect(() => {
-        if(alreadySelected && category){
-            const alreadySelectedData = category.map(cat => ({...cat,
-                data: cat.data.map(item => ({...item,
-                    isSelected: alreadySelected.includes(item.name),
-                }))}))
-            setCategory(alreadySelectedData)
-        }else{
-            const categoryData = GetIngredientNameUnitCategory('category')
-            setCategory(categoryData)
-        }
+        setCategory(prevCategory => {
+            if(alreadySelected && prevCategory){
+                return prevCategory.map(cat => ({...cat,
+                    data: cat.data.map(item => ({...item,
+                        isSelected: alreadySelected.includes(item.name),
+                    }))}))
+            }
+            return GetIngredientNameUnitCategory('category')
+        })
     },[alreadySelected])
 
     return (
@@ -72,11 +71,10 @@ export const SelectCategoryList = ({ alreadySelected, visible, onClose }: Select
     )
 }
 
-
 const styles = StyleSheet.create({
     flex: {
         flex: 1,
-        width: '100%'
+        width: '100%',
     },
     centeredView: {
         flex: 1,
@@ -122,36 +120,12 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
     },
-    inputContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: '95%',
-        height: 60,
-        backgroundColor: COLORS.light,
-        borderRadius: SIZES.extraLarge,
-        marginBottom: SIZES.small,
-        paddingHorizontal: SIZES.small,
-        color: COLORS.tint,
-        fontSize: SIZES.large,
-    },
-    textInput: {
-        width: '100%',
-        marginRight: 10,
-        color: COLORS.tint,
-        fontSize: SIZES.large,
-    },
-    icon: {
-        marginRight: 10,
-        color: COLORS.lightDark,
-        fontSize: SIZES.extraLarge
-    },
     subtitleText: {
         width: '85%',
         color: COLORS.tint,
         fontSize: SIZES.extraLarge,
         fontWeight: 'bold',
         marginBottom: 0.5 * SIZES.base,
-        marginTop: SIZES.small
+        marginTop: SIZES.small,
     },
 })
-

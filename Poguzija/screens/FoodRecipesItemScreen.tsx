@@ -19,7 +19,6 @@ import { IsRecipeBookmarked, RemoveFromMyBookmark, AddToMyBookmark } from '../se
 import { GetFoodRecipe, UpdateSavedCount, DeleteFoodRecipe } from '../service/RecipesService'
 import { AddToMyScheduler } from '../service/SchedulerService'
 
-
 export default function FoodRecipesItemScreen() {
     const { foodRecipesItemId } = useLocalSearchParams<{ foodRecipesItemId: string }>()
     const { user } = useContext(UserContext)
@@ -301,31 +300,31 @@ const styles = StyleSheet.create({
     flex: {
         flex: 1,
         width: '100%',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     scrollViewContent: {
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     images: {
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: SIZES.extraLarge
+        marginBottom: SIZES.extraLarge,
     },
     image: {
         borderTopLeftRadius: SIZES.extraLarge,
         borderTopRightRadius: SIZES.extraLarge,
-        marginTop: SIZES.extraLarge
+        marginTop: SIZES.extraLarge,
     },
     gradientTop: {
         borderTopLeftRadius: SIZES.extraLarge,
         borderTopRightRadius: SIZES.extraLarge,
-        marginTop: SIZES.small
+        marginTop: SIZES.small,
     },
     gradientBottom: {
         borderTopLeftRadius: SIZES.extraLarge,
         borderTopRightRadius: SIZES.extraLarge,
-        marginBottom: - SIZES.small
+        marginBottom: - SIZES.small,
     },
     input: {
         width: '95%',
@@ -334,7 +333,7 @@ const styles = StyleSheet.create({
         borderRadius: SIZES.extraLarge,
         paddingVertical: SIZES.base,
         color: COLORS.tint,
-        fontSize: SIZES.large
+        fontSize: SIZES.large,
     },
     button: {
         textAlign: 'center',
@@ -373,7 +372,7 @@ const styles = StyleSheet.create({
     icon: {
         marginRight: 10,
         color: COLORS.lightDark,
-        fontSize: SIZES.extraLarge
+        fontSize: SIZES.extraLarge,
     },
     subtitleText: {
         width: '85%',
@@ -381,7 +380,7 @@ const styles = StyleSheet.create({
         fontSize: SIZES.extraLarge,
         fontWeight: 'bold',
         marginBottom: SIZES.base,
-        marginTop: SIZES.small
+        marginTop: SIZES.small,
     },
     ingredientItem: {
         flexDirection: 'row',
@@ -411,8 +410,8 @@ const styles = StyleSheet.create({
         fontSize: SIZES.large,
         fontWeight: 'bold',
         marginEnd: SIZES.base,
-        textAlignVertical: 'center'
-    }, 
+        textAlignVertical: 'center',
+    },
     dropdownMenuStyle: {
         width: 'auto',
         padding: SIZES.base,
@@ -426,7 +425,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: SIZES.medium,
         alignItems: 'flex-end',
         paddingVertical: SIZES.base,
-        width: '100%'
+        width: '100%',
     },
     dropdownItemTxtStyle: {
         flex: 1,
