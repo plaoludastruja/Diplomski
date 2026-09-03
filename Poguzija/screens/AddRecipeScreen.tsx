@@ -3,7 +3,7 @@ import { View, Pressable, Text, StyleSheet, Image, Alert, Dimensions } from 'rea
 import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
 import Carousel from 'react-native-snap-carousel'
-import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet'
+import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 import { useTranslation } from 'react-i18next'
 import { router, useLocalSearchParams } from 'expo-router'
@@ -18,7 +18,6 @@ import { Ingredient, Step, FoodRecipes } from '../model/model'
 import { UploadFoodRecipesImages } from '../service/ImageService'
 import { GetFoodRecipe, EditFoodRecipe, AddFoodRecipe } from '../service/RecipesService'
 import { Timestamp } from 'firebase/firestore/lite'
-import { BottomSheetKeyboardAwareScrollView } from '../components/BottomSheetKeyboardAwareScrollView'
 
 const PlaceholderImage = require('../assets/images/icon.png')
 
@@ -264,15 +263,14 @@ export default function AddRecipeTab() {
                     />
                 </View>
 
-                
                 <BottomSheet
                     snapPoints={useMemo(() => snapPoints, [snapPoints])}
                     backgroundStyle={{ backgroundColor: COLORS.dark }}
                     handleIndicatorStyle={{ backgroundColor: COLORS.white }}
-                    keyboardBehavior='fillParent'
+                    keyboardBehavior='extend'
                 >
-<BottomSheetKeyboardAwareScrollView
-showsVerticalScrollIndicator={false}
+                    <BottomSheetScrollView
+                        showsVerticalScrollIndicator={false}
                         contentContainerStyle={styles.scrollViewContent}
                         keyboardShouldPersistTaps={'handled'}>
 
@@ -312,6 +310,7 @@ showsVerticalScrollIndicator={false}
                                 placeholder={t(TranslationKeys.Recipe.SERVING_SIZE)}
                                 value={servingSize}
                                 onChangeText={text => setServingSize(text)}
+                                autoComplete='off'
                                 maxLength={3}
                                 keyboardType='numeric'
                             />
@@ -342,13 +341,13 @@ showsVerticalScrollIndicator={false}
                         {stepList?.map((step, index) => (
                             <Pressable key={index} style={styles.ingredientItem} >
                                 <BottomSheetTextInput
-                                style={[styles.input, { width: "85%" }]}
-                                multiline={true}
-                                value={`${step.number}. ${step.description}`}
-                                autoComplete='off'
-                                onChangeText={(text) => handleChangeText(text, index)}
-                                key={step.number}
-                            />
+                                    style={[styles.input, { width: "85%" }]}
+                                    multiline={true}
+                                    value={`${step.number}. ${step.description}`}
+                                    autoComplete='off'
+                                    onChangeText={(text) => handleChangeText(text, index)}
+                                    key={step.number}
+                                />
                                 <Pressable onPress={() => handleDeleteStep(index)}>
                                     <MaterialIcons name="delete" style={styles.icon} />
                                 </Pressable>
@@ -370,7 +369,7 @@ showsVerticalScrollIndicator={false}
                             {!isEdit && <Text style={styles.buttonText}>{t(TranslationKeys.Recipe.CREATE_RECIPE)}</Text>}
                             {isEdit && <Text style={styles.buttonText}>{t(TranslationKeys.Recipe.EDIT_RECIPE)}</Text>}
                         </Pressable>
-</BottomSheetKeyboardAwareScrollView>
+                    </BottomSheetScrollView>
                 </BottomSheet>
                 
                 <AddIngredientsModal

@@ -1,6 +1,7 @@
 import { MaterialIcons } from "@expo/vector-icons"
 import { useEffect, useState } from "react"
-import { TextInput, View, Text, StyleSheet } from "react-native"
+import { View, Text, StyleSheet } from "react-native"
+import { BottomSheetTextInput } from "@gorhom/bottom-sheet"
 import { SIZES, COLORS } from "../constants/Colors"
 
 interface TimeInputProps {
@@ -32,7 +33,7 @@ export const TimeInput = ({ time, onTimeChange, refresh }: TimeInputProps) => {
     return (
         <View style={styles.inputContainer}>
             <MaterialIcons name="timelapse" style={styles.icon} />
-            <TextInput
+            <BottomSheetTextInput
                 style={styles.smallTextInput}
                 value={hours}
                 onChangeText={handleHoursChange}
@@ -41,7 +42,7 @@ export const TimeInput = ({ time, onTimeChange, refresh }: TimeInputProps) => {
                 placeholder="00"
             />
             <Text style={styles.textInputTime}>h</Text>
-            <TextInput
+            <BottomSheetTextInput
                 style={styles.smallTextInput}
                 value={minutes}
                 onChangeText={handleMinutesChange}
