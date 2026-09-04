@@ -47,8 +47,8 @@ export const AddCommentModal = ({ visible, onAdd, onClose }: AddCommentModalProp
                             onChangeText={text => setText(text)}
                         />
                     </View>
+                    <StarRating ratingValue={rating} onRatingChange={setRating} />
                     <View style={styles.bottomContainer}>
-                        <StarRating ratingValue={rating} onRatingChange={setRating} />
                         <Pressable style={ styles.button } onPress={ handleOnAdd }>
                             <Text style={ styles.buttonText }>{t(TranslationKeys.Review.CREATE_REVIEW)}</Text>
                         </Pressable>

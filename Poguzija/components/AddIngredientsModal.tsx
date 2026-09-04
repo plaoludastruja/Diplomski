@@ -79,8 +79,6 @@ export const AddIngredientsModal = ({ visible, dataEdit, onAdd, onClose }: AddIn
                 visible={ modalVisible } 
                 onAdd={ (item: { name: string }) => { if(modalDataType === 'ingredient'){setName(item.name)} else if(modalDataType === 'unit'){setUnit(item.name)} }}
                 onClose={() => closeModal()} />
-            
-            
         </Modal>
     )
 }
@@ -96,7 +94,8 @@ const styles = StyleSheet.create({
         width: '80%',
         backgroundColor: COLORS.dark,
         borderRadius: SIZES.extraLarge,
-        padding: SIZES.large,
+        paddingHorizontal: SIZES.large,
+        paddingVertical: 2 * SIZES.extraLarge,
         alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: {
@@ -165,7 +164,7 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.tint,
         borderRadius: SIZES.extraLarge,
         padding: SIZES.base,
-        marginVertical: SIZES.base,
+        marginTop: SIZES.base,
         elevation: 2,
     },
     buttonText: {
