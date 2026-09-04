@@ -50,8 +50,7 @@ export const MyFridge = () => {
         try {
             const fridgeData = await GetMyFridge()
             setSelectedIngredients(fridgeData?.ingredients ?? [])
-        } catch (error) {
-            console.error('[MyFridge] fetchData failed:', error)
+        } catch {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
                 title: t(TranslationKeys.Error.LOADING_FAILED)

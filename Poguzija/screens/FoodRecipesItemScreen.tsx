@@ -50,8 +50,7 @@ export default function FoodRecipesItemScreen() {
                 setIsRecipeBookmarked(false)
             }
             setSavedCount(foodRecipesData.savedCount || 0)
-        } catch (error) {
-            console.error('[FoodRecipesItemScreen] fetchData failed:', error)
+        } catch {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
                 title: t(TranslationKeys.Error.LOADING_FAILED)

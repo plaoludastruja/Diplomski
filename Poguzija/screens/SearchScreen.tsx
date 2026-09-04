@@ -62,8 +62,7 @@ export default function SearchScreen() {
             setHasMore(foodRecipesData.length > 0)
             setEmptyResult(foodRecipesData.length === 0)
             setScrollDirection(foodRecipesData.length === 0 ? 'up' : 'down')
-        } catch (error) {
-            console.error('[SearchScreen] handleSearch failed:', error)
+        } catch {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
                 title: t(TranslationKeys.Error.LOADING_FAILED)
@@ -89,8 +88,7 @@ export default function SearchScreen() {
             } else {
                 setHasMore(false)
             }
-        } catch (error) {
-            console.error('[SearchScreen] handleEndReached failed:', error)
+        } catch {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
                 title: t(TranslationKeys.Error.LOADING_FAILED)

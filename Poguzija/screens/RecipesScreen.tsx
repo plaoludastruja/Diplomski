@@ -33,8 +33,7 @@ export default function RecipesScreen() {
             setFood(foodRecipesData)
             setLastVisible(newLastVisible)
             setHasMore(foodRecipesData.length > 0)
-        } catch (error) {
-            console.error('[RecipesScreen] fetchData failed:', error)
+        } catch {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
                 title: t(TranslationKeys.Error.LOADING_FAILED)
@@ -62,8 +61,7 @@ export default function RecipesScreen() {
             } else {
                 setHasMore(false)
             }
-        } catch (error) {
-            console.error('[RecipesScreen] handleEndReached failed:', error)
+        } catch {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
                 title: t(TranslationKeys.Error.LOADING_FAILED)

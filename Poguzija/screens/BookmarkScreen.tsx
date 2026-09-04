@@ -38,8 +38,7 @@ export default function BookmarkScreen() {
             setFood(foodRecipesData)
             setLastVisible(newLastIndex)
             setHasMore(newLastIndex !== -1)
-        } catch (error) {
-            console.error('[BookmarkScreen] fetchData failed:', error)
+        } catch {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
                 title: t(TranslationKeys.Error.LOADING_FAILED)
@@ -66,8 +65,7 @@ export default function BookmarkScreen() {
             } else {
                 setHasMore(false)
             }
-        } catch (error) {
-            console.error('[BookmarkScreen] handleEndReached failed:', error)
+        } catch {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
                 title: t(TranslationKeys.Error.LOADING_FAILED)

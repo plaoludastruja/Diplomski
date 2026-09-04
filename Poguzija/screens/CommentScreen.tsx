@@ -34,8 +34,7 @@ export default function CommentsScreen() {
         try {
             const commentsData = await GetCommentsForRecipe(commentRecipeId)
             setComments(commentsData)
-        } catch (error) {
-            console.error('[CommentScreen] fetchData failed:', error)
+        } catch {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
                 title: t(TranslationKeys.Error.LOADING_FAILED)

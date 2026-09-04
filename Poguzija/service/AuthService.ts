@@ -18,8 +18,6 @@ async function SignIn(): Promise<MyUser | undefined> {
         const credential = GoogleAuthProvider.credential(user.idToken)
         await signInWithCredential(auth, credential)
         if (!auth.currentUser) return
-        console.log(user)
-        console.log(auth)
         return await GetOrAddUser(user, auth.currentUser)
     } catch (e) {
         throw e

@@ -26,8 +26,7 @@ export const MyRecipes = () => {
             setFood(foodRecipesData)
             setLastVisible(newLastVisible)
             setHasMore(foodRecipesData.length > 0)
-        } catch (error) {
-            console.error('[MyRecipes] fetchData failed:', error)
+        } catch {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
                 title: t(TranslationKeys.Error.LOADING_FAILED)
@@ -63,8 +62,7 @@ export const MyRecipes = () => {
             } else {
                 setHasMore(false)
             }
-        } catch (error) {
-            console.error('[MyRecipes] handleEndReached failed:', error)
+        } catch {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
                 title: t(TranslationKeys.Error.LOADING_FAILED)

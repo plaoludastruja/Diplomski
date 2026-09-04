@@ -46,7 +46,6 @@ async function GetFoodRecipe(id: string): Promise<FoodRecipes> {
 async function AddFoodRecipe(newRecipe: FoodRecipes) {
     CreateSearchFields(newRecipe)
     const ref = await addDoc(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), newRecipe)
-    console.log(JSON.stringify(ref.id))
     return ref.id
 }
 

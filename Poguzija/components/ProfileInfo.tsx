@@ -1,11 +1,10 @@
 import { Text, StyleSheet, View, Image } from 'react-native'
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import { FontAwesome } from '@expo/vector-icons'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { COLORS, SIZES } from '../constants/Colors'
 import SelectDropdown from 'react-native-select-dropdown'
 import { UserContext } from '../app/_layout'
-import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { TranslationKeys } from '../locales/_translationKeys'
@@ -14,12 +13,7 @@ export const ProfileInfo = () => {
     const { user, signInFn, signOutFn } = useContext(UserContext)
     const router = useRouter()
     const {t} = useTranslation()
-    useEffect(() => {
-        GoogleSignin.configure({
-            webClientId: "679997496367-v24ck2ikahtou5jd89fa870fp9s83plt.apps.googleusercontent.com"
-        })
-    }, [])
-    const emojisWithIcons = user ? 
+    const emojisWithIcons = user ?
         [
             { title: t(TranslationKeys.Settings.SETTINGS), code: 'settings' },
             { title: t(TranslationKeys.Button.LOG_OUT), code: 'signOut' },

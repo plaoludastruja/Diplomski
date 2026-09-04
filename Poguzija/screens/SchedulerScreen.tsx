@@ -32,8 +32,7 @@ export default function SchedulerScreen() {
         try {
             const recipesWeekData = await GetRecipesScheduler()
             setRecipesWeek(recipesWeekData)
-        } catch (error) {
-            console.error('[SchedulerScreen] fetchData failed:', error)
+        } catch {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
                 title: t(TranslationKeys.Error.LOADING_FAILED)
