@@ -2,6 +2,7 @@ import { QueryDocumentSnapshot, arrayRemove, arrayUnion, doc, getDoc, setDoc, up
 import { GetCurrentUser } from "./AuthService"
 import { Bookmark, DatabaseCollection, FoodRecipes } from "../model/model"
 import { db } from "./firebase"
+import { RESULT_LIMIT } from "../constants/Firestore"
 
 function AddBookmark(id: string) {
     const bookmark: Bookmark = {
@@ -25,7 +26,7 @@ async function GetMySavedFoodRecipes(lastIndex: number = 0): Promise<{foodRecipe
     if (bookmark.savedFoodRecipesIds.length === 0) {
         return { foodRecipesData: [], newLastIndex: -1 }
     }
-    const batchSize = 5
+    const batchSize = RESULT_LIMIT
     const nextBatchIds = bookmark.savedFoodRecipesIds.slice(lastIndex, lastIndex + batchSize)
     if (nextBatchIds.length === 0) {
         return { foodRecipesData: [], newLastIndex: -1 }

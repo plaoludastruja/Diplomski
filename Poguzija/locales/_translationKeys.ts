@@ -64,6 +64,7 @@ export namespace TranslationKeys {
         SELECT_CATEGORY = 'search.selectCategory',
         SELECT_INGREDIENT = 'search.selectIngredient',
         NO_RESULTS = 'search.noResults',
+        TOO_MANY_FILTERS = 'search.tooManyFilters',
     }
 
     export enum Fridge {

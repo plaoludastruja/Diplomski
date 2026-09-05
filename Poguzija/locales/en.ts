@@ -57,6 +57,7 @@ export const en = {
         selectCategory: 'Select category',
         selectIngredient: 'Select ingredient',
         noResults: 'No results found',
+        tooManyFilters: 'Choose a maximum of 10 filters',
     },
     fridge: {
         myKitchen: 'My kitchen',

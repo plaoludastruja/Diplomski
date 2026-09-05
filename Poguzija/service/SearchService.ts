@@ -1,28 +1,22 @@
 import { QueryDocumentSnapshot, QueryConstraint, collection, getDocs, limit, query, startAfter, where } from "firebase/firestore/lite"
-import { DatabaseCollection, FoodRecipes } from "../model/model"
+import { DatabaseCollection } from "../model/model"
 import { db } from "./firebase"
 import { foodRecipesConverter } from "./RecipesService"
+import { RESULT_LIMIT } from "../constants/Firestore"
+
+const MAX_SEARCH_TERMS = 10
 
 async function GetSearchResults(searchParams: string[], lastVisible: QueryDocumentSnapshot | null | undefined) {
-    let foodRecipesData: FoodRecipes[] = []
-    const searchParamsData = searchParams.map(searchParam => searchParam.toUpperCase())
-    const searchPromises = searchParamsData.map(searchParam => {
-        const constraints: QueryConstraint[] = [where('searchFields', 'array-contains', searchParam), limit(5)]
-        if (lastVisible) {
-            constraints.push(startAfter(lastVisible))
-        }
-        return getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), ...constraints))
-    })
-    
-    const searchSnapshot = await Promise.all(searchPromises)
-    const allResults  = searchSnapshot.flatMap(snapshot => snapshot.docs.map(doc => doc.data()))
-    const filteredResults = allResults.filter(doc =>
-        searchParamsData.every(searchParam => doc.searchFields?.includes(searchParam))
-    )
-    foodRecipesData = filteredResults.filter((result, index, self) => 
-        index === self.findIndex(r => r.id === result.id)
-    )
-    const newLastVisible = searchSnapshot.flatMap(snapshot => snapshot.docs).slice(-1)[0] || null
+    const searchParamsData = searchParams.map(searchParam => searchParam.toUpperCase()).slice(0, MAX_SEARCH_TERMS)
+
+    const constraints: QueryConstraint[] = [where('searchFields', 'array-contains-any', searchParamsData), limit(RESULT_LIMIT)]
+    if (lastVisible) {
+        constraints.push(startAfter(lastVisible))
+    }
+    const data = await getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), ...constraints))
+
+    const foodRecipesData = data.docs.map(doc => doc.data())
+    const newLastVisible = data.docs[data.docs.length - 1] || null
 
     return { foodRecipesData, newLastVisible }
 }

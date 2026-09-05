@@ -57,6 +57,13 @@ export default function SearchScreen() {
             return
         }
 
+        if (searchParams.length > 10) {
+            Toast.show({
+                type: ALERT_TYPE.WARNING,
+                title: t(TranslationKeys.Search.TOO_MANY_FILTERS)
+            })
+        }
+
         try {
             const { foodRecipesData, newLastVisible } = await GetSearchResults(searchParams, null)
             setFood(foodRecipesData)

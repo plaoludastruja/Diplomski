@@ -57,6 +57,7 @@ export const sr = {
         selectCategory: 'Odaberi kategorije',
         selectIngredient: 'Odaberi sastojke',
         noResults: 'Nema rezultata',
+        tooManyFilters: 'Izaberite maksimalno 10 filtera',
     },
     fridge: {
         myKitchen: 'Moja kuhinja',

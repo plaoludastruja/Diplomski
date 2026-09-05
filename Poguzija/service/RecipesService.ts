@@ -2,10 +2,11 @@ import { getDocs, query, collection, orderBy, getDoc, doc, addDoc, QueryDocument
 import { DatabaseCollection, FoodRecipes } from "../model/model"
 import { db } from "./firebase"
 import { GetCurrentUser } from "./AuthService"
+import { RESULT_LIMIT } from "../constants/Firestore"
 import 'react-native-get-random-values'
 
 async function GetAllFoodRecipes(lastVisible: QueryDocumentSnapshot | undefined) {
-    const constraints: QueryConstraint[] = [orderBy('createdAt', "desc"), limit(15)]
+    const constraints: QueryConstraint[] = [orderBy('createdAt', "desc"), limit(RESULT_LIMIT)]
     if (lastVisible) {
         constraints.push(startAfter(lastVisible))
     }
@@ -53,7 +54,7 @@ async function DeleteFoodRecipe(recipeId: string) {
 async function GetMyFoodRecipes(lastVisible: QueryDocumentSnapshot | null | undefined) {
     const user = await GetCurrentUser()
     if (!user) return { foodRecipesData: [] as FoodRecipes[], newLastVisible: null }
-    const constraints: QueryConstraint[] = [where("author", "==", user.id), orderBy('createdAt', "desc"), limit(5)]
+    const constraints: QueryConstraint[] = [where("author", "==", user.id), orderBy('createdAt', "desc"), limit(RESULT_LIMIT)]
     if (lastVisible) {
         constraints.push(startAfter(lastVisible))
     }
