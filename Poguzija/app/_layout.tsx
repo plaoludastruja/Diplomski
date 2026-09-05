@@ -2,6 +2,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useFonts } from 'expo-font'
 import { DefaultTheme, SplashScreen, Stack, ThemeProvider } from 'expo-router'
 import { Dispatch, SetStateAction, createContext, useEffect, useState } from 'react'
+import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { COLORS, ALERT_COLORS } from '../constants/Colors'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { MyUser } from '../model/model'
@@ -72,6 +73,12 @@ function RootLayoutNav() {
 
     useEffect(() => {
         getCurrentUserFn()
+    }, [])
+
+    useEffect(() => {
+        GoogleSignin.configure({
+            webClientId: "679997496367-v24ck2ikahtou5jd89fa870fp9s83plt.apps.googleusercontent.com"
+        })
     }, [])
 
     const signInFn = async () => {

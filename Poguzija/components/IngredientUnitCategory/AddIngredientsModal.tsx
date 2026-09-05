@@ -1,11 +1,13 @@
-import { Text, StyleSheet, View, Modal, Pressable, TextInput } from 'react-native'
+import { StyleSheet, View, Pressable, TextInput } from 'react-native'
 import { useEffect, useState } from 'react'
-import { Ingredient } from '../model/model'
+import { Ingredient } from '../../model/model'
 import { MaterialIcons } from '@expo/vector-icons'
-import { COLORS, SIZES } from '../constants/Colors'
-import { TranslationKeys } from '../locales/_translationKeys'
+import { COLORS, SIZES } from '../../constants/Colors'
+import { ModalBackdrop } from '../Common/ModalBackdrop'
+import { PillButton } from '../Common/PillButton'
+import { TranslationKeys } from '../../locales/_translationKeys'
 import { useTranslation } from 'react-i18next'
-import { SelectIngredientNameUnitList } from './SelectIngredientNameUnitList'
+import { SelectIngredientOrUnitList } from './SelectIngredientOrUnitList'
 
 interface AddIngredientsModalProps {
     visible: boolean
@@ -39,6 +41,10 @@ export const AddIngredientsModal = ({ visible, dataEdit, onAdd, onClose }: AddIn
         setUnit(dataEdit?.unit ?? '')
     },[dataEdit])
 
+    const handleOnClose = () => {
+        onClose()
+    }
+
     const handleOnAdd = () => {
         const ingredient : Ingredient = {
             name: name,
@@ -53,58 +59,36 @@ export const AddIngredientsModal = ({ visible, dataEdit, onAdd, onClose }: AddIn
     }
 
     return (
-        <Modal visible={visible} animationType="fade" transparent={true} onRequestClose={ onClose }>
-            <Pressable style={styles.flex} onPress={ onClose }>
-                <Pressable style={styles.modalView}>
-                    <Pressable style={styles.nameInput} onPress={() => {if(!dataEdit?.name) openModal('ingredient')}}>
-                        <MaterialIcons name="search" style={styles.icon} />
-                        <TextInput value={t(TranslationKeys.IngredientItem[name as keyof typeof TranslationKeys.IngredientItem]) || name} placeholder={t(TranslationKeys.Ingredient.NAME)} editable={false} style={styles.textInput} />
-                    </Pressable>
-                    <View style={styles.amountAndUnitContainer}>
-                        <View style={[styles.amountAndUnitInput, styles.amountInput]}>
-                            <TextInput value={amount} placeholder={t(TranslationKeys.Ingredient.AMOUNT)} style={styles.textInput} keyboardType='numeric' onChangeText={text => setAmount(text)} />
-                        </View>
-                        <Pressable style={[styles.amountAndUnitInput, styles.unitInput]} onPress={() => openModal('unit')}>
-                            <TextInput value={t(TranslationKeys.UnitItem[unit as keyof typeof TranslationKeys.UnitItem]) || unit} placeholder={t(TranslationKeys.Ingredient.UNIT)} editable={false} style={styles.textInput} onChangeText={text => setUnit(text)} />   
-                        </Pressable>
-                    </View>
-                    <Pressable style={ styles.button } onPress={ handleOnAdd }>
-                        <Text style={ styles.buttonText }>{t(TranslationKeys.Button.ADD)}</Text>
-                    </Pressable>
+        <>
+            <ModalBackdrop visible={visible} onClose={handleOnClose} cardStyle={styles.card}>
+                <Pressable style={styles.nameInput} onPress={() => {if(!dataEdit?.name) openModal('ingredient')}}>
+                    <MaterialIcons name="search" style={styles.icon} />
+                    <TextInput value={t(TranslationKeys.IngredientItem[name as keyof typeof TranslationKeys.IngredientItem]) || name} placeholder={t(TranslationKeys.Ingredient.NAME)} editable={false} style={styles.textInput} />
                 </Pressable>
-            </Pressable>
+                <View style={styles.amountAndUnitContainer}>
+                    <View style={[styles.amountAndUnitInput, styles.amountInput]}>
+                        <TextInput value={amount} placeholder={t(TranslationKeys.Ingredient.AMOUNT)} style={styles.textInput} keyboardType='numeric' onChangeText={text => setAmount(text)} />
+                    </View>
+                    <Pressable style={[styles.amountAndUnitInput, styles.unitInput]} onPress={() => openModal('unit')}>
+                        <TextInput value={t(TranslationKeys.UnitItem[unit as keyof typeof TranslationKeys.UnitItem]) || unit} placeholder={t(TranslationKeys.Ingredient.UNIT)} editable={false} style={styles.textInput} onChangeText={text => setUnit(text)} />
+                    </Pressable>
+                </View>
+                <PillButton onPress={ handleOnAdd } style={styles.addButton}>{t(TranslationKeys.Button.ADD)}</PillButton>
+            </ModalBackdrop>
 
-            <SelectIngredientNameUnitList 
+            <SelectIngredientOrUnitList
                 modalDataType={ modalDataType }
                 visible={ modalVisible } 
                 onAdd={ (item: { name: string }) => { if(modalDataType === 'ingredient'){setName(item.name)} else if(modalDataType === 'unit'){setUnit(item.name)} }}
                 onClose={() => closeModal()} />
-        </Modal>
+        </>
     )
 }
 
 const styles = StyleSheet.create({
-    flex: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-    modalView: {
-        width: '80%',
+    card: {
+        paddingVertical: SIZES.extraLarge,
         backgroundColor: COLORS.dark,
-        borderRadius: SIZES.extraLarge,
-        paddingHorizontal: SIZES.large,
-        paddingVertical: 2 * SIZES.extraLarge,
-        alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
     },
     nameInput: {
         flexDirection: 'row',
@@ -157,20 +141,8 @@ const styles = StyleSheet.create({
         color: COLORS.lightDark,
         fontSize: SIZES.extraLarge,
     },
-    button: {
-        textAlign: 'center',
-        justifyContent: 'center',
-        width: '85%',
-        backgroundColor: COLORS.tint,
-        borderRadius: SIZES.extraLarge,
-        padding: SIZES.base,
+    addButton: {
+        marginVertical: 0,
         marginTop: SIZES.base,
-        elevation: 2,
-    },
-    buttonText: {
-        color: COLORS.white,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        fontSize: SIZES.large,
     },
 })

@@ -2,12 +2,12 @@ import { Text, StyleSheet, View, Image } from 'react-native'
 import { useContext } from 'react'
 import { FontAwesome } from '@expo/vector-icons'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
-import { COLORS, SIZES } from '../constants/Colors'
+import { COLORS, SIZES } from '../../constants/Colors'
 import SelectDropdown from 'react-native-select-dropdown'
-import { UserContext } from '../app/_layout'
+import { UserContext } from '../../app/_layout'
 import { useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
-import { TranslationKeys } from '../locales/_translationKeys'
+import { TranslationKeys } from '../../locales/_translationKeys'
 
 export const ProfileInfo = () => {
     const { user, signInFn, signOutFn } = useContext(UserContext)

@@ -6,10 +6,12 @@ import { useTranslation } from "react-i18next"
 import { ALERT_TYPE, Toast } from "react-native-alert-notification"
 import { UserContext } from "../app/_layout"
 import { Comment } from "../model/model"
-import { AddCommentModal } from "../components/AddCommentModal"
-import { BackgroundSafeAreaView } from "../components/BackgroundSafeAreaView"
-import { CardComment } from "../components/CardComment"
-import { LoadingScreen } from "../components/LoadingScreen"
+import { AddCommentModal } from "../components/Comment/AddCommentModal"
+import { BackgroundSafeAreaView } from "../components/Common/BackgroundSafeAreaView"
+import { CardComment } from "../components/Comment/CardComment"
+import { LoadingScreen } from "../components/Common/LoadingScreen"
+import { Divider } from "../components/Common/Divider"
+import { SubtitleText } from "../components/Common/SubtitleText"
 import { COLORS, SIZES } from "../constants/Colors"
 import { TranslationKeys } from "../locales/_translationKeys"
 import { GetCommentsForRecipe, AddComment } from "../service/CommentService"
@@ -23,12 +25,7 @@ export default function CommentsScreen() {
     const [loading, setLoading] = useState(true)
     const [refreshing, setRefreshing] = useState(false)
     const [addCommentModalVisible, setAddCommentModalVisible] = useState(false)
-    const {t} = useTranslation()
-
-    useEffect(() => {
-        setLoading(true)
-        fetchData()
-    }, [])
+    const { t } = useTranslation()
 
     const fetchData = async () => {
         try {
@@ -45,6 +42,10 @@ export default function CommentsScreen() {
         }
     }
 
+    useEffect(() => {
+        fetchData()
+    }, [])
+
     const handleRefresh = () => {
         setRefreshing(true)
         fetchData()
@@ -52,19 +53,16 @@ export default function CommentsScreen() {
 
     const onAddNewComment = (text: string, rating: number) => {
         setAddCommentModalVisible(false)
-        if(text !== ''){
+        if (text !== '') {
             const comment: Partial<Comment> = {
                 authorName: user?.fullName || '',
                 authorProfilePhoto: user?.profilePhoto || '',
                 text: text
             }
-            
-            comment.authorName = user?.fullName
-            comment.authorProfilePhoto = user?.profilePhoto
             AddComment(commentRecipeId, comment)
         }
-        
-        if(rating !== 0){
+
+        if (rating !== 0) {
             UpdateRecipeRating(commentRecipeId, rating)
         }
     }
@@ -77,16 +75,16 @@ export default function CommentsScreen() {
 
     return (
         <BackgroundSafeAreaView>
-            <View style={styles.container}>
+            <View>
                 <View style={styles.header}>
-                    <Text style={styles.subtitleText}>{t(TranslationKeys.Review.REVIEWS)}</Text>
-                    { user ? 
-                    <Pressable style={styles.addButton} onPress={() => setAddCommentModalVisible(true)}>
-                        <MaterialIcons name="add" style={styles.icon}  />
-                    </Pressable> : <View / >}
+                    <SubtitleText>{t(TranslationKeys.Review.REVIEWS)}</SubtitleText>
+                    {user ?
+                        <Pressable style={styles.addButton} onPress={() => setAddCommentModalVisible(true)}>
+                            <MaterialIcons name="add" style={styles.icon} />
+                        </Pressable> : <View />}
                 </View>
             </View>
-            <View style={styles.line} />
+            <Divider />
             <FlashList
                 data={comments}
                 renderItem={renderItem}
@@ -99,27 +97,21 @@ export default function CommentsScreen() {
                         onRefresh={handleRefresh}
                     />
                 }
-            />             
-            <AddCommentModal 
-                visible={ addCommentModalVisible } 
-                onAdd={onAddNewComment} 
+            />
+            <AddCommentModal
+                visible={addCommentModalVisible}
+                onAdd={onAddNewComment}
                 onClose={() => setAddCommentModalVisible(false)} />
-            
         </BackgroundSafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'column',
-        justifyContent: 'center',
-    },
     header: {
         justifyContent: 'space-between',
         flexDirection: 'row',
         alignItems: 'center',
-        width: '95%',
-        padding: SIZES.base,
+        width: '90%',
     },
     addButton: {
         backgroundColor: COLORS.tint,
@@ -131,23 +123,8 @@ const styles = StyleSheet.create({
         color: COLORS.white,
         fontSize: SIZES.extraLarge,
     },
-    line: {
-        backgroundColor: COLORS.tint,
-        height: SIZES.base,
-        width: '95%',
-        borderRadius: SIZES.base,
-        elevation: 2,
-    },
     flex: {
         flex: 1,
         width: '95%',
-    },
-    subtitleText: {
-        width: '85%',
-        color: COLORS.tint,
-        fontSize: SIZES.extraLarge,
-        fontWeight: 'bold',
-        marginBottom: 0.5 * SIZES.base,
-        marginTop: SIZES.small,
     },
 })

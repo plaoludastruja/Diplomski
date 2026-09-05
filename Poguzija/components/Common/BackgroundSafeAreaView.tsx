@@ -1,8 +1,8 @@
 import { useContext } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { SafeAreaView, Edge } from 'react-native-safe-area-context'
-import { COLORS, SIZES } from '../constants/Colors'
-import { MyComponentProps } from '../model/model'
+import { COLORS, SIZES } from '../../constants/Colors'
+import { MyComponentProps } from '../../model/model'
 import { HeaderHeightContext } from 'expo-router/react-navigation'
 import { BottomTabBarHeightContext } from 'expo-router/build/react-navigation/bottom-tabs'
 

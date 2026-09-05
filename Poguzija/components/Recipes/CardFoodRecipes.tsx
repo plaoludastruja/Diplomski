@@ -1,15 +1,15 @@
 import { View, Image, StyleSheet, Pressable, Text, GestureResponderEvent } from 'react-native'
 import { memo, useContext } from 'react'
-import { COLORS, SIZES } from '../constants/Colors'
-import { FoodRecipes, Day } from '../model/model'
+import { COLORS, SIZES } from '../../constants/Colors'
+import { FoodRecipes, Day } from '../../model/model'
 import { useRouter } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient'
-import { AddToMyScheduler, RemoveFromScheduler } from '../service/SchedulerService'
-import { SchedulerContext, UserContext } from '../app/_layout'
-import { StarRatingShow } from './StartRating'
+import { AddToMyScheduler, RemoveFromScheduler } from '../../service/SchedulerService'
+import { SchedulerContext, UserContext } from '../../app/_layout'
+import { StarRatingShow } from './StarRating'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
-const PlaceholderImage = require('../assets/images/icon.png')
+const PlaceholderImage = require('../../assets/images/icon.png')
 
 export const CardFoodRecipes = memo(({ data, route }: { data: FoodRecipes, route: string }) => {
     const router = useRouter()

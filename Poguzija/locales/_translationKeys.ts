@@ -39,6 +39,7 @@ export namespace TranslationKeys {
     export enum Scheduler {
         RECIPE_ADDED_TO_SCHEDULER = 'scheduler.recipeAddedToScheduler',
         RECIPE_ALREADY_ADDED_TO_SCHEDULER = 'scheduler.recipeAlreadyAddedToScheduler',
+        NO_RECIPES_FOR_DAY = 'scheduler.noRecipesForDay',
     }
 
     export enum Day {
@@ -62,6 +63,7 @@ export namespace TranslationKeys {
     export enum Search {
         SELECT_CATEGORY = 'search.selectCategory',
         SELECT_INGREDIENT = 'search.selectIngredient',
+        NO_RESULTS = 'search.noResults',
     }
 
     export enum Fridge {

@@ -2,9 +2,11 @@ import { useCallback, useContext, useEffect, useState } from "react"
 import { StyleSheet, Text, View } from "react-native"
 import { useTranslation } from "react-i18next"
 import { UserContext } from "../app/_layout"
-import { BackgroundSafeAreaView } from "../components/BackgroundSafeAreaView"
-import { CardFoodRecipes } from "../components/CardFoodRecipes"
-import { LoadingScreen } from "../components/LoadingScreen"
+import { BackgroundSafeAreaView } from "../components/Common/BackgroundSafeAreaView"
+import { CardFoodRecipes } from "../components/Recipes/CardFoodRecipes"
+import { LoadingScreen } from "../components/Common/LoadingScreen"
+import { Divider } from "../components/Common/Divider"
+import { SubtitleText } from "../components/Common/SubtitleText"
 import { COLORS, SIZES } from "../constants/Colors"
 import { TranslationKeys } from "../locales/_translationKeys"
 import { FoodRecipes } from "../model/model"
@@ -83,8 +85,8 @@ export default function BookmarkScreen() {
 
     return (
         <BackgroundSafeAreaView>
-            <Text style={styles.subtitleText}>{t(TranslationKeys.Bookmark.SAVED)}</Text>
-            <View style={styles.line} />
+            <SubtitleText>{t(TranslationKeys.Bookmark.SAVED)}</SubtitleText>
+            <Divider />
             <FlashList
                 data={food}
                 renderItem={renderItem}
@@ -104,20 +106,5 @@ const styles = StyleSheet.create({
     flex: {
         flex: 1,
         width: '95%',
-    },
-    line: {
-        backgroundColor: COLORS.tint,
-        height: SIZES.base,
-        width: '95%',
-        borderRadius: SIZES.base,
-        elevation: 2,
-    },
-    subtitleText: {
-        width: '95%',
-        color: COLORS.tint,
-        fontSize: SIZES.extraLarge,
-        fontWeight: 'bold',
-        padding: SIZES.base,
-        elevation: 2,
     },
 })

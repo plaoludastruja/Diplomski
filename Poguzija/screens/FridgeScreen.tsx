@@ -1,132 +1,16 @@
-import { View, Text, StyleSheet, Pressable, Image, Dimensions } from 'react-native'
-import { useCallback, useContext, useEffect, useState } from 'react'
-import { SceneMap, TabBar, TabView } from 'react-native-tab-view'
-import { GoogleSignin } from '@react-native-google-signin/google-signin'
-import { useTranslation } from 'react-i18next'
+//ok
+import { useContext } from 'react'
 import { UserContext } from '../app/_layout'
-import { BackgroundSafeAreaView } from '../components/BackgroundSafeAreaView'
-import { MyFridge } from '../components/MyFridge'
-import { MyRecipes } from '../components/MyRecipes'
-import { ProfileInfo } from '../components/ProfileInfo'
-import { COLORS, SIZES } from '../constants/Colors'
-import i18n from '../locales/_i18n'
-import { TranslationKeys } from '../locales/_translationKeys'
-
-const RegisterImage = require('../assets/images/registerImage.png')
-
-const renderMyRecipes = () => <MyRecipes />
-const renderMyFridge = () => <MyFridge />
+import { BackgroundSafeAreaView } from '../components/Common/BackgroundSafeAreaView'
+import { MyKitchen } from '../components/Fridge/MyKitchen'
+import { SignInSection } from '../components/Fridge/SignInSection'
 
 export default function FridgeScreen() {
-    const { user, signInFn } = useContext(UserContext)
-    const [index, setIndex] = useState(0)
-    const screenWidth = Dimensions.get('window').width
-    const screenHeight = Dimensions.get('window').height
-    const { t } = useTranslation()
-
-    useEffect(() => {
-        GoogleSignin.configure({
-            webClientId: "679997496367-v24ck2ikahtou5jd89fa870fp9s83plt.apps.googleusercontent.com"
-        })
-    }, [])
-
-    useEffect(() => {
-        setRoutes([
-            { key: 'myRecipes', title: t(TranslationKeys.Fridge.MY_RECIPES) },
-            { key: 'myFridge', title: t(TranslationKeys.Fridge.MY_FRIDGE) },
-        ])
-    }, [i18n.language])
-
-    const [routes, setRoutes] = useState([
-        { key: 'myRecipes', title: t(TranslationKeys.Fridge.MY_RECIPES) },
-        { key: 'myFridge', title: t(TranslationKeys.Fridge.MY_FRIDGE) },
-    ])
-
-    const renderScene = SceneMap({
-        myRecipes: renderMyRecipes,
-        myFridge: renderMyFridge,
-    })
-
-    const renderTabBar = useCallback((props: any) => (
-        <TabBar
-            {...props}
-            activeColor={COLORS.tint}
-            inactiveColor={COLORS.tint}
-            indicatorStyle={{ backgroundColor: COLORS.tint }}
-            style={{ backgroundColor: COLORS.light }}
-        />
-    ), [])
+    const { user } = useContext(UserContext)
 
     return (
         <BackgroundSafeAreaView>
-            {user ? (
-                <>
-                    <View style={styles.container}>
-                        <ProfileInfo />
-                        <Text style={styles.subtitleText}>{t(TranslationKeys.Fridge.MY_KITCHEN)}</Text>
-                        <TabView
-                            navigationState={{ index, routes }}
-                            renderScene={renderScene}
-                            onIndexChange={setIndex}
-                            renderTabBar={renderTabBar}
-                        />
-                    </View>
-                    <Pressable style={styles.button}>
-                        <Text style={styles.buttonText}>{t(TranslationKeys.Fridge.SUGGEST_RECIPE)}</Text>
-                    </Pressable>
-                    <Pressable style={styles.button}>
-                        <Text style={styles.buttonText}>{t(TranslationKeys.Fridge.RANDOM_RECIPE)}</Text>
-                    </Pressable>
-                </>)
-                : (
-                    <>
-                        <ProfileInfo />
-                        <View style={styles.containerRegister}>
-                            <Image source={RegisterImage} style={[{ width: screenWidth, height: screenHeight / 2 }]} />
-                            <Pressable style={styles.button} onPress={() => { signInFn() }}>
-                                <Text style={styles.buttonText}>{t(TranslationKeys.Button.LOG_IN)}</Text>
-                            </Pressable>
-                        </View>
-                        
-                    </>
-                )}
+            {user ? <MyKitchen /> : <SignInSection />}
         </BackgroundSafeAreaView>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        width: '95%',
-    },
-    containerRegister: {
-        flex: 1,
-        width: '95%',
-        alignItems: 'center',
-    },
-    subtitleText: {
-        width: '95%',
-        color: COLORS.tint,
-        fontSize: SIZES.extraLarge,
-        fontWeight: 'bold',
-        alignSelf: 'flex-start',
-        paddingHorizontal: SIZES.base,
-        elevation: 2,
-    },
-    buttonText: {
-        color: COLORS.white,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        fontSize: SIZES.large,
-    },
-    button: {
-        textAlign: 'center',
-        justifyContent: 'center',
-        width: '85%',
-        backgroundColor: COLORS.tint,
-        borderRadius: SIZES.extraLarge,
-        padding: SIZES.base,
-        marginVertical: SIZES.base,
-        elevation: 2,
-    },
-})

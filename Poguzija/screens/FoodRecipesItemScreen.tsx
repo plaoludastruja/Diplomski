@@ -9,9 +9,11 @@ import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 import { useTranslation } from 'react-i18next'
 import SelectDropdown from 'react-native-select-dropdown'
 import { UserContext, SchedulerContext } from '../app/_layout'
-import { BackgroundSafeAreaView } from '../components/BackgroundSafeAreaView'
-import { LoadingScreen } from '../components/LoadingScreen'
-import { SelectWeekModal } from '../components/SelectWeekModal'
+import { BackgroundSafeAreaView } from '../components/Common/BackgroundSafeAreaView'
+import { LoadingScreen } from '../components/Common/LoadingScreen'
+import { PillButton } from '../components/Common/PillButton'
+import { SelectWeekModal } from '../components/Recipes/SelectWeekModal'
+import { SubtitleText } from '../components/Common/SubtitleText'
 import { COLORS, SIZES } from '../constants/Colors'
 import { TranslationKeys } from '../locales/_translationKeys'
 import { FoodRecipes, Day } from '../model/model'
@@ -29,7 +31,7 @@ export default function FoodRecipesItemScreen() {
     const [isRecipeBookmarked, setIsRecipeBookmarked] = useState(false)
     const [savedCount, setSavedCount] = useState(0)
     const [selectWeekModalVisible, setSelectWeekModalVisible] = useState(false)
-    const {t} = useTranslation()
+    const { t } = useTranslation()
 
     const router = useRouter()
 
@@ -64,7 +66,7 @@ export default function FoodRecipesItemScreen() {
     const screenHeight = Dimensions.get('window').height
 
     const timeDisplay = () => {
-        if(!food?.cookingTime) {
+        if (!food?.cookingTime) {
             return
         }
         else if (food?.cookingTime?.hours !== '' && food?.cookingTime?.minutes !== '') {
@@ -102,19 +104,19 @@ export default function FoodRecipesItemScreen() {
         setSelectWeekModalVisible(false)
         if (day && food) {
             const recipe = await AddToMyScheduler(food, day)
-            if(recipe){
+            if (recipe) {
                 setRefreshScheduler(true)
                 Toast.show({
                     type: ALERT_TYPE.SUCCESS,
                     title: t(TranslationKeys.Scheduler.RECIPE_ADDED_TO_SCHEDULER)
                 })
-            }else{
+            } else {
                 Toast.show({
                     type: ALERT_TYPE.WARNING,
-                    title: t(TranslationKeys.Scheduler.RECIPE_ALREADY_ADDED_TO_SCHEDULER) + ' ' +  t(TranslationKeys.Day[day]).toLowerCase()
+                    title: t(TranslationKeys.Scheduler.RECIPE_ALREADY_ADDED_TO_SCHEDULER) + ' ' + t(TranslationKeys.Day[day]).toLowerCase()
                 })
             }
-            
+
         }
     }
 
@@ -184,30 +186,30 @@ export default function FoodRecipesItemScreen() {
                             <Ionicons name='calendar-outline' color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base }} onPress={handleAddToScheduler} />
                             {user.id === food?.author &&
                                 <SelectDropdown
-                                data={emojisWithIcons}
-                                onSelect={(selectedItem, index) => {
-                                    switch(selectedItem.code){
-                                        case 'edit': { handleEditRecipe(); break;}
-                                        case 'delete': { handleDeleteRecipe(); break;}
-                                    }
-                                }}
-                                renderButton={(selectedItem, isOpened) => {
-                                    return (
-                                        <View>
-                                            <Ionicons name="options" color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base / 2, }} />
-                                        </View>
-                                    )
-                                }}
-                                renderItem={(item, index, isSelected) => {
-                                    return (
-                                        <View style={{ ...styles.dropdownItemStyle }}>
-                                            <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
-                                        </View>
-                                    )
-                                }}
-                                showsVerticalScrollIndicator={false}
-                                dropdownStyle={styles.dropdownMenuStyle}
-                            />}
+                                    data={emojisWithIcons}
+                                    onSelect={(selectedItem, index) => {
+                                        switch (selectedItem.code) {
+                                            case 'edit': { handleEditRecipe(); break; }
+                                            case 'delete': { handleDeleteRecipe(); break; }
+                                        }
+                                    }}
+                                    renderButton={(selectedItem, isOpened) => {
+                                        return (
+                                            <View>
+                                                <Ionicons name="options" color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base / 2, }} />
+                                            </View>
+                                        )
+                                    }}
+                                    renderItem={(item, index, isSelected) => {
+                                        return (
+                                            <View style={{ ...styles.dropdownItemStyle }}>
+                                                <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
+                                            </View>
+                                        )
+                                    }}
+                                    showsVerticalScrollIndicator={false}
+                                    dropdownStyle={styles.dropdownMenuStyle}
+                                />}
                         </View>}
                 </View>
 
@@ -215,9 +217,9 @@ export default function FoodRecipesItemScreen() {
                     snapPoints={['35', '65', '95']}
                     backgroundStyle={{ backgroundColor: COLORS.dark }}
                     handleIndicatorStyle={{ backgroundColor: COLORS.white }}
-                    >
+                >
                     <BottomSheetScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
-                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.NAME)}</Text>
+                        <SubtitleText>{t(TranslationKeys.Recipe.NAME)}</SubtitleText>
                         <View style={styles.inputContainer}>
                             <FontAwesome6 name="bread-slice" style={styles.icon} />
                             <BottomSheetTextInput
@@ -230,7 +232,7 @@ export default function FoodRecipesItemScreen() {
                             />
                         </View>
 
-                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.DESCRIPTION)}</Text>
+                        <SubtitleText>{t(TranslationKeys.Recipe.DESCRIPTION)}</SubtitleText>
                         <View style={styles.inputContainer}>
                             <MaterialIcons name="description" style={styles.icon} />
                             <BottomSheetTextInput
@@ -243,7 +245,7 @@ export default function FoodRecipesItemScreen() {
                             />
                         </View>
 
-                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.SERVING_SIZE)}</Text>
+                        <SubtitleText>{t(TranslationKeys.Recipe.SERVING_SIZE)}</SubtitleText>
                         <View style={styles.inputContainer}>
                             <MaterialIcons name="people" style={styles.icon} />
                             <BottomSheetTextInput
@@ -254,7 +256,7 @@ export default function FoodRecipesItemScreen() {
                             />
                         </View>
 
-                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.TIME_TO_PREPARE)}</Text>
+                        <SubtitleText>{t(TranslationKeys.Recipe.TIME_TO_PREPARE)}</SubtitleText>
                         <View style={styles.inputContainer}>
                             <MaterialIcons name="people" style={styles.icon} />
                             <BottomSheetTextInput
@@ -265,14 +267,14 @@ export default function FoodRecipesItemScreen() {
                             />
                         </View>
 
-                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.INGREDIENTS)}</Text>
+                        <SubtitleText>{t(TranslationKeys.Recipe.INGREDIENTS)}</SubtitleText>
                         {food?.ingredients?.map((ingredient, index) => (
                             <View key={index} style={styles.ingredientItem}>
                                 <Text style={[styles.textInput, { width: "auto" }]}>   {t(TranslationKeys.IngredientItem[ingredient.name as keyof typeof TranslationKeys.IngredientItem]) || ingredient.name}   -   {ingredient.amount}  {t(TranslationKeys.UnitItem[ingredient.unit as keyof typeof TranslationKeys.UnitItem]).toLowerCase() || ingredient.unit}</Text>
                             </View>
                         ))}
 
-                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.INSTRUCTIONS)}</Text>
+                        <SubtitleText>{t(TranslationKeys.Recipe.INSTRUCTIONS)}</SubtitleText>
                         {food?.steps?.map((step, index) => (
                             <View style={styles.ingredientItem} key={step.number} >
                                 <BottomSheetTextInput
@@ -283,9 +285,7 @@ export default function FoodRecipesItemScreen() {
                                 />
                             </View>
                         ))}
-                        <Pressable style={styles.button} onPress={handleOpenComments}>
-                            <Text style={styles.buttonText}>{t(TranslationKeys.Review.SHOW_REVIEWS)}</Text>
-                        </Pressable>
+                        <PillButton onPress={handleOpenComments}>{t(TranslationKeys.Review.SHOW_REVIEWS)}</PillButton>
                     </BottomSheetScrollView>
                 </BottomSheet>
 
@@ -334,22 +334,6 @@ const styles = StyleSheet.create({
         color: COLORS.tint,
         fontSize: SIZES.large,
     },
-    button: {
-        textAlign: 'center',
-        justifyContent: 'center',
-        width: '85%',
-        backgroundColor: COLORS.tint,
-        borderRadius: SIZES.extraLarge,
-        padding: SIZES.base,
-        marginVertical: SIZES.base,
-        elevation: 2,
-    },
-    buttonText: {
-        color: COLORS.white,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        fontSize: SIZES.large,
-    },
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -372,14 +356,6 @@ const styles = StyleSheet.create({
         marginRight: 10,
         color: COLORS.lightDark,
         fontSize: SIZES.extraLarge,
-    },
-    subtitleText: {
-        width: '85%',
-        color: COLORS.tint,
-        fontSize: SIZES.extraLarge,
-        fontWeight: 'bold',
-        marginBottom: SIZES.base,
-        marginTop: SIZES.small,
     },
     ingredientItem: {
         flexDirection: 'row',
@@ -414,7 +390,7 @@ const styles = StyleSheet.create({
     dropdownMenuStyle: {
         width: 'auto',
         padding: SIZES.base,
-        paddingEnd:0,
+        paddingEnd: 0,
         marginStart: -145,
         marginTop: -30,
         borderRadius: SIZES.base,

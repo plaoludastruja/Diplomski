@@ -1,7 +1,7 @@
 import { Text, StyleSheet, View, Image } from 'react-native'
 import { memo } from 'react'
-import { Comment } from '../model/model'
-import { COLORS, SIZES } from '../constants/Colors'
+import { Comment } from '../../model/model'
+import { COLORS, SIZES } from '../../constants/Colors'
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 
 export const CardComment = memo(({ commentData }: { commentData: Comment }) => {
@@ -9,13 +9,12 @@ export const CardComment = memo(({ commentData }: { commentData: Comment }) => {
         <View style={styles.containerComment}>
             <View style={styles.containerAuthor}>
                 {commentData.authorProfilePhoto ?
-                                    <Image source={{ uri: commentData.authorProfilePhoto }} style={styles.image} /> : 
-                                    <FontAwesome6 name="bowl-food" color={COLORS.light} style={styles.image} size={1.2 * SIZES.tabIcon} />}
+                    <Image source={{ uri: commentData.authorProfilePhoto }} style={styles.image} /> :
+                    <FontAwesome6 name="bowl-food" color={COLORS.light} style={styles.image} size={1.2 * SIZES.tabIcon} />}
                 <View>
-                <Text style={styles.textInputName}>{commentData.authorName}</Text>
-                <Text style={styles.textInputDate}>{` ${commentData.createdAt.toDate().getDate()}.${commentData.createdAt.toDate().getMonth()}.${commentData.createdAt.toDate().getFullYear()}.`}</Text>
+                    <Text style={styles.textInputName}>{commentData.authorName}</Text>
+                    <Text style={styles.textInputDate}>{` ${commentData.createdAt.toDate().getDate()}.${commentData.createdAt.toDate().getMonth()}.${commentData.createdAt.toDate().getFullYear()}.`}</Text>
                 </View>
-                
             </View>
             <View style={styles.textContainer}>
                 <Text style={styles.textInput}>       {commentData.text}</Text>

@@ -1,6 +1,6 @@
 import { ActivityIndicator } from 'react-native'
 import { BackgroundSafeAreaView } from './BackgroundSafeAreaView'
-import { COLORS } from '../constants/Colors'
+import { COLORS } from '../../constants/Colors'
 
 export const LoadingScreen = () => {
     return (

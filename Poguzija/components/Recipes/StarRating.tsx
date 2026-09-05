@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
-import { SIZES } from '../constants/Colors'
+import { SIZES } from '../../constants/Colors'
 
 interface StarRatingProps {
     ratingValue: number

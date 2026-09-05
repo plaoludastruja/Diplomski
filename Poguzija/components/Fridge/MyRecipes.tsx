@@ -1,15 +1,15 @@
 import { StyleSheet, RefreshControl } from 'react-native'
 import { useCallback, useContext, useEffect, useState } from 'react'
-import { FoodRecipes } from '../model/model'
-import { UserContext } from '../app/_layout'
-import { CardFoodRecipes } from './CardFoodRecipes'
-import { GetMyFoodRecipes } from '../service/RecipesService'
-import { LoadingScreen } from './LoadingScreen'
+import { FoodRecipes } from '../../model/model'
+import { UserContext } from '../../app/_layout'
+import { CardFoodRecipes } from '../Recipes/CardFoodRecipes'
+import { GetMyFoodRecipes } from '../../service/RecipesService'
+import { LoadingScreen } from '../Common/LoadingScreen'
 import { QueryDocumentSnapshot } from 'firebase/firestore/lite'
 import { FlashList } from '@shopify/flash-list'
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 import { useTranslation } from 'react-i18next'
-import { TranslationKeys } from '../locales/_translationKeys'
+import { TranslationKeys } from '../../locales/_translationKeys'
 
 export const MyRecipes = () => {
     const { user } = useContext(UserContext)

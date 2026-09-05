@@ -1,14 +1,15 @@
 import { Text, StyleSheet, View, Pressable } from 'react-native'
 import { useCallback, useContext, useEffect, useState } from 'react'
-import { Ingredient } from '../model/model'
+import { Ingredient } from '../../model/model'
 import { MaterialIcons } from '@expo/vector-icons'
-import { COLORS, SIZES } from '../constants/Colors'
-import { UserContext } from '../app/_layout'
-import { AddIngredientsModal } from './AddIngredientsModal'
-import { AddToMyFridge, GetMyFridge } from '../service/FridgeService'
-import { LoadingScreen } from './LoadingScreen'
+import { COLORS, SIZES } from '../../constants/Colors'
+import { UserContext } from '../../app/_layout'
+import { AddIngredientsModal } from '../IngredientUnitCategory/AddIngredientsModal'
+import { AddToMyFridge, GetMyFridge } from '../../service/FridgeService'
+import { LoadingScreen } from '../Common/LoadingScreen'
+import { PillButton } from '../Common/PillButton'
 import { ScrollView } from 'react-native-gesture-handler'
-import { TranslationKeys } from '../locales/_translationKeys'
+import { TranslationKeys } from '../../locales/_translationKeys'
 import { useTranslation } from 'react-i18next'
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 
@@ -41,7 +42,7 @@ export const MyFridge = () => {
         setIngredientsModalVisible(true)
     }
 
-    const handleClose = () => {
+    const handleOnClose = () => {
         setIngredientsModalVisible(false)
         setIngredientEdit(undefined)
     }
@@ -74,9 +75,7 @@ export const MyFridge = () => {
 
     return (
         <View style={styles.container}>
-            <Pressable style={styles.button} onPress={() => setIngredientsModalVisible(true)}>
-                <Text style={styles.buttonText}>{t(TranslationKeys.Recipe.ADD_INGREDIENT)}</Text>
-            </Pressable>
+            <PillButton onPress={() => setIngredientsModalVisible(true)}>{t(TranslationKeys.Recipe.ADD_INGREDIENT)}</PillButton>
             <ScrollView style={styles.flex} horizontal={false} showsVerticalScrollIndicator={false}>
             {selectedIngredients?.map((ingredient, index) => (
                 <Pressable key={index} style={styles.ingredientItem} onPress={() => handlePressToEdit(ingredient)}>
@@ -92,7 +91,7 @@ export const MyFridge = () => {
                 visible={ingredientsModalVisible}
                 dataEdit={ingredientEdit}
                 onAdd={handleAddIngredient}
-                onClose={handleClose} />
+                onClose={handleOnClose} />
         </View>
         
     )
@@ -104,25 +103,9 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center',
     },
-    buttonText: {
-        color: COLORS.white,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        fontSize: SIZES.large,
-    },
     flex: {
         flex: 1,
         width: '100%',
-    },
-    button: {
-        textAlign: 'center',
-        justifyContent: 'center',
-        width: '85%',
-        backgroundColor: COLORS.tint,
-        borderRadius: SIZES.extraLarge,
-        padding: SIZES.base,
-        marginVertical: SIZES.base,
-        elevation: 2,
     },
     ingredientItem: {
         flexDirection: 'row',

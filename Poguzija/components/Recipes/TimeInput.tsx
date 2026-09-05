@@ -2,7 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons"
 import { useEffect, useState } from "react"
 import { View, Text, StyleSheet } from "react-native"
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet"
-import { SIZES, COLORS } from "../constants/Colors"
+import { SIZES, COLORS } from "../../constants/Colors"
 
 interface TimeInputProps {
     time: { hours: string, minutes: string }

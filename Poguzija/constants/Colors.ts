@@ -28,6 +28,7 @@ export const COLORS = {
   lightDark: "#5C5470",
   white: "#FEFEFC",
   gray: "#74858C",
+  black: "#000"
 }
 
 export const SIZES = {

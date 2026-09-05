@@ -36,6 +36,7 @@ export const en = {
     scheduler: {
         recipeAddedToScheduler: 'Recipe added to your scheduler',
         recipeAlreadyAddedToScheduler: 'Recipe already added for',
+        noRecipesForDay: 'No recipes for this day',
     },
     days: {
         monday: 'Monday',
@@ -55,7 +56,8 @@ export const en = {
     search: {
         selectCategory: 'Select category',
         selectIngredient: 'Select ingredient',
-    }, 
+        noResults: 'No results found',
+    },
     fridge: {
         myKitchen: 'My kitchen',
         myRecipes: 'My recipes',

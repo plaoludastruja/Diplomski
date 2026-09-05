@@ -4,11 +4,12 @@ import { useCallback, useState, useRef, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { ALERT_TYPE, Toast } from "react-native-alert-notification"
 import { Animated, View, TextInput, Pressable, StyleSheet, Text, NativeSyntheticEvent, NativeScrollEvent } from "react-native"
-import { BackgroundSafeAreaView } from "../components/BackgroundSafeAreaView"
-import { CardFoodRecipes } from "../components/CardFoodRecipes"
-import { LoadingScreen } from "../components/LoadingScreen"
-import { SelectCategoryList } from "../components/SelectCategoryList"
-import { SelectIngredientList } from "../components/SelectIngredientList"
+import { BackgroundSafeAreaView } from "../components/Common/BackgroundSafeAreaView"
+import { CardFoodRecipes } from "../components/Recipes/CardFoodRecipes"
+import { LoadingScreen } from "../components/Common/LoadingScreen"
+import { PillButton } from "../components/Common/PillButton"
+import { SelectCategoryList } from "../components/IngredientUnitCategory/SelectCategoryList"
+import { SelectIngredientsList } from "../components/IngredientUnitCategory/SelectIngredientsList"
 import { SIZES, COLORS } from "../constants/Colors"
 import { TranslationKeys } from "../locales/_translationKeys"
 import { FoodRecipes } from "../model/model"
@@ -47,6 +48,7 @@ export default function SearchScreen() {
 
     const handleSearch = async () => {
         setLoading(true)
+        setEmptyResult(false)
         const searchData = search.toUpperCase().split(/[\s-\.,!?]/).filter(t => t.length >= 4)
         const searchParams = [...categoryData, ...ingredientData, ...searchData]
 
@@ -171,15 +173,9 @@ export default function SearchScreen() {
                             }}
                         />
                     </View>
-                    <Pressable style={styles.button} onPress={() => setCategoryModalVisible(true)}>
-                        <Text style={styles.buttonText}>{t(TranslationKeys.Search.SELECT_CATEGORY)}</Text>
-                    </Pressable>
-                    <Pressable style={styles.button} onPress={() => setIngredientModalVisible(true)}>
-                        <Text style={styles.buttonText}>{t(TranslationKeys.Search.SELECT_INGREDIENT)}</Text>
-                    </Pressable>
-                    <Pressable style={styles.button} onPress={() => handleSearch()}>
-                        <Text style={styles.buttonText}>{t(TranslationKeys.Button.SEARCH)}</Text>
-                    </Pressable>
+                    <PillButton onPress={() => setCategoryModalVisible(true)}>{t(TranslationKeys.Search.SELECT_CATEGORY)}</PillButton>
+                    <PillButton onPress={() => setIngredientModalVisible(true)}>{t(TranslationKeys.Search.SELECT_INGREDIENT)}</PillButton>
+                    <PillButton onPress={() => handleSearch()}>{t(TranslationKeys.Button.SEARCH)}</PillButton>
                     <FlatList
                         data={categoryData}
                         style={styles.flex}
@@ -198,7 +194,7 @@ export default function SearchScreen() {
                         showsHorizontalScrollIndicator={false}
                         horizontal
                     />
-                    {emptyResult && <Text>Nema rezultata TODO</Text>}
+                    {emptyResult && <Text style={styles.emptyText}>{t(TranslationKeys.Search.NO_RESULTS)}</Text>}
                 </Animated.View>
                 {loading ? <LoadingScreen /> :
                     <GestureRecognizer style={styles.flex} onSwipeDown={(state) => { if (food.length !== 0) { setScrollDirection('up') } }} onSwipeUp={(state) => { if (food.length !== 0) { setScrollDirection('down') } }} >
@@ -223,7 +219,7 @@ export default function SearchScreen() {
                     visible={categoryModalVisible}
                     onClose={(selectedCategories: string[]) => handleCloseCategoryModal(selectedCategories)} />
 
-                <SelectIngredientList
+                <SelectIngredientsList
                     alreadySelected={ingredientData}
                     visible={ingredientModalVisible}
                     onClose={(selectedIngredients: string[]) => handleCloseIngredientModal(selectedIngredients)} />
@@ -254,22 +250,6 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         zIndex: 1,
-    },
-    button: {
-        textAlign: 'center',
-        justifyContent: 'center',
-        width: '85%',
-        backgroundColor: COLORS.tint,
-        borderRadius: SIZES.extraLarge,
-        padding: SIZES.base,
-        marginVertical: SIZES.base,
-        elevation: 2,
-    },
-    buttonText: {
-        color: COLORS.white,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        fontSize: SIZES.large,
     },
     inputContainer: {
         flexDirection: 'row',
@@ -317,5 +297,10 @@ const styles = StyleSheet.create({
     iconButton: {
         color: COLORS.lightDark,
         fontSize: SIZES.medium,
+    },
+    emptyText: {
+        color: COLORS.tint,
+        fontSize: SIZES.large,
+        paddingTop: SIZES.base,
     },
 })

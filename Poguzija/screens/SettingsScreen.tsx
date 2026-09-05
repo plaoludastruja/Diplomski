@@ -5,7 +5,9 @@ import { ScrollView } from "react-native-gesture-handler"
 import * as SecureStore from 'expo-secure-store'
 import i18next from "i18next"
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons"
-import { BackgroundSafeAreaView } from "../components/BackgroundSafeAreaView"
+import { BackgroundSafeAreaView } from "../components/Common/BackgroundSafeAreaView"
+import { Divider } from "../components/Common/Divider"
+import { SubtitleText } from "../components/Common/SubtitleText"
 import { COLORS, SIZES, THEMES } from "../constants/Colors"
 import { languageResources } from "../locales/_i18n"
 import { TranslationKeys } from "../locales/_translationKeys"
@@ -40,8 +42,8 @@ export default function SettingsScreen() {
 
     return (
         <BackgroundSafeAreaView>
-            <Text style={styles.subtitleText}>{t(TranslationKeys.Settings.SETTINGS)}</Text>
-            <View style={styles.line} />
+            <SubtitleText>{t(TranslationKeys.Settings.SETTINGS)}</SubtitleText>
+            <Divider />
             <ScrollView style={styles.flex} horizontal={false} showsVerticalScrollIndicator={false}>
                 <SettingsItems title={t(TranslationKeys.Settings.SELECT_LANGUAGE)} resource={languageResources} selectedSetting={selectedLanguage} onSelectedSetting={(key: string) => handleSelectedLanguage(key)} />
                 <SettingsItems title={t(TranslationKeys.Settings.SELECT_THEME)} resource={THEMES} selectedSetting={selectedTheme} onSelectedSetting={(key: string) => handleSelectedTheme(key)} />
@@ -60,10 +62,9 @@ interface SettingsItemsProps {
 function SettingsItems({ title, resource, selectedSetting, onSelectedSetting }: SettingsItemsProps) {
     return (
         <>
-            <Text style={styles.subtitleText}>{title}:</Text>
+            <SubtitleText>{title}:</SubtitleText>
             <SettingsItem resource={resource} selectedSetting={selectedSetting} onSelectedSetting={onSelectedSetting} />
         </>
-
     )
 }
 
@@ -89,21 +90,6 @@ const styles = StyleSheet.create({
     flex: {
         flex: 1,
         width: '95%',
-    },
-    line: {
-        backgroundColor: COLORS.tint,
-        height: SIZES.base,
-        width: '95%',
-        borderRadius: SIZES.base,
-        elevation: 2,
-    },
-    subtitleText: {
-        width: '95%',
-        color: COLORS.tint,
-        fontSize: SIZES.extraLarge,
-        fontWeight: 'bold',
-        padding: SIZES.base,
-        elevation: 2,
     },
     settingsItem: {
         flexDirection: 'row',

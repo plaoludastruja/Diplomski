@@ -8,10 +8,12 @@ import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 import { useTranslation } from 'react-i18next'
 import { router, useLocalSearchParams } from 'expo-router'
 import { UserContext } from '../app/_layout'
-import { AddIngredientsModal } from '../components/AddIngredientsModal'
-import { BackgroundSafeAreaView } from '../components/BackgroundSafeAreaView'
-import { SelectCategoryList } from '../components/SelectCategoryList'
-import { TimeInput } from '../components/TimeInput'
+import { AddIngredientsModal } from '../components/IngredientUnitCategory/AddIngredientsModal'
+import { BackgroundSafeAreaView } from '../components/Common/BackgroundSafeAreaView'
+import { PillButton } from '../components/Common/PillButton'
+import { SelectCategoryList } from '../components/IngredientUnitCategory/SelectCategoryList'
+import { SubtitleText } from '../components/Common/SubtitleText'
+import { TimeInput } from '../components/Recipes/TimeInput'
 import { COLORS, SIZES } from '../constants/Colors'
 import { TranslationKeys } from '../locales/_translationKeys'
 import { Ingredient, Step, FoodRecipes } from '../model/model'
@@ -24,7 +26,7 @@ const PlaceholderImage = require('../assets/images/icon.png')
 export default function AddRecipeTab() {
     const { addEditRecipeId } = useLocalSearchParams<{ addEditRecipeId: string }>()
     const { user } = useContext(UserContext)
-    const {t} = useTranslation()
+    const { t } = useTranslation()
 
     const screenWidth = Dimensions.get('window').width
     const screenHeight = Dimensions.get('window').height
@@ -46,7 +48,7 @@ export default function AddRecipeTab() {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [servingSize, setServingSize] = useState('')
-    const [cookingTime, setCookingTime] = useState({hours: '', minutes: ''})
+    const [cookingTime, setCookingTime] = useState({ hours: '', minutes: '' })
     const [cookingTimeAll, setCookingTimeAll] = useState('')
     const [refreshTime, setRefreshTime] = useState(false)
     const [author, setAuthor] = useState('')
@@ -56,7 +58,7 @@ export default function AddRecipeTab() {
     const [stepsPlaceholder, setStepsPlaceholder] = useState('ADD_FIRST_STEP')
 
     useEffect(() => {
-        if(isEdit){
+        if (isEdit) {
             fetchData()
         }
     }, [])
@@ -74,7 +76,7 @@ export default function AddRecipeTab() {
         setCategoryFields(recipe.categories)
         setCategoryNumber(recipe.categories.length)
         setSelectedImageArray([...recipe.images, PlaceholderImage])
-        setSnapPoints(['35', '65', '95']) 
+        setSnapPoints(['35', '65', '95'])
         setStepsPlaceholder('ADD_NEXT_STEP')
     }
 
@@ -92,13 +94,13 @@ export default function AddRecipeTab() {
     }
 
     const handleCreateOrEditRecipe = async () => {
-        if(!title || !servingSize || !(/\d/.test(cookingTimeAll) && Number(cookingTimeAll) !== 0) || stepList.length === 0 || selectedIngredients.length === 0 || (selectedImageToUpload.length === 0 && selectedImageArray.length === 1)){   
-                Toast.show({
+        if (!title || !servingSize || !(/\d/.test(cookingTimeAll) && Number(cookingTimeAll) !== 0) || stepList.length === 0 || selectedIngredients.length === 0 || (selectedImageToUpload.length === 0 && selectedImageArray.length === 1)) {
+            Toast.show({
                 type: ALERT_TYPE.WARNING,
                 title: t(TranslationKeys.Recipe.FILL_ALL_FIELDS)
             })
             return
-        } 
+        }
         const updatedStepList = step !== '' ? [...stepList, { number: stepList.length + 1, description: step }] : stepList
         try {
             const newRecipe: FoodRecipes = {
@@ -118,9 +120,9 @@ export default function AddRecipeTab() {
                 createdAt: Timestamp.now(),
             }
 
-            if(isEdit){
+            if (isEdit) {
                 newRecipe.images = [...selectedImageArray.slice(0, -1)]
-                if(selectedImageToUpload.length !== 0){
+                if (selectedImageToUpload.length !== 0) {
                     const uploadedImages = await UploadFoodRecipesImages(selectedImageToUpload)
                     newRecipe.images.concat(uploadedImages)
                 }
@@ -130,7 +132,7 @@ export default function AddRecipeTab() {
                     type: ALERT_TYPE.SUCCESS,
                     title: t(TranslationKeys.Recipe.RECIPE_EDITED)
                 })
-            }else{
+            } else {
                 const uploadedImages = await UploadFoodRecipesImages(selectedImageToUpload)
                 newRecipe.images = uploadedImages
                 const createdRecipeId = await AddFoodRecipe(newRecipe)
@@ -172,7 +174,7 @@ export default function AddRecipeTab() {
     const handleDeleteStep = (index: number) => {
         setStepList((prevStepList) => {
             const updatedStepList = prevStepList.filter((_, stepIndex) => stepIndex !== index)
-            if(updatedStepList.length === 0) setStepsPlaceholder('ADD_FIRST_STEP')
+            if (updatedStepList.length === 0) setStepsPlaceholder('ADD_FIRST_STEP')
             return updatedStepList.map((step, idx) => ({
                 ...step,
                 number: idx + 1
@@ -227,8 +229,8 @@ export default function AddRecipeTab() {
         })
     }
 
-    const handleTimeChange = (newTime: {hours: string, minutes: string, all: string}) => {
-        setCookingTime({hours: newTime.hours, minutes: newTime.minutes})
+    const handleTimeChange = (newTime: { hours: string, minutes: string, all: string }) => {
+        setCookingTime({ hours: newTime.hours, minutes: newTime.minutes })
         setCookingTimeAll(newTime.all)
     }
 
@@ -274,7 +276,7 @@ export default function AddRecipeTab() {
                         contentContainerStyle={styles.scrollViewContent}
                         keyboardShouldPersistTaps={'handled'}>
 
-                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.NAME)}</Text>
+                        <SubtitleText>{t(TranslationKeys.Recipe.NAME)}</SubtitleText>
                         <View style={styles.inputContainer}>
                             <FontAwesome6 name="bread-slice" style={styles.icon} />
                             <BottomSheetTextInput
@@ -288,7 +290,7 @@ export default function AddRecipeTab() {
                             />
                         </View>
 
-                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.DESCRIPTION)}</Text>
+                        <SubtitleText>{t(TranslationKeys.Recipe.DESCRIPTION)}</SubtitleText>
                         <View style={styles.inputContainer}>
                             <MaterialIcons name="description" style={styles.icon} />
                             <BottomSheetTextInput
@@ -302,7 +304,7 @@ export default function AddRecipeTab() {
                             />
                         </View>
 
-                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.SERVING_SIZE)}</Text>
+                        <SubtitleText>{t(TranslationKeys.Recipe.SERVING_SIZE)}</SubtitleText>
                         <View style={styles.inputContainer}>
                             <MaterialIcons name="people" style={styles.icon} />
                             <BottomSheetTextInput
@@ -316,15 +318,13 @@ export default function AddRecipeTab() {
                             />
                         </View>
 
-                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.TIME_TO_PREPARE)}</Text>
-                        <TimeInput time={cookingTime} onTimeChange={handleTimeChange} refresh={refreshTime}/>
+                        <SubtitleText>{t(TranslationKeys.Recipe.TIME_TO_PREPARE)}</SubtitleText>
+                        <TimeInput time={cookingTime} onTimeChange={handleTimeChange} refresh={refreshTime} />
 
-                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.SELECTED_CATEGORIES)}: {categoryNumber}</Text>
-                        <Pressable style={styles.button} onPress={() => handleOpenCategoryModal()}>
-                            <Text style={styles.buttonText}>{t(TranslationKeys.Recipe.ADD_CATEGORIES)}</Text>
-                        </Pressable>
+                        <SubtitleText>{t(TranslationKeys.Recipe.SELECTED_CATEGORIES)}: {categoryNumber}</SubtitleText>
+                        <PillButton onPress={() => handleOpenCategoryModal()}>{t(TranslationKeys.Recipe.ADD_CATEGORIES)}</PillButton>
 
-                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.INGREDIENTS)}</Text>
+                        <SubtitleText>{t(TranslationKeys.Recipe.INGREDIENTS)}</SubtitleText>
                         {selectedIngredients?.map((ingredient, index) => (
                             <Pressable key={index} style={styles.ingredientItem} onPress={() => handlePressToEdit(ingredient)}>
                                 <Text style={[styles.textInput, { width: "85%" }]}>   {t(TranslationKeys.IngredientItem[ingredient.name as keyof typeof TranslationKeys.IngredientItem]) || ingredient.name}   -   {ingredient.amount}  {t(TranslationKeys.UnitItem[ingredient.unit as keyof typeof TranslationKeys.UnitItem]).toLowerCase() || ingredient.unit}</Text>
@@ -333,11 +333,9 @@ export default function AddRecipeTab() {
                                 </Pressable>
                             </Pressable>
                         ))}
-                        <Pressable style={styles.button} onPress={() => setIngredientsModalVisible(true)}>
-                            <Text style={styles.buttonText}>{t(TranslationKeys.Recipe.ADD_INGREDIENT)}</Text>
-                        </Pressable>
+                        <PillButton onPress={() => setIngredientsModalVisible(true)}>{t(TranslationKeys.Recipe.ADD_INGREDIENT)}</PillButton>
 
-                        <Text style={styles.subtitleText}>{t(TranslationKeys.Recipe.INSTRUCTIONS)}</Text>
+                        <SubtitleText>{t(TranslationKeys.Recipe.INSTRUCTIONS)}</SubtitleText>
                         {stepList?.map((step, index) => (
                             <Pressable key={index} style={styles.ingredientItem} >
                                 <BottomSheetTextInput
@@ -365,13 +363,10 @@ export default function AddRecipeTab() {
                                 blurOnSubmit={false}
                             />
                         </View>
-                        <Pressable style={styles.button} onPress={handleCreateOrEditRecipe}>
-                            {!isEdit && <Text style={styles.buttonText}>{t(TranslationKeys.Recipe.CREATE_RECIPE)}</Text>}
-                            {isEdit && <Text style={styles.buttonText}>{t(TranslationKeys.Recipe.EDIT_RECIPE)}</Text>}
-                        </Pressable>
+                        <PillButton onPress={handleCreateOrEditRecipe}>{isEdit ? t(TranslationKeys.Recipe.EDIT_RECIPE) : t(TranslationKeys.Recipe.CREATE_RECIPE)}</PillButton>
                     </BottomSheetScrollView>
                 </BottomSheet>
-                
+
                 <AddIngredientsModal
                     visible={ingredientsModalVisible}
                     dataEdit={ingredientEdit}
@@ -416,22 +411,6 @@ const styles = StyleSheet.create({
         color: COLORS.tint,
         fontSize: SIZES.large,
     },
-    button: {
-        textAlign: 'center',
-        justifyContent: 'center',
-        width: '85%',
-        backgroundColor: COLORS.tint,
-        borderRadius: SIZES.extraLarge,
-        padding: SIZES.base,
-        marginVertical: SIZES.base,
-        elevation: 2,
-    },
-    buttonText: {
-        color: COLORS.white,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        fontSize: SIZES.large,
-    },
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -454,14 +433,6 @@ const styles = StyleSheet.create({
         marginRight: 10,
         color: COLORS.lightDark,
         fontSize: SIZES.extraLarge,
-    },
-    subtitleText: {
-        width: '85%',
-        color: COLORS.tint,
-        fontSize: SIZES.extraLarge,
-        fontWeight: 'bold',
-        marginBottom: 0.5 * SIZES.base,
-        marginTop: SIZES.small,
     },
     ingredientItem: {
         flexDirection: 'row',

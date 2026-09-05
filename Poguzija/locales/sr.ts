@@ -36,6 +36,7 @@ export const sr = {
     scheduler: {
         recipeAddedToScheduler: 'Recept je dodat u vaš sedmični planer',
         recipeAlreadyAddedToScheduler: 'Recept je već dodat za',
+        noRecipesForDay: 'Nema recepata za ovaj dan',
     },
     days: {
         monday: 'Ponedjeljak',
@@ -55,6 +56,7 @@ export const sr = {
     search: {
         selectCategory: 'Odaberi kategorije',
         selectIngredient: 'Odaberi sastojke',
+        noResults: 'Nema rezultata',
     },
     fridge: {
         myKitchen: 'Moja kuhinja',
