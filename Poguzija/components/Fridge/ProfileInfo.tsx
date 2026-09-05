@@ -1,4 +1,5 @@
-import { Text, StyleSheet, View, Image } from 'react-native'
+import { Text, StyleSheet, View } from 'react-native'
+import { Image } from 'expo-image'
 import { useContext } from 'react'
 import { FontAwesome } from '@expo/vector-icons'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
@@ -48,7 +49,7 @@ export const ProfileInfo = () => {
                     return (
                         <View style={styles.image}>
                             {user ?
-                                <Image source={{ uri: user.profilePhoto }} style={styles.image} /> : 
+                                <Image source={{ uri: user.profilePhoto }} style={styles.image} contentFit="cover" transition={300} /> :
                                 <MaterialCommunityIcons name="dots-vertical" color={COLORS.lightDark} style={styles.image} size={1.2 * SIZES.tabIcon} />}
                         </View>
                     )

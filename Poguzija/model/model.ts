@@ -25,6 +25,7 @@ export interface FoodRecipes {
     savedCount: number
     rating: Rating
     createdAt: Timestamp
+    updatedAt: Timestamp
 }
 
 export interface Ingredient {

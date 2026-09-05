@@ -1,0 +1,53 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function affectedKeys() {
+      return request.resource.data.diff(resource.data).affectedKeys();
+    }
+
+    // One document per user, keyed by uid. Only that user ever reads/writes it.
+    match /users/{userId} {
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
+    }
+
+    match /fridges/{userId} {
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
+    }
+
+    match /bookmarks/{userId} {
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
+    }
+
+    match /recipeSchedulers/{userId} {
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
+    }
+
+    match /foodRecipes/{recipeId} {
+      // Recipes are browsable by everyone, including signed-out users.
+      allow read: if true;
+
+      allow create: if isSignedIn() && request.resource.data.author == request.auth.uid;
+
+      // The author can edit/delete their own recipe. Any signed-in user may
+      // update ONLY savedCount/rating (bookmarking and rating other people's recipes).
+      allow update: if isSignedIn() && (
+        resource.data.author == request.auth.uid ||
+        affectedKeys().hasOnly(['savedCount', 'rating'])
+      );
+
+      allow delete: if isSignedIn() && resource.data.author == request.auth.uid;
+
+      match /comments/{commentId} {
+        allow read: if true;
+        allow create: if isSignedIn();
+        allow update, delete: if false;
+      }
+    }
+  }
+}

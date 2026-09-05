@@ -59,6 +59,14 @@ npx expo login                 # log in to your Expo account
 npx expo whoami                # currently logged-in user
 ```
 
+## Firebase (Firestore/Storage rules)
+
+```bash
+npm install -g firebase-tools                          # install the Firebase CLI (one-time)
+firebase login                                          # log in to your Firebase account
+firebase deploy --only firestore:rules,storage          # deploy firestore.rules + storage.rules
+```
+
 ## Upgrading Expo
 
 ```bash

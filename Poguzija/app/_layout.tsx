@@ -6,7 +6,7 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { COLORS, ALERT_COLORS } from '../constants/Colors'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { MyUser } from '../model/model'
-import { SignIn, SignOut, GetCurrentUser } from '../service/AuthService'
+import { SignIn, SignOut, GetCurrentUser, EnsureAnonymousSession } from '../service/AuthService'
 import { AlertNotificationRoot } from 'react-native-alert-notification'
 import { I18nextProvider } from 'react-i18next'
 import i18n from '../locales/_i18n'
@@ -51,7 +51,7 @@ const theme = {
 interface UserContextType {
     user: MyUser | undefined
     signInFn: () => Promise<void>
-    signOutFn: () => void
+    signOutFn: () => Promise<void>
 }
 
 interface SchedulerContextType {
@@ -59,7 +59,7 @@ interface SchedulerContextType {
     setRefreshScheduler: Dispatch<SetStateAction<boolean>>
 }
 
-export const UserContext = createContext<UserContextType>({ user: undefined, signInFn: async () => { }, signOutFn: () => { } })
+export const UserContext = createContext<UserContextType>({ user: undefined, signInFn: async () => { }, signOutFn: async () => { } })
 export const SchedulerContext = createContext<SchedulerContextType>({ refreshScheduler: false, setRefreshScheduler: () => { } })
 
 function RootLayoutNav() {
@@ -73,6 +73,7 @@ function RootLayoutNav() {
 
     useEffect(() => {
         getCurrentUserFn()
+        EnsureAnonymousSession()
     }, [])
 
     useEffect(() => {
@@ -86,9 +87,9 @@ function RootLayoutNav() {
         setUser(user)
     }
 
-    const signOutFn = () => {
+    const signOutFn = async () => {
         setUser(undefined)
-        SignOut()
+        await SignOut()
     }
 
     return (

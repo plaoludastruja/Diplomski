@@ -1,4 +1,5 @@
-import { View, Image, StyleSheet, Pressable, Text, GestureResponderEvent } from 'react-native'
+import { View, StyleSheet, Pressable, Text, GestureResponderEvent } from 'react-native'
+import { Image } from 'expo-image'
 import { memo, useContext } from 'react'
 import { COLORS, SIZES } from '../../constants/Colors'
 import { FoodRecipes, Day } from '../../model/model'
@@ -48,7 +49,7 @@ export const CardFoodRecipes = memo(({ data, route }: { data: FoodRecipes, route
 
     return (
         <View style={styles.cardContainer}>
-            <Image source={data.images ? { uri: data.images[0] } : PlaceholderImage} style={styles.image} />
+            <Image source={data.images ? { uri: data.images[0] } : PlaceholderImage} style={styles.image} contentFit="cover" transition={300} />
             <Pressable style={styles.pressable} onPress={() => handlePress(data)} onLongPress={() => handleLongPress(data)} >
                 <LinearGradient 
                     colors={['rgba(0, 0, 0, 0.8)', 'rgba(255, 255, 255, 0)']}

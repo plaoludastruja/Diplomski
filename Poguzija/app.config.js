@@ -40,7 +40,8 @@ export default {
       "expo-localization",
       "expo-splash-screen",
       "expo-status-bar",
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-image"
     ],
     experiments: {
       typedRoutes: true

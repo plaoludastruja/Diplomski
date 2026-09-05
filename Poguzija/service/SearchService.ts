@@ -1,4 +1,4 @@
-import { QueryDocumentSnapshot, collection, getDocs, limit, query, startAfter, where } from "firebase/firestore/lite"
+import { QueryDocumentSnapshot, QueryConstraint, collection, getDocs, limit, query, startAfter, where } from "firebase/firestore/lite"
 import { DatabaseCollection, FoodRecipes } from "../model/model"
 import { db } from "./firebase"
 import { foodRecipesConverter } from "./RecipesService"
@@ -7,11 +7,11 @@ async function GetSearchResults(searchParams: string[], lastVisible: QueryDocume
     let foodRecipesData: FoodRecipes[] = []
     const searchParamsData = searchParams.map(searchParam => searchParam.toUpperCase())
     const searchPromises = searchParamsData.map(searchParam => {
-        let q = query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), where('searchFields', 'array-contains', searchParam), limit(5))
+        const constraints: QueryConstraint[] = [where('searchFields', 'array-contains', searchParam), limit(5)]
         if (lastVisible) {
-            q = query(q, startAfter(lastVisible))
+            constraints.push(startAfter(lastVisible))
         }
-        return getDocs(q)
+        return getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), ...constraints))
     })
     
     const searchSnapshot = await Promise.all(searchPromises)

@@ -1,7 +1,8 @@
 // ne valja mi slika i dugme
 import { useContext } from 'react'
 import { UserContext } from '../../app/_layout'
-import { View, Image, StyleSheet, Dimensions } from 'react-native'
+import { View, StyleSheet, Dimensions } from 'react-native'
+import { Image } from 'expo-image'
 import { useTranslation } from 'react-i18next'
 import { ProfileInfo } from './ProfileInfo'
 import { PillButton } from '../Common/PillButton'
@@ -19,7 +20,7 @@ export const SignInSection = () => {
         <>
             <ProfileInfo />
             <View style={styles.containerRegister}>
-                <Image source={RegisterImage} style={[{ width: screenWidth, height: screenHeight / 2 }]} />
+                <Image source={RegisterImage} style={[{ width: screenWidth, height: screenHeight / 2 }]} contentFit="cover" transition={300} />
                 <PillButton onPress={signInFn}>{t(TranslationKeys.Button.LOG_IN)}</PillButton>
             </View>
         </>

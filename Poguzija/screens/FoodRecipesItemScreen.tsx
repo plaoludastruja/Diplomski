@@ -1,6 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useContext, useEffect, useState } from 'react'
-import { View, Pressable, Text, StyleSheet, Image, Dimensions } from 'react-native'
+import { View, Pressable, Text, StyleSheet, Dimensions } from 'react-native'
+import { Image } from 'expo-image'
 import Carousel from 'react-native-snap-carousel'
 import { FontAwesome, FontAwesome6, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
@@ -42,6 +43,14 @@ export default function FoodRecipesItemScreen() {
     const fetchData = async () => {
         try {
             const foodRecipesData = await GetFoodRecipe(foodRecipesItemId)
+            if (!foodRecipesData) {
+                Toast.show({
+                    type: ALERT_TYPE.DANGER,
+                    title: t(TranslationKeys.Error.LOADING_FAILED)
+                })
+                router.back()
+                return
+            }
             const isRecipeBookmarkedData = await IsRecipeBookmarked(foodRecipesItemId)
             setFood(foodRecipesData)
             if (isRecipeBookmarkedData) {
@@ -127,7 +136,7 @@ export default function FoodRecipesItemScreen() {
     const renderItem = ({ item }: { item: string }) => {
         return (
             <View style={[styles.images, { width: screenWidth, height: 2 / 3 * screenHeight }]} >
-                <Image source={{ uri: item }} style={[styles.image, { width: screenWidth, height: 2 * screenHeight / 3 }]} />
+                <Image source={{ uri: item }} style={[styles.image, { width: screenWidth, height: 2 * screenHeight / 3 }]} contentFit="cover" transition={300} />
                 <LinearGradient
                     colors={['rgba(0, 0, 0, 0.8)', 'rgba(255, 255, 255, 0)']}
                     start={{ x: 0.5, y: - 0.2 }}
@@ -157,12 +166,19 @@ export default function FoodRecipesItemScreen() {
         })
     }
 
-    const handleDeleteRecipe = () => {
-        DeleteFoodRecipe(foodRecipesItemId)
-        Toast.show({
-            type: ALERT_TYPE.SUCCESS,
-            title: t(TranslationKeys.Recipe.RECIPE_DELETED)
-        })
+    const handleDeleteRecipe = async () => {
+        try {
+            await DeleteFoodRecipe(foodRecipesItemId)
+            Toast.show({
+                type: ALERT_TYPE.SUCCESS,
+                title: t(TranslationKeys.Recipe.RECIPE_DELETED)
+            })
+        } catch {
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: t(TranslationKeys.Error.LOADING_FAILED)
+            })
+        }
     }
 
     if (loading) return <LoadingScreen />

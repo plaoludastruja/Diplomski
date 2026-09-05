@@ -1,5 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from 'react'
-import { View, Pressable, Text, StyleSheet, Image, Alert, Dimensions } from 'react-native'
+import { View, Pressable, Text, StyleSheet, Alert, Dimensions } from 'react-native'
+import { Image } from 'expo-image'
 import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
 import Carousel from 'react-native-snap-carousel'
@@ -19,6 +20,7 @@ import { TranslationKeys } from '../locales/_translationKeys'
 import { Ingredient, Step, FoodRecipes } from '../model/model'
 import { UploadFoodRecipesImages } from '../service/ImageService'
 import { GetFoodRecipe, EditFoodRecipe, AddFoodRecipe } from '../service/RecipesService'
+import { EnsureAnonymousSession, GetCurrentAuthUid } from '../service/AuthService'
 import { Timestamp } from 'firebase/firestore/lite'
 
 const PlaceholderImage = require('../assets/images/icon.png')
@@ -65,6 +67,14 @@ export default function AddRecipeTab() {
 
     const fetchData = async () => {
         const recipe = await GetFoodRecipe(addEditRecipeId)
+        if (!recipe) {
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: t(TranslationKeys.Error.LOADING_FAILED)
+            })
+            router.back()
+            return
+        }
         setTitle(recipe.title)
         setDescription(recipe.description)
         setServingSize(recipe.servingSize)
@@ -103,11 +113,12 @@ export default function AddRecipeTab() {
         }
         const updatedStepList = step !== '' ? [...stepList, { number: stepList.length + 1, description: step }] : stepList
         try {
+            await EnsureAnonymousSession()
             const newRecipe: FoodRecipes = {
                 id: '',
                 title: title,
                 description: description,
-                author: user ? user.id : '',
+                author: user ? user.id : (GetCurrentAuthUid() ?? ''),
                 cookingTime: cookingTime,
                 servingSize: servingSize,
                 ingredients: selectedIngredients,
@@ -118,6 +129,7 @@ export default function AddRecipeTab() {
                 savedCount: 0,
                 rating: { sum: 0, count: 0 },
                 createdAt: Timestamp.now(),
+                updatedAt: Timestamp.now(),
             }
 
             if (isEdit) {
@@ -244,7 +256,7 @@ export default function AddRecipeTab() {
                         </Pressable>
                     ) : (
                         <Pressable style={[styles.images, { width: screenWidth, height: 2 * screenHeight / 3 }]} onLongPress={() => handleDeleteImage(item)}>
-                            <Image source={{ uri: item }} style={[styles.image, { width: screenWidth, height: 2 * screenHeight / 3 }]} />
+                            <Image source={{ uri: item }} style={[styles.image, { width: screenWidth, height: 2 * screenHeight / 3 }]} contentFit="cover" transition={300} />
                         </Pressable>
                     )
                 }

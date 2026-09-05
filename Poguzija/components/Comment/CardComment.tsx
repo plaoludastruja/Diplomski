@@ -1,4 +1,5 @@
-import { Text, StyleSheet, View, Image } from 'react-native'
+import { Text, StyleSheet, View } from 'react-native'
+import { Image } from 'expo-image'
 import { memo } from 'react'
 import { Comment } from '../../model/model'
 import { COLORS, SIZES } from '../../constants/Colors'
@@ -9,7 +10,7 @@ export const CardComment = memo(({ commentData }: { commentData: Comment }) => {
         <View style={styles.containerComment}>
             <View style={styles.containerAuthor}>
                 {commentData.authorProfilePhoto ?
-                    <Image source={{ uri: commentData.authorProfilePhoto }} style={styles.image} /> :
+                    <Image source={{ uri: commentData.authorProfilePhoto }} style={styles.image} contentFit="cover" transition={300} /> :
                     <FontAwesome6 name="bowl-food" color={COLORS.light} style={styles.image} size={1.2 * SIZES.tabIcon} />}
                 <View>
                     <Text style={styles.textInputName}>{commentData.authorName}</Text>
