@@ -14,7 +14,7 @@ async function GetOrAddUser(user: User, authUser: AuthUser) {
         AddUserAdditionalData(authUser.uid)
         userAdded = await AddUser(user, authUser)
     }
-    SetCurrentUser(userAdded)
+    await SetCurrentUser(userAdded)
     return userAdded
 }
 

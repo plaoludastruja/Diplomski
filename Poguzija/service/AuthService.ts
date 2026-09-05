@@ -7,6 +7,7 @@ import { GetOrAddUser } from './UserService'
 import { MyUser } from '../model/model'
 
 async function EnsureAnonymousSession() {
+    await auth.authStateReady()
     if (!auth.currentUser) {
         await signInAnonymously(auth)
     }
@@ -59,9 +60,9 @@ async function SignOut() {
     }
 }
 
-function SetCurrentUser(userAdded: MyUser) {
+async function SetCurrentUser(userAdded: MyUser) {
     const userValue = JSON.stringify(userAdded)
-    SecureStore.setItemAsync('signedUser', userValue)
+    await SecureStore.setItemAsync('signedUser', userValue)
 }
 
 async function GetCurrentUser(): Promise<MyUser | null> {
