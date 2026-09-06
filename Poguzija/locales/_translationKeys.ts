@@ -89,6 +89,7 @@ export namespace TranslationKeys {
         SUBMIT = 'button.submit',
         DELETE = 'button.delete',
         ADD = 'button.add',
+        EDIT = 'button.edit',
         SEARCH = 'button.search',
         LOG_IN = 'button.logIn',
         LOG_OUT = 'button.logOut'

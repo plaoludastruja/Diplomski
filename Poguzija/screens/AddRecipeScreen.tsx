@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from 'react'
-import { View, Pressable, Text, StyleSheet, Alert, Dimensions } from 'react-native'
+import { View, Pressable, Text, StyleSheet, Alert, Dimensions, Animated, useAnimatedValue } from 'react-native'
 import { Image } from 'expo-image'
 import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
@@ -11,6 +11,7 @@ import { router, useLocalSearchParams } from 'expo-router'
 import { UserContext } from '../app/_layout'
 import { AddIngredientsModal } from '../components/IngredientUnitCategory/AddIngredientsModal'
 import { BackgroundSafeAreaView } from '../components/Common/BackgroundSafeAreaView'
+import { DeleteIconButton } from '../components/Common/DeleteIconButton'
 import { PillButton } from '../components/Common/PillButton'
 import { SelectCategoryList } from '../components/IngredientUnitCategory/SelectCategoryList'
 import { SubtitleText } from '../components/Common/SubtitleText'
@@ -58,6 +59,16 @@ export default function AddRecipeTab() {
     const [stepList, setStepList] = useState<Step[]>([])
     const [step, setStep] = useState('')
     const [stepsPlaceholder, setStepsPlaceholder] = useState('ADD_FIRST_STEP')
+
+    const addPhotoScale = useAnimatedValue(1)
+
+    const handleAddPhotoPressIn = () => {
+        Animated.spring(addPhotoScale, { toValue: 0.9, useNativeDriver: true }).start()
+    }
+
+    const handleAddPhotoPressOut = () => {
+        Animated.spring(addPhotoScale, { toValue: 1, useNativeDriver: true }).start()
+    }
 
     useEffect(() => {
         if (isEdit) {
@@ -251,9 +262,11 @@ export default function AddRecipeTab() {
             <View>
                 {
                     item === PlaceholderImage ? (
-                        <Pressable style={[styles.images, { width: screenWidth, height: screenHeight / 3, }]} onPress={pickImageAsync}>
-                            <MaterialIcons name="add-photo-alternate" size={128} color={COLORS.lightDark} />
-                        </Pressable>
+                        <Animated.View style={[styles.images, { width: screenWidth, height: screenHeight / 3, transform: [{ scale: addPhotoScale }] }]}>
+                            <Pressable style={styles.addPhotoPressable} onPress={pickImageAsync} onPressIn={handleAddPhotoPressIn} onPressOut={handleAddPhotoPressOut}>
+                                <MaterialIcons name="add-photo-alternate" size={128} color={COLORS.lightDark} />
+                            </Pressable>
+                        </Animated.View>
                     ) : (
                         <Pressable style={[styles.images, { width: screenWidth, height: 2 * screenHeight / 3 }]} onLongPress={() => handleDeleteImage(item)}>
                             <Image source={{ uri: item }} style={[styles.image, { width: screenWidth, height: 2 * screenHeight / 3 }]} contentFit="cover" transition={300} />
@@ -340,9 +353,7 @@ export default function AddRecipeTab() {
                         {selectedIngredients?.map((ingredient, index) => (
                             <Pressable key={index} style={styles.ingredientItem} onPress={() => handlePressToEdit(ingredient)}>
                                 <Text style={[styles.textInput, { width: "85%" }]}>   {t(TranslationKeys.IngredientItem[ingredient.name as keyof typeof TranslationKeys.IngredientItem]) || ingredient.name}   -   {ingredient.amount}  {t(TranslationKeys.UnitItem[ingredient.unit as keyof typeof TranslationKeys.UnitItem]).toLowerCase() || ingredient.unit}</Text>
-                                <Pressable onPress={() => handleDeleteIngredient(ingredient)}>
-                                    <MaterialIcons name="delete" style={styles.icon} />
-                                </Pressable>
+                                <DeleteIconButton style={styles.icon} onPress={() => handleDeleteIngredient(ingredient)} />
                             </Pressable>
                         ))}
                         <PillButton onPress={() => setIngredientsModalVisible(true)}>{t(TranslationKeys.Recipe.ADD_INGREDIENT)}</PillButton>
@@ -358,9 +369,7 @@ export default function AddRecipeTab() {
                                     onChangeText={(text) => handleChangeText(text, index)}
                                     key={step.number}
                                 />
-                                <Pressable onPress={() => handleDeleteStep(index)}>
-                                    <MaterialIcons name="delete" style={styles.icon} />
-                                </Pressable>
+                                <DeleteIconButton style={styles.icon} onPress={() => handleDeleteStep(index)} />
                             </Pressable>
                         ))}
                         <View style={styles.ingredientItem} >
@@ -408,6 +417,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginBottom: SIZES.extraLarge,
+    },
+    addPhotoPressable: {
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     image: {
         borderTopLeftRadius: SIZES.extraLarge,

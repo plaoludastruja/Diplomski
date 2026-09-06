@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react"
-import { Pressable, RefreshControl, StyleSheet, Text, View } from "react-native"
+import { Animated, Pressable, RefreshControl, StyleSheet, Text, View, useAnimatedValue } from "react-native"
 import { useTranslation } from "react-i18next"
 import { ScrollView } from "react-native-gesture-handler"
 import * as SecureStore from 'expo-secure-store'
@@ -77,12 +77,40 @@ interface SettingsItemProps {
 function SettingsItem({ resource, selectedSetting, onSelectedSetting }: SettingsItemProps) {
     const { t } = useTranslation()
     return (
-        Object.keys(resource).map((key, index) => (
-            <Pressable key={key} style={styles.settingsItem} onPress={() => onSelectedSetting(key)}>
-                <Text style={[styles.textInput, { width: "auto" }]}>{t(TranslationKeys.Settings[key as keyof typeof TranslationKeys.Settings] || key)}</Text>
-                {selectedSetting === key && <FontAwesome name="check" style={styles.icon} />}
-            </Pressable>
+        Object.keys(resource).map((key) => (
+            <SettingsOptionRow
+                key={key}
+                label={t(TranslationKeys.Settings[key as keyof typeof TranslationKeys.Settings] || key)}
+                selected={selectedSetting === key}
+                onPress={() => onSelectedSetting(key)} />
         ))
+    )
+}
+
+interface SettingsOptionRowProps {
+    label: string
+    selected: boolean
+    onPress: () => void
+}
+
+function SettingsOptionRow({ label, selected, onPress }: SettingsOptionRowProps) {
+    const scaleAnim = useAnimatedValue(1)
+
+    const handlePressIn = () => {
+        Animated.spring(scaleAnim, { toValue: 0.96, useNativeDriver: true }).start()
+    }
+
+    const handlePressOut = () => {
+        Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }).start()
+    }
+
+    return (
+        <Animated.View style={[styles.settingsItem, { transform: [{ scale: scaleAnim }] }]}>
+            <Pressable style={styles.settingsItemPressable} onPress={onPress} onPressIn={handlePressIn} onPressOut={handlePressOut}>
+                <Text style={[styles.textInput, { width: "auto" }]}>{label}</Text>
+                {selected && <FontAwesome name="check" style={styles.icon} />}
+            </Pressable>
+        </Animated.View>
     )
 }
 
@@ -92,9 +120,6 @@ const styles = StyleSheet.create({
         width: '95%',
     },
     settingsItem: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
         height: 60,
         backgroundColor: COLORS.dark,
         borderRadius: SIZES.extraLarge,
@@ -102,6 +127,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: SIZES.small,
         color: COLORS.tint,
         fontSize: SIZES.large,
+    },
+    settingsItemPressable: {
+        flex: 1,
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     textInput: {
         width: '100%',

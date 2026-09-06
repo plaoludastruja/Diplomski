@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { GestureResponderEvent, Pressable, StyleProp, StyleSheet, Text, ViewStyle } from 'react-native'
+import { Animated, GestureResponderEvent, Pressable, StyleProp, StyleSheet, Text, ViewStyle, useAnimatedValue } from 'react-native'
 import { COLORS, SIZES } from '../../constants/Colors'
 
 interface PillButtonProps {
@@ -9,10 +9,28 @@ interface PillButtonProps {
 }
 
 export const PillButton = ({ children, onPress, style }: PillButtonProps) => {
+    const scaleAnim = useAnimatedValue(1)
+
+    const handlePressIn = () => {
+        Animated.spring(scaleAnim, {
+            toValue: 0.96,
+            useNativeDriver: true,
+        }).start()
+    }
+
+    const handlePressOut = () => {
+        Animated.spring(scaleAnim, {
+            toValue: 1,
+            useNativeDriver: true,
+        }).start()
+    }
+
     return (
-        <Pressable style={[styles.button, style]} onPress={onPress}>
-            <Text style={styles.buttonText}>{children}</Text>
-        </Pressable>
+        <Animated.View style={[styles.button, style, { transform: [{ scale: scaleAnim }] }]}>
+            <Pressable onPress={onPress} onPressIn={handlePressIn} onPressOut={handlePressOut}>
+                <Text style={styles.buttonText}>{children}</Text>
+            </Pressable>
+        </Animated.View>
     )
 }
 
@@ -25,6 +43,7 @@ const styles = StyleSheet.create({
         padding: SIZES.base,
         marginVertical: SIZES.base,
         elevation: 2,
+        shadowColor: COLORS.dark,
     },
     buttonText: {
         color: COLORS.white,

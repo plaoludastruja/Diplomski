@@ -1,13 +1,14 @@
-import { MaterialIcons } from "@expo/vector-icons"
 import { QueryDocumentSnapshot } from "firebase/firestore/lite"
 import { useCallback, useState, useRef, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { ALERT_TYPE, Toast } from "react-native-alert-notification"
-import { Animated, View, TextInput, Pressable, StyleSheet, Text, NativeSyntheticEvent, NativeScrollEvent } from "react-native"
+import { Animated, View, StyleSheet, Text, NativeSyntheticEvent, NativeScrollEvent } from "react-native"
 import { BackgroundSafeAreaView } from "../components/Common/BackgroundSafeAreaView"
 import { CardFoodRecipes } from "../components/Recipes/CardFoodRecipes"
+import { FilterChip } from "../components/Common/FilterChip"
 import { LoadingScreen } from "../components/Common/LoadingScreen"
 import { PillButton } from "../components/Common/PillButton"
+import { SearchInput } from "../components/Common/SearchInput"
 import { SelectCategoryList } from "../components/IngredientUnitCategory/SelectCategoryList"
 import { SelectIngredientsList } from "../components/IngredientUnitCategory/SelectIngredientsList"
 import { SIZES, COLORS } from "../constants/Colors"
@@ -115,17 +116,15 @@ export default function SearchScreen() {
     }, [])
 
     const renderCategoryItem = useCallback(({ item }: { item: string }) => (
-        <Pressable style={styles.buttonModalSelected} onPress={() => onDeleteSelected('category', item)}>
-            <Text style={styles.textStyle}>{t(TranslationKeys.CategoryItem[item as keyof typeof TranslationKeys.CategoryItem]) || item}</Text>
-            <MaterialIcons name="close" style={styles.iconButton} />
-        </Pressable>
+        <FilterChip
+            label={t(TranslationKeys.CategoryItem[item as keyof typeof TranslationKeys.CategoryItem]) || item}
+            onPress={() => onDeleteSelected('category', item)} />
     ), [onDeleteSelected, t])
 
     const renderIngredientItem = useCallback(({ item }: { item: string }) => (
-        <Pressable style={styles.buttonModalSelected} onPress={() => onDeleteSelected('ingredient', item)}>
-            <Text style={styles.textStyle}>{t(TranslationKeys.IngredientItem[item as keyof typeof TranslationKeys.IngredientItem]) || item}</Text>
-            <MaterialIcons name="close" style={styles.iconButton} />
-        </Pressable>
+        <FilterChip
+            label={t(TranslationKeys.IngredientItem[item as keyof typeof TranslationKeys.IngredientItem]) || item}
+            onPress={() => onDeleteSelected('ingredient', item)} />
     ), [onDeleteSelected, t])
 
     const renderFoodItem = useCallback(({ item }: { item: FoodRecipes }) => (
@@ -168,18 +167,9 @@ export default function SearchScreen() {
         <BackgroundSafeAreaView>
             <View style={styles.relativeContainer}>
                 <Animated.View style={[styles.animatedContainer, { transform: [{ translateY: positionAnimation }] }]}>
-                    <View style={styles.inputContainer}>
-                        <MaterialIcons name="search" style={styles.icon} />
-                        <TextInput
-                            style={styles.textInput}
-                            placeholder={t(TranslationKeys.Button.SEARCH)}
-                            value={search}
-                            autoComplete='off'
-                            onChangeText={text => {
-                                setSearch(text)
-                            }}
-                        />
-                    </View>
+                    <SearchInput
+                        value={search}
+                        onChangeText={text => setSearch(text)} />
                     <PillButton onPress={() => setCategoryModalVisible(true)}>{t(TranslationKeys.Search.SELECT_CATEGORY)}</PillButton>
                     <PillButton onPress={() => setIngredientModalVisible(true)}>{t(TranslationKeys.Search.SELECT_INGREDIENT)}</PillButton>
                     <PillButton onPress={() => handleSearch()}>{t(TranslationKeys.Button.SEARCH)}</PillButton>
@@ -257,53 +247,6 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         zIndex: 1,
-    },
-    inputContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: '95%',
-        height: 60,
-        backgroundColor: COLORS.white,
-        borderRadius: SIZES.extraLarge,
-        marginBottom: SIZES.small,
-        paddingHorizontal: SIZES.small,
-        color: COLORS.tint,
-        fontSize: SIZES.large,
-        elevation: 2,
-    },
-    textInput: {
-        width: '100%',
-        marginRight: 10,
-        color: COLORS.tint,
-        fontSize: SIZES.large,
-    },
-    icon: {
-        marginRight: SIZES.medium,
-        color: COLORS.lightDark,
-        fontSize: SIZES.extraLarge,
-    },
-    buttonModalSelected: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 20,
-        paddingHorizontal: SIZES.small,
-        paddingVertical: 0.5 * SIZES.base,
-        marginVertical: SIZES.base,
-        marginHorizontal: 0.5 * SIZES.base,
-        elevation: 2,
-        backgroundColor: COLORS.dark,
-    },
-    textStyle: {
-        color: COLORS.light,
-        fontWeight: 'bold',
-        fontSize: SIZES.medium,
-        textAlign: 'center',
-    },
-    iconButton: {
-        color: COLORS.lightDark,
-        fontSize: SIZES.medium,
     },
     emptyText: {
         color: COLORS.tint,

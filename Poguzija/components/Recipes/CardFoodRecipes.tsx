@@ -1,6 +1,6 @@
-import { View, StyleSheet, Pressable, Text, GestureResponderEvent } from 'react-native'
+import { View, StyleSheet, Pressable, Text, GestureResponderEvent, Animated, useAnimatedValue } from 'react-native'
 import { Image } from 'expo-image'
-import { memo, useContext } from 'react'
+import { memo, useContext, useEffect, useState } from 'react'
 import { COLORS, SIZES } from '../../constants/Colors'
 import { FoodRecipes, Day } from '../../model/model'
 import { useRouter } from 'expo-router'
@@ -16,8 +16,54 @@ export const CardFoodRecipes = memo(({ data, route }: { data: FoodRecipes, route
     const router = useRouter()
     const { setRefreshScheduler } = useContext(SchedulerContext)
     const { user } = useContext(UserContext)
-    
-    
+    const [imageIndex, setImageIndex] = useState(0)
+    const scaleAnim = useAnimatedValue(1)
+    const removeScale = useAnimatedValue(1)
+
+    const handleRemovePressIn = () => {
+        Animated.spring(removeScale, {
+            toValue: 0.9,
+            useNativeDriver: true,
+        }).start()
+    }
+
+    const handleRemovePressOut = () => {
+        Animated.spring(removeScale, {
+            toValue: 1,
+            useNativeDriver: true,
+        }).start()
+    }
+
+    const handlePressIn = () => {
+        Animated.spring(scaleAnim, {
+            toValue: 0.96,
+            useNativeDriver: true,
+        }).start()
+    }
+
+    const handlePressOut = () => {
+        Animated.spring(scaleAnim, {
+            toValue: 1,
+            useNativeDriver: true,
+        }).start()
+    }
+
+    useEffect(() => {
+        setImageIndex(0)
+        if (!data.images || data.images.length <= 1) return
+        let timeoutId: ReturnType<typeof setTimeout>
+        const scheduleNext = () => {
+            const delay = 3000 + Math.random() * 7000
+            timeoutId = setTimeout(() => {
+                setImageIndex(index => (index + 1) % data.images.length)
+                scheduleNext()
+            }, delay)
+        }
+        scheduleNext()
+        return () => clearTimeout(timeoutId)
+    }, [data.id, data.images])
+
+
     const handlePress = async (data: FoodRecipes) => {
         router.push(`/foodRecipesItem/${data.id}`)
         if (route.split('/')[0] === 'schedulerAdd' && false){
@@ -48,9 +94,9 @@ export const CardFoodRecipes = memo(({ data, route }: { data: FoodRecipes, route
     }
 
     return (
-        <View style={styles.cardContainer}>
-            <Image source={data.images ? { uri: data.images[0] } : PlaceholderImage} style={styles.image} contentFit="cover" transition={300} />
-            <Pressable style={styles.pressable} onPress={() => handlePress(data)} onLongPress={() => handleLongPress(data)} >
+        <Animated.View style={[styles.cardContainer, { transform: [{ scale: scaleAnim }] }]}>
+            <Image key={data.id} source={data.images ? { uri: data.images[imageIndex] } : PlaceholderImage} style={styles.image} contentFit="cover" transition={600} />
+            <Pressable style={styles.pressable} onPress={() => handlePress(data)} onLongPress={() => handleLongPress(data)} onPressIn={handlePressIn} onPressOut={handlePressOut} >
                 <LinearGradient 
                     colors={['rgba(0, 0, 0, 0.8)', 'rgba(255, 255, 255, 0)']}
                     start={{ x: 0.5, y: - 0.2 }}
@@ -68,9 +114,13 @@ export const CardFoodRecipes = memo(({ data, route }: { data: FoodRecipes, route
             </Pressable>
             {route.split('/')[0]==='scheduler' && user &&<View style={styles.textContainerTop}>
                 { false && <MaterialCommunityIcons name='swap-horizontal-circle-outline' color={COLORS.white} size={1.2*SIZES.tabIcon} onPress={(event) => handleSwapFromScheduler(event, data)} />}
-                <MaterialCommunityIcons name='close-circle-outline' color={COLORS.white} size={1.2*SIZES.tabIcon} onPress={(event) => handleRemoveFromScheduler(event, data)} />
+                <Animated.View style={{ transform: [{ scale: removeScale }] }}>
+                    <Pressable onPress={(event) => handleRemoveFromScheduler(event, data)} onPressIn={handleRemovePressIn} onPressOut={handleRemovePressOut}>
+                        <MaterialCommunityIcons name='close-circle-outline' color={COLORS.white} size={1.2*SIZES.tabIcon} />
+                    </Pressable>
+                </Animated.View>
             </View>}
-        </View>
+        </Animated.View>
     )
 })
 

@@ -53,24 +53,16 @@ export const SelectIngredientsList = ({ alreadySelected, visible, onClose }: Sel
         setDataFilter(filteredData)
     }
 
-    const fetchData = () => {
-        const ingredients = GetIngredientNameUnitCategory('ingredient')
-        setData(ingredients)
-        setDataFilter(ingredients)
-    }
-
     useEffect(() => {
         setData(prevData => {
-            if(!alreadySelected || !prevData){
-                fetchData()
-                return prevData
-            }
-            const alreadySelectedData = prevData.map(sel => ({...sel,
-                data: sel.data.map(item => ({...item,
-                isSelected: alreadySelected.includes(item.name),
-            }))}))
-            setDataFilter(alreadySelectedData)
-            return alreadySelectedData
+            const nextData = (alreadySelected && prevData)
+                ? prevData.map(sel => ({...sel,
+                    data: sel.data.map(item => ({...item,
+                    isSelected: alreadySelected.includes(item.name),
+                }))}))
+                : GetIngredientNameUnitCategory('ingredient')
+            setDataFilter(nextData)
+            return nextData
         })
     },[alreadySelected])
 

@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useState } from "react"
 import { useLocalSearchParams } from "expo-router"
-import { Pressable, View, Text, StyleSheet, RefreshControl } from "react-native"
+import { Animated, Pressable, View, Text, StyleSheet, RefreshControl, useAnimatedValue } from "react-native"
 import { MaterialIcons } from "@expo/vector-icons"
 import { useTranslation } from "react-i18next"
 import { ALERT_TYPE, Toast } from "react-native-alert-notification"
@@ -26,6 +26,15 @@ export default function CommentsScreen() {
     const [refreshing, setRefreshing] = useState(false)
     const [addCommentModalVisible, setAddCommentModalVisible] = useState(false)
     const { t } = useTranslation()
+    const addButtonScale = useAnimatedValue(1)
+
+    const handleAddButtonPressIn = () => {
+        Animated.spring(addButtonScale, { toValue: 0.9, useNativeDriver: true }).start()
+    }
+
+    const handleAddButtonPressOut = () => {
+        Animated.spring(addButtonScale, { toValue: 1, useNativeDriver: true }).start()
+    }
 
     const fetchData = async () => {
         try {
@@ -79,9 +88,11 @@ export default function CommentsScreen() {
                 <View style={styles.header}>
                     <SubtitleText>{t(TranslationKeys.Review.REVIEWS)}</SubtitleText>
                     {user ?
-                        <Pressable style={styles.addButton} onPress={() => setAddCommentModalVisible(true)}>
-                            <MaterialIcons name="add" style={styles.icon} />
-                        </Pressable> : <View />}
+                        <Animated.View style={[styles.addButton, { transform: [{ scale: addButtonScale }] }]}>
+                            <Pressable onPress={() => setAddCommentModalVisible(true)} onPressIn={handleAddButtonPressIn} onPressOut={handleAddButtonPressOut}>
+                                <MaterialIcons name="add" style={styles.icon} />
+                            </Pressable>
+                        </Animated.View> : <View />}
                 </View>
             </View>
             <Divider />

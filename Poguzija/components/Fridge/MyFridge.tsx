@@ -1,11 +1,11 @@
 import { Text, StyleSheet, View, Pressable } from 'react-native'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { Ingredient } from '../../model/model'
-import { MaterialIcons } from '@expo/vector-icons'
 import { COLORS, SIZES } from '../../constants/Colors'
 import { UserContext } from '../../app/_layout'
 import { AddIngredientsModal } from '../IngredientUnitCategory/AddIngredientsModal'
 import { AddToMyFridge, GetMyFridge } from '../../service/FridgeService'
+import { DeleteIconButton } from '../Common/DeleteIconButton'
 import { LoadingScreen } from '../Common/LoadingScreen'
 import { PillButton } from '../Common/PillButton'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -80,9 +80,7 @@ export const MyFridge = () => {
             {selectedIngredients?.map((ingredient, index) => (
                 <Pressable key={index} style={styles.ingredientItem} onPress={() => handlePressToEdit(ingredient)}>
                     <Text style={[styles.textInput, { width: "auto" }]}>   {t(TranslationKeys.IngredientItem[ingredient.name as keyof typeof TranslationKeys.IngredientItem]) || ingredient.name}   -   {ingredient.amount}  {t(TranslationKeys.UnitItem[ingredient.unit as keyof typeof TranslationKeys.UnitItem] || ingredient.unit).toLowerCase()}</Text>
-                    <Pressable onPress={() => handleDeleteIngredient(index)}>
-                        <MaterialIcons name="delete" style={styles.icon} />
-                    </Pressable>
+                    <DeleteIconButton style={styles.icon} onPress={() => handleDeleteIngredient(index)} />
                 </Pressable>
             ))}
             </ScrollView>

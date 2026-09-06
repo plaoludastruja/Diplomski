@@ -73,7 +73,7 @@ export const AddIngredientsModal = ({ visible, dataEdit, onAdd, onClose }: AddIn
                         <TextInput value={t(TranslationKeys.UnitItem[unit as keyof typeof TranslationKeys.UnitItem]) || unit} placeholder={t(TranslationKeys.Ingredient.UNIT)} editable={false} style={styles.textInput} onChangeText={text => setUnit(text)} />
                     </Pressable>
                 </View>
-                <PillButton onPress={ handleOnAdd } style={styles.addButton}>{t(TranslationKeys.Button.ADD)}</PillButton>
+                <PillButton onPress={ handleOnAdd } style={styles.addButton}>{t(dataEdit ? TranslationKeys.Button.EDIT : TranslationKeys.Button.ADD)}</PillButton>
             </ModalBackdrop>
 
             <SelectIngredientOrUnitList

@@ -12,5 +12,6 @@ const styles = StyleSheet.create({
         width: '95%',
         borderRadius: SIZES.base,
         elevation: 2,
+        shadowColor: COLORS.dark,
     },
 })

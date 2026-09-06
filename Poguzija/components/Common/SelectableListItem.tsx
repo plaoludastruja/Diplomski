@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text } from 'react-native'
+import { Animated, Pressable, StyleSheet, Text, useAnimatedValue } from 'react-native'
 import { COLORS, SIZES } from '../../constants/Colors'
 
 interface SelectableListItemProps {
@@ -8,26 +8,45 @@ interface SelectableListItemProps {
 }
 
 export const SelectableListItem = ({ label, selected, onPress }: SelectableListItemProps) => {
+    const scaleAnim = useAnimatedValue(1)
+
+    const handlePressIn = () => {
+        Animated.spring(scaleAnim, {
+            toValue: 0.96,
+            useNativeDriver: true,
+        }).start()
+    }
+
+    const handlePressOut = () => {
+        Animated.spring(scaleAnim, {
+            toValue: 1,
+            useNativeDriver: true,
+        }).start()
+    }
+
     return (
-        <Pressable style={selected ? styles.buttonModalSelected : styles.buttonModal} onPress={onPress}>
-            <Text style={styles.textStyle}>{label}</Text>
-        </Pressable>
+        <Animated.View style={[selected ? styles.buttonModalSelected : styles.buttonModal, { transform: [{ scale: scaleAnim }] }]}>
+            <Pressable onPress={onPress} onPressIn={handlePressIn} onPressOut={handlePressOut}>
+                <Text style={styles.textStyle}>{label}</Text>
+            </Pressable>
+        </Animated.View>
     )
 }
 
 const styles = StyleSheet.create({
     buttonModal: {
         borderRadius: SIZES.extraLarge,
-        padding: 10,
-        marginVertical: 0.2 * SIZES.base,
+        padding: SIZES.small,
+        marginVertical: 0.5 * SIZES.base,
         width: '100%',
         elevation: 2,
+        shadowColor: COLORS.dark,
         backgroundColor: COLORS.tint,
     },
     buttonModalSelected: {
         borderRadius: SIZES.extraLarge,
-        padding: 10,
-        marginVertical: 0.2 * SIZES.base,
+        padding: SIZES.small,
+        marginVertical: 0.5 * SIZES.base,
         width: '100%',
         elevation: 2,
         backgroundColor: COLORS.dark,
