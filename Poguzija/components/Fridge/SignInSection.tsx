@@ -13,14 +13,13 @@ const RegisterImage = require('../../assets/images/registerImage.png')
 export const SignInSection = () => {
     const { t } = useTranslation()
     const { signInFn } = useContext(UserContext)
-    const screenWidth = Dimensions.get('window').width
     const screenHeight = Dimensions.get('window').height
 
     return (
         <>
             <ProfileInfo />
             <View style={styles.containerRegister}>
-                <Image source={RegisterImage} style={[{ width: screenWidth, height: screenHeight / 2 }]} contentFit="cover" transition={300} />
+                <Image source={RegisterImage} style={[{ width: '100%', height: screenHeight / 2 }]} contentFit="contain" transition={300} />
                 <PillButton onPress={signInFn}>{t(TranslationKeys.Button.LOG_IN)}</PillButton>
             </View>
         </>

@@ -21,6 +21,38 @@ async function GetFoodRecipe(id: string): Promise<FoodRecipes | null> {
     return data.exists() ? data.data() : null
 }
 
+async function TryGetRandomFoodRecipe(): Promise<FoodRecipes | null> {
+    const randomValue = Math.random()
+    const data = await getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), where('randomValue', '>=', randomValue), orderBy('randomValue'), limit(1)))
+    return data.empty ? null : data.docs[0].data()
+}
+
+async function GetRandomFoodRecipe(): Promise<FoodRecipes | null> {
+    const firstAttempt = await TryGetRandomFoodRecipe()
+    if (firstAttempt) return firstAttempt
+    const secondAttempt = await TryGetRandomFoodRecipe()
+    if (secondAttempt) return secondAttempt
+    const wrapDirection = Math.random() < 0.5 ? 'asc' : 'desc'
+    const wrapAround = await getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), orderBy('randomValue', wrapDirection), limit(1)))
+    return wrapAround.empty ? null : wrapAround.docs[0].data()
+}
+
+async function GetSuggestedFoodRecipe(ingredientNames: string[]): Promise<FoodRecipes | null> {
+    if (ingredientNames.length === 0) return null
+    const searchTerms = ingredientNames.map(name => name.toUpperCase()).slice(0, 10)
+    const data = await getDocs(query(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), where('searchFields', 'array-contains-any', searchTerms), limit(20)))
+    if (data.empty) return null
+    const scored = data.docs.map(docSnap => {
+        const recipe = docSnap.data()
+        const matchCount = searchTerms.filter(term => recipe.searchFields?.includes(term)).length
+        return { recipe, matchCount }
+    })
+    const maxMatch = Math.max(...scored.map(s => s.matchCount))
+    const bestMatches = scored.filter(s => s.matchCount === maxMatch)
+    const randomIndex = Math.floor(Math.random() * bestMatches.length)
+    return bestMatches[randomIndex].recipe
+}
+
 async function AddFoodRecipe(newRecipe: FoodRecipes) {
     CreateSearchFields(newRecipe)
     const ref = await addDoc(collection(db, DatabaseCollection.recipes).withConverter(foodRecipesConverter), newRecipe)
@@ -106,6 +138,7 @@ const foodRecipesConverter = {
             searchFields: foodRecipe.searchFields,
             savedCount: foodRecipe.savedCount,
             rating: foodRecipe.rating,
+            randomValue: Math.random(),
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp()
         }
@@ -119,6 +152,8 @@ const foodRecipesConverter = {
 export {
     GetAllFoodRecipes,
     GetFoodRecipe,
+    GetRandomFoodRecipe,
+    GetSuggestedFoodRecipe,
     AddFoodRecipe,
     EditFoodRecipe,
     DeleteFoodRecipe,

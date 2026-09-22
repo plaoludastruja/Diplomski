@@ -24,6 +24,7 @@ export interface FoodRecipes {
     searchFields: string[]
     savedCount: number
     rating: Rating
+    randomValue: number
     createdAt: Timestamp
     updatedAt: Timestamp
 }

@@ -72,7 +72,9 @@ export namespace TranslationKeys {
         MY_RECIPES = 'fridge.myRecipes',
         MY_FRIDGE = 'fridge.myFridge',
         SUGGEST_RECIPE = 'fridge.suggestRecipe',
-        RANDOM_RECIPE = 'fridge.randomRecipe'
+        RANDOM_RECIPE = 'fridge.randomRecipe',
+        FRIDGE_EMPTY = 'fridge.fridgeEmpty',
+        NO_SUGGESTION_FOUND = 'fridge.noSuggestionFound',
     }
 
     export enum Tab {

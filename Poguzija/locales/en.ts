@@ -63,8 +63,10 @@ export const en = {
         myKitchen: 'My kitchen',
         myRecipes: 'My recipes',
         myFridge: 'My fridge',
-        suggestRecipe: 'Suggest a meal',
+        suggestRecipe: 'Suggest a meal from your fridge',
         randomRecipe: 'Suggest a random meal',
+        fridgeEmpty: 'Add some ingredients to your fridge first',
+        noSuggestionFound: 'No matching recipe found',
     },
     tab: {
         food: 'Food',

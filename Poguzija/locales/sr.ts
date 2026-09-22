@@ -63,8 +63,10 @@ export const sr = {
         myKitchen: 'Moja kuhinja',
         myRecipes: 'Moji recepti',
         myFridge: 'Moj frižider',
-        suggestRecipe: 'Predloži jelo',
+        suggestRecipe: 'Predloži jelo iz frižidera',
         randomRecipe: 'Predloži nasumično jelo',
+        fridgeEmpty: 'Prvo dodajte sastojke u frižider',
+        noSuggestionFound: 'Nema odgovarajućeg recepta',
     },
     tab: {
         food: 'Hrana',

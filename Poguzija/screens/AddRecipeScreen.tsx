@@ -139,6 +139,7 @@ export default function AddRecipeTab() {
                 searchFields: categoryFields,
                 savedCount: 0,
                 rating: { sum: 0, count: 0 },
+                randomValue: Math.random(),
                 createdAt: Timestamp.now(),
                 updatedAt: Timestamp.now(),
             }
