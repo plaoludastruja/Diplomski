@@ -1,9 +1,10 @@
 import { db } from './firebase'
-import { getDoc, doc, serverTimestamp, setDoc, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore/lite'
+import { getDoc, doc, serverTimestamp, setDoc, deleteDoc, getDocs, query, collection, where, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore/lite'
 import { DatabaseCollection, MyUser } from '../model/model'
 import { AddRecipesScheduler } from './SchedulerService'
 import { AddFridge } from './FridgeService'
 import { AddBookmark } from './BookmarkService'
+import { DeleteCommentsForRecipe } from './CommentService'
 import { User as AuthUser } from 'firebase/auth'
 import { User } from '@react-native-google-signin/google-signin'
 import { SetCurrentUser } from './AuthService'
@@ -47,6 +48,20 @@ function AddUserAdditionalData(uid: string) {
     AddBookmark(uid)
 }
 
+async function DeleteUserData(uid: string) {
+    const recipesSnap = await getDocs(query(collection(db, DatabaseCollection.recipes), where('author', '==', uid)))
+    await Promise.all(recipesSnap.docs.map(async recipeDoc => {
+        await DeleteCommentsForRecipe(recipeDoc.id)
+        await deleteDoc(recipeDoc.ref)
+    }))
+    await Promise.all([
+        deleteDoc(doc(db, DatabaseCollection.users, uid)),
+        deleteDoc(doc(db, DatabaseCollection.fridges, uid)),
+        deleteDoc(doc(db, DatabaseCollection.bookmarks, uid)),
+        deleteDoc(doc(db, DatabaseCollection.recipeSchedulers, uid)),
+    ])
+}
+
 const userConverter = {
     toFirestore: (user: MyUser) => {
         return {
@@ -67,5 +82,6 @@ const userConverter = {
 
 export {
     GetOrAddUser,
+    DeleteUserData,
     userConverter
 }

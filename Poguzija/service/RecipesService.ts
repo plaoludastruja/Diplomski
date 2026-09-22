@@ -2,6 +2,7 @@ import { getDocs, query, collection, orderBy, getDoc, doc, addDoc, QueryDocument
 import { DatabaseCollection, FoodRecipes } from "../model/model"
 import { db } from "./firebase"
 import { GetCurrentUser } from "./AuthService"
+import { DeleteCommentsForRecipe } from "./CommentService"
 import { RESULT_LIMIT } from "../constants/Firestore"
 import 'react-native-get-random-values'
 
@@ -80,6 +81,7 @@ async function EditFoodRecipe(recipeId: string, newRecipe: FoodRecipes) {
 async function DeleteFoodRecipe(recipeId: string) {
     const user = await GetCurrentUser()
     if (!user) return
+    await DeleteCommentsForRecipe(recipeId)
     await deleteDoc(doc(db, DatabaseCollection.recipes, recipeId))
 }
 

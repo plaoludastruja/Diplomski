@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useContext, useEffect, useState } from 'react'
-import { View, Text, StyleSheet, Dimensions } from 'react-native'
+import { useContext, useEffect, useRef, useState } from 'react'
+import { View, Text, StyleSheet, Dimensions, Pressable } from 'react-native'
 import { Image } from 'expo-image'
 import Carousel from 'react-native-snap-carousel'
 import { FontAwesome, FontAwesome6, Ionicons, MaterialIcons } from '@expo/vector-icons'
@@ -8,10 +8,11 @@ import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorho
 import { LinearGradient } from 'expo-linear-gradient'
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 import { useTranslation } from 'react-i18next'
-import SelectDropdown from 'react-native-select-dropdown'
 import { UserContext, SchedulerContext } from '../app/_layout'
 import { BackgroundSafeAreaView } from '../components/Common/BackgroundSafeAreaView'
+import { ConfirmBottomSheet, ConfirmBottomSheetRef } from '../components/Common/ConfirmBottomSheet'
 import { LoadingScreen } from '../components/Common/LoadingScreen'
+import { OptionsBottomSheet, OptionsBottomSheetRef } from '../components/Common/OptionsBottomSheet'
 import { PillButton } from '../components/Common/PillButton'
 import { SelectWeekModal } from '../components/Recipes/SelectWeekModal'
 import { SubtitleText } from '../components/Common/SubtitleText'
@@ -33,6 +34,8 @@ export default function FoodRecipesItemScreen() {
     const [savedCount, setSavedCount] = useState(0)
     const [selectWeekModalVisible, setSelectWeekModalVisible] = useState(false)
     const { t } = useTranslation()
+    const optionsSheetRef = useRef<OptionsBottomSheetRef>(null)
+    const confirmDeleteSheetRef = useRef<ConfirmBottomSheetRef>(null)
 
     const router = useRouter()
 
@@ -151,7 +154,7 @@ export default function FoodRecipesItemScreen() {
         )
     }
 
-    const emojisWithIcons =
+    const options =
         [
             { title: t(TranslationKeys.Recipe.EDIT_RECIPE), code: 'edit' },
             { title: t(TranslationKeys.Recipe.DELETE_RECIPE), code: 'delete' },
@@ -164,6 +167,13 @@ export default function FoodRecipesItemScreen() {
                 addEditRecipeId: foodRecipesItemId
             }
         })
+    }
+
+    const handleOptionsSelect = (code: string) => {
+        switch (code) {
+            case 'edit': { handleEditRecipe(); break; }
+            case 'delete': { confirmDeleteSheetRef.current?.present(handleDeleteRecipe); break; }
+        }
     }
 
     const handleDeleteRecipe = async () => {
@@ -201,31 +211,9 @@ export default function FoodRecipesItemScreen() {
                             <FontAwesome name={bookmarkIconType} color={COLORS.white} size={1.2 * SIZES.tabIcon} onPress={handleAddToBookmarks} />
                             <Ionicons name='calendar-outline' color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base }} onPress={handleAddToScheduler} />
                             {user.id === food?.author &&
-                                <SelectDropdown
-                                    data={emojisWithIcons}
-                                    onSelect={(selectedItem, index) => {
-                                        switch (selectedItem.code) {
-                                            case 'edit': { handleEditRecipe(); break; }
-                                            case 'delete': { handleDeleteRecipe(); break; }
-                                        }
-                                    }}
-                                    renderButton={(selectedItem, isOpened) => {
-                                        return (
-                                            <View>
-                                                <Ionicons name="options" color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base / 2, }} />
-                                            </View>
-                                        )
-                                    }}
-                                    renderItem={(item, index, isSelected) => {
-                                        return (
-                                            <View style={{ ...styles.dropdownItemStyle }}>
-                                                <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
-                                            </View>
-                                        )
-                                    }}
-                                    showsVerticalScrollIndicator={false}
-                                    dropdownStyle={styles.dropdownMenuStyle}
-                                />}
+                                <Pressable onPress={() => optionsSheetRef.current?.present()}>
+                                    <Ionicons name="options" color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base / 2, }} />
+                                </Pressable>}
                         </View>}
                 </View>
 
@@ -307,6 +295,12 @@ export default function FoodRecipesItemScreen() {
 
             </View>
             <SelectWeekModal visible={selectWeekModalVisible} onClose={(day?: string | null) => { onDaySelected((day as keyof typeof Day) ?? null) }} />
+            <OptionsBottomSheet ref={optionsSheetRef} options={options} onSelect={handleOptionsSelect} />
+            <ConfirmBottomSheet
+                ref={confirmDeleteSheetRef}
+                title={t(TranslationKeys.Recipe.DELETE_RECIPE)}
+                message={t(TranslationKeys.Recipe.DELETE_RECIPE_CONFIRMATION)}
+            />
         </BackgroundSafeAreaView>
     )
 }
@@ -402,28 +396,5 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginEnd: SIZES.base,
         textAlignVertical: 'center',
-    },
-    dropdownMenuStyle: {
-        width: 'auto',
-        padding: SIZES.base,
-        paddingEnd: 0,
-        marginStart: -145,
-        marginTop: -30,
-        borderRadius: SIZES.base,
-        borderTopEndRadius: 0,
-    },
-    dropdownItemStyle: {
-        paddingHorizontal: SIZES.medium,
-        alignItems: 'flex-end',
-        paddingVertical: SIZES.base,
-        width: '100%',
-    },
-    dropdownItemTxtStyle: {
-        flex: 1,
-        width: '100%',
-        textAlign: 'right',
-        fontSize: SIZES.large,
-        fontWeight: '500',
-        color: COLORS.lightDark,
     },
 })

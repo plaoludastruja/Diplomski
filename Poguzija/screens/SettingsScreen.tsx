@@ -1,21 +1,29 @@
-import { useCallback, useContext, useEffect, useState } from "react"
+import { useCallback, useContext, useEffect, useRef, useState } from "react"
 import { Animated, Pressable, RefreshControl, StyleSheet, Text, View, useAnimatedValue } from "react-native"
 import { useTranslation } from "react-i18next"
 import { ScrollView } from "react-native-gesture-handler"
 import * as SecureStore from 'expo-secure-store'
 import i18next from "i18next"
+import { useRouter } from "expo-router"
+import { ALERT_TYPE, Toast } from "react-native-alert-notification"
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons"
+import { UserContext } from "../app/_layout"
 import { BackgroundSafeAreaView } from "../components/Common/BackgroundSafeAreaView"
+import { ConfirmBottomSheet, ConfirmBottomSheetRef } from "../components/Common/ConfirmBottomSheet"
 import { Divider } from "../components/Common/Divider"
 import { SubtitleText } from "../components/Common/SubtitleText"
-import { COLORS, SIZES, THEMES } from "../constants/Colors"
+import { ALERT_COLORS, COLORS, SIZES, THEMES } from "../constants/Colors"
 import { languageResources } from "../locales/_i18n"
 import { TranslationKeys } from "../locales/_translationKeys"
+import { DeleteAccount } from "../service/AuthService"
 
 export default function SettingsScreen() {
     const [selectedLanguage, setSelectedLanguage] = useState('EN')
     const [selectedTheme, setSelectedTheme] = useState('DARK_THEME')
     const { t } = useTranslation()
+    const { user, signOutFn } = useContext(UserContext)
+    const router = useRouter()
+    const confirmDeleteProfileSheetRef = useRef<ConfirmBottomSheetRef>(null)
 
     useEffect(() => {
         loadSettings()
@@ -40,6 +48,23 @@ export default function SettingsScreen() {
         await SecureStore.setItemAsync('currentTheme', newTheme)
     }, [])
 
+    const handleDeleteProfile = async () => {
+        try {
+            await DeleteAccount()
+            await signOutFn()
+            Toast.show({
+                type: ALERT_TYPE.SUCCESS,
+                title: t(TranslationKeys.Settings.PROFILE_DELETED)
+            })
+            router.back()
+        } catch {
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: t(TranslationKeys.Error.LOADING_FAILED)
+            })
+        }
+    }
+
     return (
         <BackgroundSafeAreaView>
             <SubtitleText>{t(TranslationKeys.Settings.SETTINGS)}</SubtitleText>
@@ -47,7 +72,19 @@ export default function SettingsScreen() {
             <ScrollView style={styles.flex} horizontal={false} showsVerticalScrollIndicator={false}>
                 <SettingsItems title={t(TranslationKeys.Settings.SELECT_LANGUAGE)} resource={languageResources} selectedSetting={selectedLanguage} onSelectedSetting={(key: string) => handleSelectedLanguage(key)} />
                 <SettingsItems title={t(TranslationKeys.Settings.SELECT_THEME)} resource={THEMES} selectedSetting={selectedTheme} onSelectedSetting={(key: string) => handleSelectedTheme(key)} />
+                {user &&
+                    <>
+                        <SubtitleText>{t(TranslationKeys.Settings.DELETE_PROFILE)}:</SubtitleText>
+                        <Pressable style={styles.deleteProfileButton} onPress={() => confirmDeleteProfileSheetRef.current?.present(handleDeleteProfile)}>
+                            <Text style={styles.deleteProfileText}>{t(TranslationKeys.Settings.DELETE_PROFILE)}</Text>
+                        </Pressable>
+                    </>}
             </ScrollView>
+            <ConfirmBottomSheet
+                ref={confirmDeleteProfileSheetRef}
+                title={t(TranslationKeys.Settings.DELETE_PROFILE)}
+                message={t(TranslationKeys.Settings.DELETE_PROFILE_CONFIRMATION)}
+            />
         </BackgroundSafeAreaView>
     )
 }
@@ -118,6 +155,20 @@ const styles = StyleSheet.create({
     flex: {
         flex: 1,
         width: '95%',
+    },
+    deleteProfileButton: {
+        height: 60,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: ALERT_COLORS.danger,
+        borderRadius: SIZES.extraLarge,
+        marginBottom: SIZES.small,
+        paddingHorizontal: SIZES.small,
+    },
+    deleteProfileText: {
+        color: COLORS.white,
+        fontSize: SIZES.large,
+        fontWeight: 'bold',
     },
     settingsItem: {
         height: 60,

@@ -20,6 +20,7 @@ export const sr = {
         editRecipe: 'Ažurirajte recept',
         recipeEdited: 'Recept je ažuriran',
         deleteRecipe: 'Obrišite recept',
+        deleteRecipeConfirmation: 'Da li želite obrisati recept?',
         recipeDeleted: 'Recept je obrisan',
     },
     ingredient: {
@@ -95,7 +96,10 @@ export const sr = {
         selectLanguage: 'Odaberite jezik',
         language: 'Jezik',
         sr: 'Srpski',
-        en: 'Engleski'
+        en: 'Engleski',
+        deleteProfile: 'Obrišite profil',
+        deleteProfileConfirmation: 'Da li želite trajno obrisati svoj profil? Ovo će obrisati i sve recepte koje ste kreirali.',
+        profileDeleted: 'Profil je obrisan',
     },
     missing: {
         text: 'Greška! Ovaj ekran ne postoji!',

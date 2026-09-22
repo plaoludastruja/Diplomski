@@ -5,6 +5,7 @@ import { Dispatch, SetStateAction, createContext, useEffect, useState } from 're
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { COLORS, ALERT_COLORS } from '../constants/Colors'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { MyUser } from '../model/model'
 import { SignIn, SignOut, GetCurrentUser, EnsureAnonymousSession } from '../service/AuthService'
 import { AlertNotificationRoot } from 'react-native-alert-notification'
@@ -94,6 +95,7 @@ function RootLayoutNav() {
 
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
+            <BottomSheetModalProvider>
             <ThemeProvider value={theme}>
             <UserContext.Provider value={{ user, signInFn, signOutFn }}>
             <SchedulerContext.Provider value={{ refreshScheduler, setRefreshScheduler }}>
@@ -106,12 +108,13 @@ function RootLayoutNav() {
                     <Stack.Screen name="(bookmark)/bookmark" options={{ headerShown: false, }}/>
                     <Stack.Screen name="(comments)/comments/[commentRecipeId]" options={{ headerShown: false, }}/>
                     <Stack.Screen name="(settings)/settings" options={{ headerShown: false, }}/>
-                </Stack>  
+                </Stack>
             </I18nextProvider>
             </AlertNotificationRoot>
             </SchedulerContext.Provider>
             </UserContext.Provider>
             </ThemeProvider>
+            </BottomSheetModalProvider>
         </GestureHandlerRootView>
     )
 }

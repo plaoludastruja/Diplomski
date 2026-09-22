@@ -1,4 +1,4 @@
-import { QueryDocumentSnapshot, addDoc, collection, getDocs, query, serverTimestamp } from "firebase/firestore/lite"
+import { QueryDocumentSnapshot, addDoc, collection, deleteDoc, getDocs, query, serverTimestamp } from "firebase/firestore/lite"
 import { Comment, DatabaseCollection } from "../model/model"
 import { db } from "./firebase"
 import { GetCurrentUser } from "./AuthService"
@@ -13,6 +13,11 @@ async function AddComment(recipeId: string, comment: Partial<Comment>) {
     const user = await GetCurrentUser()
     if (!user) return
     addDoc(collection(db, DatabaseCollection.recipes, recipeId, DatabaseCollection.comments).withConverter(commentConverter), comment)
+}
+
+async function DeleteCommentsForRecipe(recipeId: string) {
+    const commentsSnap = await getDocs(collection(db, DatabaseCollection.recipes, recipeId, DatabaseCollection.comments))
+    await Promise.all(commentsSnap.docs.map(commentDoc => deleteDoc(commentDoc.ref)))
 }
 
 const commentConverter = {
@@ -33,4 +38,5 @@ const commentConverter = {
 export {
     GetCommentsForRecipe,
     AddComment,
+    DeleteCommentsForRecipe,
 }

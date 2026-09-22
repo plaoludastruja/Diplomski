@@ -20,6 +20,7 @@ export namespace TranslationKeys {
         EDIT_RECIPE = 'recipe.editRecipe',
         RECIPE_EDITED = 'recipe.recipeEdited',
         DELETE_RECIPE = 'recipe.deleteRecipe',
+        DELETE_RECIPE_CONFIRMATION = 'recipe.deleteRecipeConfirmation',
         RECIPE_DELETED = 'recipe.recipeDeleted',
     }
 
@@ -106,7 +107,10 @@ export namespace TranslationKeys {
         SELECT_LANGUAGE = 'settings.selectLanguage',
         LANGUAGE = 'settings.language',
         SR = 'settings.sr',
-        EN = 'settings.en'
+        EN = 'settings.en',
+        DELETE_PROFILE = 'settings.deleteProfile',
+        DELETE_PROFILE_CONFIRMATION = 'settings.deleteProfileConfirmation',
+        PROFILE_DELETED = 'settings.profileDeleted',
     }
 
     export enum Missing {

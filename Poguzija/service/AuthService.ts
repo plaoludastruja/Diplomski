@@ -1,9 +1,9 @@
 import { GoogleSignin, isSuccessResponse } from '@react-native-google-signin/google-signin'
 import * as SecureStore from 'expo-secure-store'
-import { GoogleAuthProvider, signInWithCredential, signInAnonymously, linkWithCredential } from 'firebase/auth'
+import { GoogleAuthProvider, signInWithCredential, signInAnonymously, linkWithCredential, deleteUser, reauthenticateWithCredential } from 'firebase/auth'
 import { FirebaseError } from 'firebase/app'
 import { auth } from './firebase'
-import { GetOrAddUser } from './UserService'
+import { GetOrAddUser, DeleteUserData } from './UserService'
 import { MyUser } from '../model/model'
 
 async function EnsureAnonymousSession() {
@@ -60,6 +60,26 @@ async function SignOut() {
     }
 }
 
+async function DeleteAccount() {
+    const authUser = auth.currentUser
+    if (!authUser) return
+    await DeleteUserData(authUser.uid)
+    try {
+        await deleteUser(authUser)
+    } catch (e) {
+        if (e instanceof FirebaseError && e.code === 'auth/requires-recent-login') {
+            await GoogleSignin.hasPlayServices()
+            const response = await GoogleSignin.signIn()
+            if (!isSuccessResponse(response)) throw e
+            const credential = GoogleAuthProvider.credential(response.data.idToken)
+            await reauthenticateWithCredential(authUser, credential)
+            await deleteUser(authUser)
+        } else {
+            throw e
+        }
+    }
+}
+
 async function SetCurrentUser(userAdded: MyUser) {
     const userValue = JSON.stringify(userAdded)
     await SecureStore.setItemAsync('signedUser', userValue)
@@ -73,6 +93,7 @@ async function GetCurrentUser(): Promise<MyUser | null> {
 export {
     SignIn,
     SignOut,
+    DeleteAccount,
     GetCurrentUser,
     SetCurrentUser,
     EnsureAnonymousSession,

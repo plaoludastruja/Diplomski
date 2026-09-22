@@ -1,10 +1,10 @@
-import { Text, StyleSheet, View } from 'react-native'
+import { Pressable, StyleSheet, View } from 'react-native'
 import { Image } from 'expo-image'
-import { useContext } from 'react'
+import { useContext, useRef } from 'react'
 import { FontAwesome } from '@expo/vector-icons'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { COLORS, SIZES } from '../../constants/Colors'
-import SelectDropdown from 'react-native-select-dropdown'
+import { OptionsBottomSheet, OptionsBottomSheetRef } from '../Common/OptionsBottomSheet'
 import { UserContext } from '../../app/_layout'
 import { useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
@@ -14,7 +14,8 @@ export const ProfileInfo = () => {
     const { user, signInFn, signOutFn } = useContext(UserContext)
     const router = useRouter()
     const {t} = useTranslation()
-    const emojisWithIcons = user ?
+    const optionsSheetRef = useRef<OptionsBottomSheetRef>(null)
+    const options = user ?
         [
             { title: t(TranslationKeys.Settings.SETTINGS), code: 'settings' },
             { title: t(TranslationKeys.Button.LOG_OUT), code: 'signOut' },
@@ -24,48 +25,28 @@ export const ProfileInfo = () => {
             { title: t(TranslationKeys.Settings.SETTINGS), code: 'settings' },
             { title: t(TranslationKeys.Button.LOG_IN), code: 'signIn' },
         ]
-    
-    const handleOpenBookmarks = () => {
-        router.push(`/bookmark`)
+
+    const handleOpenBookmarks = () => { router.push(`/bookmark`) }
+    const handleOpenSettings = () => { router.push(`/settings`) }
+
+    const handleSelect = (code: string) => {
+        switch (code) {
+            case 'signIn': { signInFn(); break; }
+            case 'signOut': { signOutFn(); break; }
+            case 'settings': { handleOpenSettings(); break; }
+        }
     }
 
-    const handleOpenSettings = () => {
-        router.push(`/settings`)
-    }
-    
     return (
         <View style={styles.header}>
             {user && <FontAwesome name="bookmark-o" color={COLORS.lightDark} style={styles.icon} size={1.2 * SIZES.tabIcon} onPress={handleOpenBookmarks}/>}
-            <SelectDropdown
-                data={emojisWithIcons}
-                onSelect={(selectedItem, index) => {
-                    switch(selectedItem.code){
-                        case 'signIn': {signInFn(); break;}
-                        case 'signOut': {signOutFn(); break;}
-                        case 'settings': { handleOpenSettings(); break;} 
-                    }
-                }}
-                renderButton={(selectedItem, isOpened) => {
-                    return (
-                        <View style={styles.image}>
-                            {user ?
-                                <Image source={{ uri: user.profilePhoto }} style={styles.image} contentFit="cover" transition={300} /> :
-                                <MaterialCommunityIcons name="dots-vertical" color={COLORS.lightDark} style={styles.image} size={1.2 * SIZES.tabIcon} />}
-                        </View>
-                    )
-                }}
-                renderItem={(item, index, isSelected) => {
-                    return (
-                        <View style={{ ...styles.dropdownItemStyle }}>
-                            <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
-                        </View>
-                    )
-                }}
-                showsVerticalScrollIndicator={false}
-                dropdownStyle={styles.dropdownMenuStyle}
-            />
+            <Pressable style={styles.image} onPress={() => optionsSheetRef.current?.present()}>
+                {user ?
+                    <Image source={{ uri: user.profilePhoto }} style={styles.image} contentFit="cover" transition={300} /> :
+                    <MaterialCommunityIcons name="dots-vertical" color={COLORS.lightDark} style={styles.image} size={1.2 * SIZES.tabIcon} />}
+            </Pressable>
+            <OptionsBottomSheet ref={optionsSheetRef} options={options} onSelect={handleSelect} />
         </View>
-        
     )
 }
 
@@ -89,28 +70,5 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         width: 1.2 * SIZES.tabIcon,
         marginEnd: SIZES.base,
-    },
-    dropdownMenuStyle: {
-        width: 150,
-        padding: SIZES.base,
-        paddingEnd: 0,
-        marginStart: -145,
-        marginTop: -30,
-        borderRadius: SIZES.base,
-        borderTopEndRadius: 0,
-    },
-    dropdownItemStyle: {
-        paddingHorizontal: SIZES.medium,
-        alignItems: 'flex-end',
-        paddingVertical: SIZES.base,
-        width: '100%',
-    },
-    dropdownItemTxtStyle: {
-        flex: 1,
-        width: '100%',
-        textAlign: 'right',
-        fontSize: SIZES.large,
-        fontWeight: '500',
-        color: COLORS.lightDark,
     },
 })

@@ -1,5 +1,5 @@
-import { useContext, useEffect, useMemo, useState } from 'react'
-import { View, Pressable, Text, StyleSheet, Alert, Dimensions, Animated, useAnimatedValue } from 'react-native'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { View, Pressable, Text, StyleSheet, Dimensions, Animated, useAnimatedValue } from 'react-native'
 import { Image } from 'expo-image'
 import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
@@ -11,6 +11,7 @@ import { router, useLocalSearchParams } from 'expo-router'
 import { UserContext } from '../app/_layout'
 import { AddIngredientsModal } from '../components/IngredientUnitCategory/AddIngredientsModal'
 import { BackgroundSafeAreaView } from '../components/Common/BackgroundSafeAreaView'
+import { ConfirmBottomSheet, ConfirmBottomSheetRef } from '../components/Common/ConfirmBottomSheet'
 import { DeleteIconButton } from '../components/Common/DeleteIconButton'
 import { PillButton } from '../components/Common/PillButton'
 import { SelectCategoryList } from '../components/IngredientUnitCategory/SelectCategoryList'
@@ -47,6 +48,7 @@ export default function AddRecipeTab() {
 
     const [selectedImageArray, setSelectedImageArray] = useState<string[]>([PlaceholderImage])
     const [selectedImageToUpload, setSelectedImageToUpload] = useState<string[]>([])
+    const confirmDeleteImageSheetRef = useRef<ConfirmBottomSheetRef>(null)
 
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
@@ -175,19 +177,14 @@ export default function AddRecipeTab() {
     }
 
     const handleDeleteImage = (image: string) => {
-        Alert.alert(t(TranslationKeys.Recipe.DELETE_IMAGE), t(TranslationKeys.Recipe.DELETE_IMAGE_CONFIRMATION),
-            [
-                { text: t(TranslationKeys.Button.CANCEL), style: 'cancel' },
-                {
-                    text: t(TranslationKeys.Button.DELETE), onPress: () => {
-                        const updatedItems = selectedImageToUpload.filter((item) => item !== image)
-                        setSelectedImageArray([...updatedItems, PlaceholderImage])
-                        setSelectedImageToUpload([...updatedItems])
-                    },
-                },
-            ],
-            { cancelable: false }
-        )
+        confirmDeleteImageSheetRef.current?.present(() => {
+            const updatedItems = selectedImageToUpload.filter((item) => item !== image)
+            setSelectedImageArray([...updatedItems, PlaceholderImage])
+            setSelectedImageToUpload([...updatedItems])
+            if (updatedItems.length === 0) {
+                setSnapPoints(['66', '95'])
+            }
+        })
     }
 
     const handleDeleteIngredient = (newIngredient: Ingredient) => {
@@ -399,6 +396,12 @@ export default function AddRecipeTab() {
                     alreadySelected={categoryFields}
                     visible={categoryModalVisible}
                     onClose={(selectedCategories: string[]) => handleCloseCategoryModal(selectedCategories)} />
+
+                <ConfirmBottomSheet
+                    ref={confirmDeleteImageSheetRef}
+                    title={t(TranslationKeys.Recipe.DELETE_IMAGE)}
+                    message={t(TranslationKeys.Recipe.DELETE_IMAGE_CONFIRMATION)}
+                />
             </View>
         </BackgroundSafeAreaView>
     )

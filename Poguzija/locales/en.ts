@@ -20,6 +20,7 @@ export const en = {
         editRecipe: 'Update recipe',
         recipeEdited: 'Recipe is updated',
         deleteRecipe: 'Delete recipe',
+        deleteRecipeConfirmation: 'Do you want to delete this recipe?',
         recipeDeleted: 'Recipe is deleted',
     },
     ingredient: {
@@ -95,7 +96,10 @@ export const en = {
         selectLanguage: 'Select language',
         language: 'Language',
         sr: 'Serbian',
-        en: 'English'
+        en: 'English',
+        deleteProfile: 'Delete profile',
+        deleteProfileConfirmation: 'Do you want to permanently delete your profile? This will also delete all recipes you created.',
+        profileDeleted: 'Profile is deleted',
     },
     missing: {
         text: 'Error! This screen doesn\'t exist!',
