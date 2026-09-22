@@ -237,6 +237,14 @@ export const sr = {
         allspice: 'Piment',
         garlicPowder: 'Bijeli luk u prahu',
         onionPowder: 'Crni luk u prahu',
+        marjoram: 'Majoran',
+        fenugreek: 'Piskavica',
+        starAnise: 'Zvjezdasti anis',
+        mustardSeed: 'Slačica u zrnu',
+        fennelSeed: 'Sjeme komorača',
+        cayennePepper: 'Kajenski biber',
+        whitePepper: 'Bijeli biber',
+        smokedPaprika: 'Dimljena paprika',
 
         // Začinsko bilje
         basil: 'Bosiljak',
@@ -249,6 +257,10 @@ export const sr = {
         chives: 'Vlašac',
         tarragon: 'Estragon',
         sage: 'Žalfija',
+        lovage: 'Ljupčac',
+        lemongrass: 'Limunska trava',
+        lemonBalm: 'Matičnjak',
+        watercress: 'Potočarka',
 
         // Povrće
         carrot: 'Šargarepa',
@@ -266,6 +278,15 @@ export const sr = {
         celery: 'Celer',
         pumpkin: 'Bundeva',
         corn: 'Kukuruz',
+        leek: 'Praziluk',
+        asparagus: 'Špargla',
+        artichoke: 'Artičoka',
+        okra: 'Bamija',
+        fennel: 'Komorač',
+        kohlrabi: 'Keleraba',
+        greenBeans: 'Boranija',
+        springOnion: 'Mladi luk',
+        chiliPepper: 'Ljuta papričica',
 
         // Korjenasto povrće
         beetroot: 'Cvekla',
@@ -275,6 +296,9 @@ export const sr = {
         parsnip: 'Paškanat',
         horseradish: 'Ren',
         celeryRoot: 'Korijen celera',
+        rutabaga: 'Stočna repa',
+        taro: 'Taro',
+        cassava: 'Kasava',
 
         // Lisnato povrće
         lettuce: 'Zelena salata',
@@ -282,6 +306,10 @@ export const sr = {
         kale: 'Kelj',
         arugula: 'Rukola',
         chard: 'Blitva',
+        collardGreens: 'Lisnati kelj',
+        endive: 'Endivija',
+        sorrel: 'Kiseljak',
+        bokChoy: 'Kineski kupus',
 
         // Voće
         apple: 'Jabuka',
@@ -297,6 +325,13 @@ export const sr = {
         pineapple: 'Ananas',
         apricot: 'Kajsija',
         fig: 'Smokva',
+        cherry: 'Trešnja',
+        nectarine: 'Nektarina',
+        persimmon: 'Kaki',
+        pomegranate: 'Nar',
+        guava: 'Guava',
+        papaya: 'Papaja',
+        dragonFruit: 'Zmajevo voće',
 
         // Citrusno voće
         lemon: 'Limun',
@@ -304,6 +339,8 @@ export const sr = {
         orange: 'Narandža',
         grapefruit: 'Grejpfrut',
         tangerine: 'Mandarina',
+        clementine: 'Klementina',
+        pomelo: 'Pomelo',
 
         // Bobičasto voće
         strawberry: 'Jagoda',
@@ -312,6 +349,10 @@ export const sr = {
         blackberry: 'Kupina',
         cranberry: 'Brusnica',
         currant: 'Ribizla',
+        gooseberry: 'Ogrozd',
+        mulberry: 'Dud',
+        elderberry: 'Zova',
+        gojiBerry: 'Goji bobice',
 
         // Suvo voće
         raisins: 'Suvo grožđe',
@@ -319,6 +360,9 @@ export const sr = {
         prunes: 'Suva šljiva',
         driedFigs: 'Suva smokva',
         dates: 'Urme',
+        driedCranberries: 'Suva brusnica',
+        driedMango: 'Suvi mango',
+        driedBanana: 'Suva banana',
 
         // Meso
         beef: 'Govedina',
@@ -329,6 +373,37 @@ export const sr = {
         bacon: 'Slanina',
         ham: 'Šunka',
         groundMeat: 'Mljeveno meso',
+        vealLeg: 'Teleći but',
+        vealShank: 'Teleća koljenica',
+        beefSteak: 'Biftek',
+        rumpSteak: 'Ramstek',
+        beefRibs: 'Goveđa rebra',
+        porkLeg: 'Svinjski but',
+        porkShoulder: 'Svinjska plećka',
+        porkChop: 'Svinjski kare',
+        lambLeg: 'Jagnjeći but',
+        lambChop: 'Jagnjeći kotlet',
+        beefBrisket: 'Goveđa prsa',
+        beefTenderloin: 'Goveđi file',
+        sirloin: 'Rozbratna',
+        tBoneSteak: 'T-bon stek',
+        porkBelly: 'Svinjska potrbušina',
+        porkTenderloin: 'Svinjski file',
+        porkNeck: 'Svinjski vrat',
+        liver: 'Džigerica',
+        salami: 'Salama',
+        prosciutto: 'Pršut',
+        pancetta: 'Pancetta',
+        cevapi: 'Ćevapi',
+        pljeskavica: 'Pljeskavica',
+        kulen: 'Kulen',
+        sudzuk: 'Sudžuk',
+        cvarci: 'Čvarci',
+        odojak: 'Odojak',
+        krvavica: 'Krvavica',
+        vesalica: 'Vešalica',
+        budzola: 'Budžola',
+        pecenica: 'Pečenica',
 
         // Živinsko meso
         chicken: 'Piletina',
@@ -337,6 +412,11 @@ export const sr = {
         chickenWing: 'Pileće krilce',
         turkey: 'Ćuretina',
         duck: 'Pačetina',
+        chickenDrumstick: 'Pileća kračica',
+        wholeChicken: 'Cijelo pile',
+        goose: 'Guska',
+        quail: 'Prepelica',
+        chickenLiver: 'Pileća džigerica',
 
         // Riba
         fish: 'Riba',
@@ -347,6 +427,12 @@ export const sr = {
         mackerel: 'Skuša',
         cod: 'Bakalar',
         anchovy: 'Inćun',
+        seaBass: 'Brancin',
+        seaBream: 'Orada',
+        herring: 'Haringa',
+        catfish: 'Som',
+        carp: 'Šaran',
+        perch: 'Grgeč',
 
         // Plodovi mora
         shrimp: 'Škampi',
@@ -355,6 +441,10 @@ export const sr = {
         squid: 'Lignje',
         octopus: 'Hobotnica',
         oysters: 'Kamenice',
+        lobster: 'Jastog',
+        scallops: 'Kapica',
+        clams: 'Školjke',
+        crayfish: 'Rak',
 
         // Mliječni proizvodi
         milk: 'Mlijeko',
@@ -363,6 +453,10 @@ export const sr = {
         butter: 'Maslac',
         kefir: 'Kefir',
         condensedMilk: 'Kondenzovano mlijeko',
+        whippedCream: 'Šlag',
+        buttermilk: 'Mlaćenica',
+        ghee: 'Prečišćeni maslac',
+        powderedMilk: 'Mlijeko u prahu',
 
         // Sir
         cheese: 'Sir',
@@ -373,23 +467,33 @@ export const sr = {
         parmesan: 'Parmezan',
         feta: 'Feta sir',
         creamCheese: 'Krem sir',
+        gouda: 'Gauda',
+        cheddar: 'Čedar',
+        ricotta: 'Rikota',
+        gruyere: 'Grijer',
+        smokedCheese: 'Dimljeni sir',
 
         // Jogurt
         yogurt: 'Jogurt',
         greekYogurt: 'Grčki jogurt',
         probioticYogurt: 'Probiotski jogurt',
+        drinkingYogurt: 'Tečni jogurt',
+        flavoredYogurt: 'Voćni jogurt',
 
         // Jaja
         egg: 'Jaje',
         eggWhite: 'Bjelance',
         eggYolk: 'Žumance',
         quailEgg: 'Prepeličije jaje',
+        duckEgg: 'Pačje jaje',
 
         // Pahuljice
         oatmeal: 'Ovsena kaša',
         cornFlakes: 'Kukuruzne pahuljice',
         muesli: 'Musli',
         bran: 'Mekinje',
+        granola: 'Granola',
+        cornGrits: 'Kukuruzni griz',
 
         // Brašno
         wheatFlour: 'Pšenično brašno',
@@ -397,6 +501,10 @@ export const sr = {
         riceFlour: 'Pirinčano brašno',
         wholeWheatFlour: 'Integralno brašno',
         almondFlour: 'Bademovo brašno',
+        ryeFlour: 'Raženo brašno',
+        semolina: 'Griz',
+        speltFlour: 'Brašno od pira',
+        oatFlour: 'Ovseno brašno',
 
         // Hljeb
         bread: 'Hljeb',
@@ -406,6 +514,11 @@ export const sr = {
         toastBread: 'Tost hljeb',
         pitaBread: 'Pita hljeb',
         croissant: 'Kroasan',
+        ryeBread: 'Raženi hljeb',
+        sourdoughBread: 'Kiseli hljeb',
+        flatbread: 'Lepinja',
+        cornbread: 'Proja',
+        bun: 'Zemička',
 
         // Tjestenina
         spaghetti: 'Špageti',
@@ -414,6 +527,11 @@ export const sr = {
         lasagnaSheets: 'Lazanje',
         noodles: 'Rezanci',
         macaroni: 'Makarone',
+        tagliatelle: 'Tagliatelle',
+        ravioli: 'Ravioli',
+        gnocchi: 'Njoki',
+        orzo: 'Orzo',
+        tortellini: 'Tortelini',
 
         // Mahunarke
         beans: 'Pasulj',
@@ -421,6 +539,10 @@ export const sr = {
         lentils: 'Sočivo',
         peas: 'Grašak',
         soybeans: 'Soja',
+        blackBeans: 'Crni pasulj',
+        mungBeans: 'Mung pasulj',
+        favaBeans: 'Bob',
+        edamame: 'Edamame',
 
         // Orašasti plodovi
         walnut: 'Orah',
@@ -430,6 +552,10 @@ export const sr = {
         cashew: 'Indijski orah',
         pistachio: 'Pistaći',
         pecan: 'Pekan orah',
+        brazilNut: 'Brazilski orah',
+        macadamia: 'Makadamija',
+        pineNut: 'Pinjol',
+        chestnut: 'Kesten',
 
         // Sjemenke
         sunflowerSeeds: 'Suncokretove sjemenke',
@@ -438,12 +564,17 @@ export const sr = {
         chiaSeeds: 'Chia sjemenke',
         flaxseed: 'Laneno sjeme',
         poppySeeds: 'Mak',
+        hempSeeds: 'Sjemenke konoplje',
 
         // Ulja
         oliveOil: 'Maslinovo ulje',
         vegetableOil: 'Suncokretovo ulje',
         sesameOil: 'Sezamovo ulje',
         coconutOil: 'Kokosovo ulje',
+        sunflowerOil: 'Ulje suncokreta',
+        canolaOil: 'Ulje repice',
+        avocadoOil: 'Ulje avokada',
+        grapeseedOil: 'Ulje koštica grožđa',
 
         // Sosovi
         soySauce: 'Soja sos',
@@ -454,6 +585,12 @@ export const sr = {
         mustard: 'Senf',
         bbqSauce: 'BBQ sos',
         worcestershireSauce: 'Vorčester sos',
+        hotSauce: 'Ljuti sos',
+        tzatziki: 'Cacik',
+        teriyakiSauce: 'Terijaki sos',
+        sriracha: 'Sriraća',
+        ajvar: 'Ajvar',
+        gravy: 'Umak od pečenja',
 
         // Zaslađivači
         sugar: 'Šećer',
@@ -462,6 +599,9 @@ export const sr = {
         mapleSyrup: 'Javorov sirup',
         stevia: 'Stevija',
         powderedSugar: 'Šećer u prahu',
+        agaveSyrup: 'Agavin sirup',
+        molasses: 'Melasa',
+        vanillaSugar: 'Vanilin šećer',
 
         // Napici
         water: 'Voda',
@@ -470,6 +610,10 @@ export const sr = {
         juice: 'Sok',
         soda: 'Gazirano piće',
         wine: 'Vino',
+        beer: 'Pivo',
+        lemonade: 'Limunada',
+        hotChocolate: 'Topla čokolada',
+        sparklingWater: 'Kisela voda',
 
         // Smrznuti proizvodi
         frozenPeas: 'Smrznuti grašak',
@@ -477,6 +621,9 @@ export const sr = {
         frozenVegetables: 'Smrznuto povrće',
         frozenPizza: 'Smrznuta pica',
         iceCream: 'Sladoled',
+        frozenBerries: 'Smrznuto bobičasto voće',
+        frozenSpinach: 'Smrznuti spanać',
+        frozenFish: 'Smrznuta riba',
 
         // Konzervirana hrana
         cannedBeans: 'Konzervirani pasulj',
@@ -484,11 +631,15 @@ export const sr = {
         cannedTomatoes: 'Konzervirani paradajz',
         cannedTuna: 'Konzervirana tuna',
         cannedPeas: 'Konzervirani grašak',
+        cannedMushrooms: 'Konzervirane pečurke',
+        cannedChickpeas: 'Konzervirani slanutak',
+        cannedPeaches: 'Konzervirane breskve',
 
         // Gotova jela
         instantNoodles: 'Instant rezanci',
         instantSoup: 'Instant supa',
         cannedSoup: 'Konzervirana supa',
+        dumplings: 'Knedle',
 
         // Sastojci za pečenje
         bakingPowder: 'Prašak za pecivo',
@@ -497,18 +648,25 @@ export const sr = {
         vanillaExtract: 'Ekstrakt vanile',
         cocoaPowder: 'Kakao prah',
         gelatin: 'Želatin',
+        cornstarch: 'Kukuruzni skrob',
+        chocolateChips: 'Komadići čokolade',
+        almondExtract: 'Ekstrakt badema',
 
         // Aditivi
         foodColoring: 'Boja za hranu',
         preservatives: 'Konzervansi',
         citricAcid: 'Limunska kiselina',
         xanthanGum: 'Ksantan guma',
+        msg: 'Glutamat',
 
         // Grickalice
         chips: 'Čips',
         popcorn: 'Kokice',
         pretzels: 'Perece',
         crackers: 'Krekeri',
+        granolaBar: 'Granola pločica',
+        trailMix: 'Mešavina orašastih plodova',
+        riceCakes: 'Rižini kolutići',
 
         // Začinski dodaci
         vinegar: 'Sirće',
@@ -516,12 +674,18 @@ export const sr = {
         pickles: 'Kiseli krastavci',
         olives: 'Masline',
         capers: 'Kapari',
+        relish: 'Slatko-kiseli preliv',
+        chutney: 'Čatni',
+        pickledPeppers: 'Feferoni',
 
         // Pečurke
         mushroom: 'Šampinjon',
         porcini: 'Vrganj',
         oysterMushroom: 'Bukovača',
         shiitake: 'Šitake',
+        chanterelle: 'Lisičarka',
+        portobello: 'Portobelo',
+        truffle: 'Tartuf',
 
         // Žitarice
         rice: 'Pirinač',
@@ -530,5 +694,9 @@ export const sr = {
         barley: 'Ječam',
         quinoa: 'Kinoa',
         buckwheat: 'Heljda',
+        millet: 'Proso',
+        bulgur: 'Bulgur',
+        couscous: 'Kuskus',
+        polenta: 'Palenta',
     },
 }

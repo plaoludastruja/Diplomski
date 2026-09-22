@@ -1,4 +1,4 @@
-import { StyleSheet, View, Pressable } from 'react-native'
+import { StyleSheet, Pressable } from 'react-native'
 import { useCallback, useEffect, useState } from 'react'
 import { IngredientNameUnit } from '../../model/model'
 import { COLORS } from '../../constants/Colors'
@@ -63,12 +63,20 @@ export const SelectIngredientOrUnitList = ({ modalDataType, visible, onAdd, onCl
     }
 
     const filterData = (search: string) => {
+        const lowerSearch = search.toLowerCase()
         const filteredData = search === '' ? data : data.map(item => {
+            const categoryLabel = modalDataType === 'ingredient'
+                ? t(TranslationKeys.IngredientType[item.type as keyof typeof TranslationKeys.IngredientType])
+                : t(TranslationKeys.UnitType[item.type as keyof typeof TranslationKeys.UnitType])
+            if ((categoryLabel || item.type).toLowerCase().includes(lowerSearch)) {
+                return item
+            }
+
             const filteredInnerData = item.data.filter(itemData => {
                 if(modalDataType === 'ingredient'){
-                    return t(TranslationKeys.IngredientItem[itemData.name as keyof typeof TranslationKeys.IngredientItem]).toLowerCase().includes(search.toLowerCase())
+                    return t(TranslationKeys.IngredientItem[itemData.name as keyof typeof TranslationKeys.IngredientItem]).toLowerCase().includes(lowerSearch)
                 }else if(modalDataType === 'unit'){
-                    return t(TranslationKeys.UnitItem[itemData.name as keyof typeof TranslationKeys.UnitItem]).toLowerCase().includes(search.toLowerCase())
+                    return t(TranslationKeys.UnitItem[itemData.name as keyof typeof TranslationKeys.UnitItem]).toLowerCase().includes(lowerSearch)
                 }
             })
             if (filteredInnerData.length > 0) {
@@ -100,11 +108,9 @@ export const SelectIngredientOrUnitList = ({ modalDataType, visible, onAdd, onCl
                     style={styles.flex}
                     keyExtractor={item => item.type}
                     renderItem={({ item }) =>
-                        <View style={styles.itemContainer}>
-                            <Pressable>
-                                { modalDataType === 'ingredient' && <SubtitleText style={styles.itemSubtitleText}>{t(TranslationKeys.IngredientType[item.type as keyof typeof TranslationKeys.IngredientType]) || item.type}</SubtitleText> }
-                                { modalDataType === 'unit' && <SubtitleText style={styles.itemSubtitleText}>{t(TranslationKeys.UnitType[item.type as keyof typeof TranslationKeys.UnitType]) || item.type}</SubtitleText> }
-                            </Pressable>
+                        <Pressable style={styles.itemContainer}>
+                            { modalDataType === 'ingredient' && <SubtitleText style={styles.itemSubtitleText}>{t(TranslationKeys.IngredientType[item.type as keyof typeof TranslationKeys.IngredientType]) || item.type}</SubtitleText> }
+                            { modalDataType === 'unit' && <SubtitleText style={styles.itemSubtitleText}>{t(TranslationKeys.UnitType[item.type as keyof typeof TranslationKeys.UnitType]) || item.type}</SubtitleText> }
                             { item.data?.map((itemData, index) => (
                                 <SelectableListItem
                                     key={itemData.name}
@@ -114,7 +120,7 @@ export const SelectIngredientOrUnitList = ({ modalDataType, visible, onAdd, onCl
                                     onPress={ () => handlePress(itemData) }
                                 />
                             ))}
-                        </View>
+                        </Pressable>
                     }
                 />
             </ModalBackdrop>

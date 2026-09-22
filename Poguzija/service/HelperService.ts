@@ -143,7 +143,15 @@ function GetIngredientsData() {
             'CARDAMOM',
             'ALLSPICE',
             'GARLIC_POWDER',
-            'ONION_POWDER'
+            'ONION_POWDER',
+            'MARJORAM',
+            'FENUGREEK',
+            'STAR_ANISE',
+            'MUSTARD_SEED',
+            'FENNEL_SEED',
+            'CAYENNE_PEPPER',
+            'WHITE_PEPPER',
+            'SMOKED_PAPRIKA'
         ],
         HERBS: [
             'BASIL',
@@ -155,7 +163,11 @@ function GetIngredientsData() {
             'MINT',
             'CHIVES',
             'TARRAGON',
-            'SAGE'
+            'SAGE',
+            'LOVAGE',
+            'LEMONGRASS',
+            'LEMON_BALM',
+            'WATERCRESS'
         ],
         VEGETABLES: [
             'CARROT',
@@ -172,7 +184,16 @@ function GetIngredientsData() {
             'CABBAGE',
             'CELERY',
             'PUMPKIN',
-            'CORN'
+            'CORN',
+            'LEEK',
+            'ASPARAGUS',
+            'ARTICHOKE',
+            'OKRA',
+            'FENNEL',
+            'KOHLRABI',
+            'GREEN_BEANS',
+            'SPRING_ONION',
+            'CHILI_PEPPER'
         ],
         ROOT_VEGETABLES: [
             'BEETROOT',
@@ -181,14 +202,21 @@ function GetIngredientsData() {
             'SWEET_POTATO',
             'PARSNIP',
             'HORSERADISH',
-            'CELERY_ROOT'
+            'CELERY_ROOT',
+            'RUTABAGA',
+            'TARO',
+            'CASSAVA'
         ],
         LEAFY_GREENS: [
             'LETTUCE',
             'SPINACH',
             'KALE',
             'ARUGULA',
-            'CHARD'
+            'CHARD',
+            'COLLARD_GREENS',
+            'ENDIVE',
+            'SORREL',
+            'BOK_CHOY'
         ],
         FRUITS: [
             'APPLE',
@@ -203,14 +231,23 @@ function GetIngredientsData() {
             'MANGO',
             'PINEAPPLE',
             'APRICOT',
-            'FIG'
+            'FIG',
+            'CHERRY',
+            'NECTARINE',
+            'PERSIMMON',
+            'POMEGRANATE',
+            'GUAVA',
+            'PAPAYA',
+            'DRAGON_FRUIT'
         ],
         CITRUS_FRUITS: [
             'LEMON',
             'LIME',
             'ORANGE',
             'GRAPEFRUIT',
-            'TANGERINE'
+            'TANGERINE',
+            'CLEMENTINE',
+            'POMELO'
         ],
         BERRIES: [
             'STRAWBERRY',
@@ -218,14 +255,21 @@ function GetIngredientsData() {
             'BLUEBERRY',
             'BLACKBERRY',
             'CRANBERRY',
-            'CURRANT'
+            'CURRANT',
+            'GOOSEBERRY',
+            'MULBERRY',
+            'ELDERBERRY',
+            'GOJI_BERRY'
         ],
         DRIED_FRUITS: [
             'RAISINS',
             'DRIED_APRICOT',
             'PRUNES',
             'DRIED_FIGS',
-            'DATES'
+            'DATES',
+            'DRIED_CRANBERRIES',
+            'DRIED_MANGO',
+            'DRIED_BANANA'
         ],
         MEAT: [
             'BEEF',
@@ -235,7 +279,38 @@ function GetIngredientsData() {
             'SAUSAGE',
             'BACON',
             'HAM',
-            'GROUND_MEAT'
+            'GROUND_MEAT',
+            'VEAL_LEG',
+            'VEAL_SHANK',
+            'BEEF_STEAK',
+            'RUMP_STEAK',
+            'BEEF_RIBS',
+            'PORK_LEG',
+            'PORK_SHOULDER',
+            'PORK_CHOP',
+            'LAMB_LEG',
+            'LAMB_CHOP',
+            'BEEF_BRISKET',
+            'BEEF_TENDERLOIN',
+            'SIRLOIN',
+            'T_BONE_STEAK',
+            'PORK_BELLY',
+            'PORK_TENDERLOIN',
+            'PORK_NECK',
+            'LIVER',
+            'SALAMI',
+            'PROSCIUTTO',
+            'PANCETTA',
+            'CEVAPI',
+            'PLJESKAVICA',
+            'KULEN',
+            'SUDZUK',
+            'CVARCI',
+            'ODOJAK',
+            'KRVAVICA',
+            'VESALICA',
+            'BUDZOLA',
+            'PECENICA'
         ],
         POULTRY: [
             'CHICKEN',
@@ -243,7 +318,12 @@ function GetIngredientsData() {
             'CHICKEN_THIGH',
             'CHICKEN_WING',
             'TURKEY',
-            'DUCK'
+            'DUCK',
+            'CHICKEN_DRUMSTICK',
+            'WHOLE_CHICKEN',
+            'GOOSE',
+            'QUAIL',
+            'CHICKEN_LIVER'
         ],
         FISH: [
             'FISH',
@@ -253,7 +333,13 @@ function GetIngredientsData() {
             'SARDINE',
             'MACKEREL',
             'COD',
-            'ANCHOVY'
+            'ANCHOVY',
+            'SEA_BASS',
+            'SEA_BREAM',
+            'HERRING',
+            'CATFISH',
+            'CARP',
+            'PERCH'
         ],
         SEAFOOD: [
             'SHRIMP',
@@ -261,7 +347,11 @@ function GetIngredientsData() {
             'MUSSELS',
             'SQUID',
             'OCTOPUS',
-            'OYSTERS'
+            'OYSTERS',
+            'LOBSTER',
+            'SCALLOPS',
+            'CLAMS',
+            'CRAYFISH'
         ],
         MILK_PRODUCTS: [
             'MILK',
@@ -269,7 +359,11 @@ function GetIngredientsData() {
             'SOUR_CREAM',
             'BUTTER',
             'KEFIR',
-            'CONDENSED_MILK'
+            'CONDENSED_MILK',
+            'WHIPPED_CREAM',
+            'BUTTERMILK',
+            'GHEE',
+            'POWDERED_MILK'
         ],
         CHEESE: [
             'CHEESE',
@@ -279,31 +373,45 @@ function GetIngredientsData() {
             'MOZZARELLA',
             'PARMESAN',
             'FETA',
-            'CREAM_CHEESE'
+            'CREAM_CHEESE',
+            'GOUDA',
+            'CHEDDAR',
+            'RICOTTA',
+            'GRUYERE',
+            'SMOKED_CHEESE'
         ],
         YOGURT: [
             'YOGURT',
             'GREEK_YOGURT',
-            'PROBIOTIC_YOGURT'
+            'PROBIOTIC_YOGURT',
+            'DRINKING_YOGURT',
+            'FLAVORED_YOGURT'
         ],
         EGGS: [
             'EGG',
             'EGG_WHITE',
             'EGG_YOLK',
-            'QUAIL_EGG'
+            'QUAIL_EGG',
+            'DUCK_EGG'
         ],
         CEREALS: [
             'OATMEAL',
             'CORN_FLAKES',
             'MUESLI',
-            'BRAN'
+            'BRAN',
+            'GRANOLA',
+            'CORN_GRITS'
         ],
         FLOUR: [
             'WHEAT_FLOUR',
             'CORN_FLOUR',
             'RICE_FLOUR',
             'WHOLE_WHEAT_FLOUR',
-            'ALMOND_FLOUR'
+            'ALMOND_FLOUR',
+            'RYE_FLOUR',
+            'SEMOLINA',
+            'SPELT_FLOUR',
+            'OAT_FLOUR'
         ],
         BREAD: [
             'BREAD',
@@ -312,7 +420,12 @@ function GetIngredientsData() {
             'BAGUETTE',
             'TOAST_BREAD',
             'PITA_BREAD',
-            'CROISSANT'
+            'CROISSANT',
+            'RYE_BREAD',
+            'SOURDOUGH_BREAD',
+            'FLATBREAD',
+            'CORNBREAD',
+            'BUN'
         ],
         PASTA: [
             'SPAGHETTI',
@@ -320,14 +433,23 @@ function GetIngredientsData() {
             'FUSILLI',
             'LASAGNA_SHEETS',
             'NOODLES',
-            'MACARONI'
+            'MACARONI',
+            'TAGLIATELLE',
+            'RAVIOLI',
+            'GNOCCHI',
+            'ORZO',
+            'TORTELLINI'
         ],
         LEGUMES: [
             'BEANS',
             'CHICKPEAS',
             'LENTILS',
             'PEAS',
-            'SOYBEANS'
+            'SOYBEANS',
+            'BLACK_BEANS',
+            'MUNG_BEANS',
+            'FAVA_BEANS',
+            'EDAMAME'
         ],
         NUTS: [
             'WALNUT',
@@ -336,7 +458,11 @@ function GetIngredientsData() {
             'PEANUT',
             'CASHEW',
             'PISTACHIO',
-            'PECAN'
+            'PECAN',
+            'BRAZIL_NUT',
+            'MACADAMIA',
+            'PINE_NUT',
+            'CHESTNUT'
         ],
         SEEDS: [
             'SUNFLOWER_SEEDS',
@@ -344,13 +470,18 @@ function GetIngredientsData() {
             'SESAME_SEEDS',
             'CHIA_SEEDS',
             'FLAXSEED',
-            'POPPY_SEEDS'
+            'POPPY_SEEDS',
+            'HEMP_SEEDS'
         ],
         OILS: [
             'OLIVE_OIL',
             'VEGETABLE_OIL',
             'SESAME_OIL',
-            'COCONUT_OIL'
+            'COCONUT_OIL',
+            'SUNFLOWER_OIL',
+            'CANOLA_OIL',
+            'AVOCADO_OIL',
+            'GRAPESEED_OIL'
         ],
         SAUCES: [
             'SOY_SAUCE',
@@ -360,7 +491,13 @@ function GetIngredientsData() {
             'KETCHUP',
             'MUSTARD',
             'BBQ_SAUCE',
-            'WORCESTERSHIRE_SAUCE'
+            'WORCESTERSHIRE_SAUCE',
+            'HOT_SAUCE',
+            'TZATZIKI',
+            'TERIYAKI_SAUCE',
+            'SRIRACHA',
+            'AJVAR',
+            'GRAVY'
         ],
         SWEETENERS: [
             'SUGAR',
@@ -368,7 +505,10 @@ function GetIngredientsData() {
             'HONEY',
             'MAPLE_SYRUP',
             'STEVIA',
-            'POWDERED_SUGAR'
+            'POWDERED_SUGAR',
+            'AGAVE_SYRUP',
+            'MOLASSES',
+            'VANILLA_SUGAR'
         ],
         BEVERAGES: [
             'WATER',
@@ -376,26 +516,37 @@ function GetIngredientsData() {
             'TEA',
             'JUICE',
             'SODA',
-            'WINE'
+            'WINE',
+            'BEER',
+            'LEMONADE',
+            'HOT_CHOCOLATE',
+            'SPARKLING_WATER'
         ],
         FROZEN_PRODUCTS: [
             'FROZEN_PEAS',
             'FROZEN_FRIES',
             'FROZEN_VEGETABLES',
             'FROZEN_PIZZA',
-            'ICE_CREAM'
+            'ICE_CREAM',
+            'FROZEN_BERRIES',
+            'FROZEN_SPINACH',
+            'FROZEN_FISH'
         ],
         CANNED_FOOD: [
             'CANNED_BEANS',
             'CANNED_CORN',
             'CANNED_TOMATOES',
             'CANNED_TUNA',
-            'CANNED_PEAS'
+            'CANNED_PEAS',
+            'CANNED_MUSHROOMS',
+            'CANNED_CHICKPEAS',
+            'CANNED_PEACHES'
         ],
         READY_MEALS: [
             'INSTANT_NOODLES',
             'INSTANT_SOUP',
-            'CANNED_SOUP'
+            'CANNED_SOUP',
+            'DUMPLINGS'
         ],
         BAKING_INGREDIENTS: [
             'BAKING_POWDER',
@@ -403,32 +554,45 @@ function GetIngredientsData() {
             'YEAST',
             'VANILLA_EXTRACT',
             'COCOA_POWDER',
-            'GELATIN'
+            'GELATIN',
+            'CORNSTARCH',
+            'CHOCOLATE_CHIPS',
+            'ALMOND_EXTRACT'
         ],
         ADDITIVES: [
             'FOOD_COLORING',
             'PRESERVATIVES',
             'CITRIC_ACID',
-            'XANTHAN_GUM'
+            'XANTHAN_GUM',
+            'MSG'
         ],
         SNACKS: [
             'CHIPS',
             'POPCORN',
             'PRETZELS',
-            'CRACKERS'
+            'CRACKERS',
+            'GRANOLA_BAR',
+            'TRAIL_MIX',
+            'RICE_CAKES'
         ],
         CONDIMENTS: [
             'VINEGAR',
             'LEMON_JUICE',
             'PICKLES',
             'OLIVES',
-            'CAPERS'
+            'CAPERS',
+            'RELISH',
+            'CHUTNEY',
+            'PICKLED_PEPPERS'
         ],
         MUSHROOMS: [
             'MUSHROOM',
             'PORCINI',
             'OYSTER_MUSHROOM',
-            'SHIITAKE'
+            'SHIITAKE',
+            'CHANTERELLE',
+            'PORTOBELLO',
+            'TRUFFLE'
         ],
         GRAINS: [
             'RICE',
@@ -436,7 +600,11 @@ function GetIngredientsData() {
             'OATS',
             'BARLEY',
             'QUINOA',
-            'BUCKWHEAT'
+            'BUCKWHEAT',
+            'MILLET',
+            'BULGUR',
+            'COUSCOUS',
+            'POLENTA'
         ]
     }
 }

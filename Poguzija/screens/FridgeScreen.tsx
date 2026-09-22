@@ -1,4 +1,3 @@
-//ok
 import { useContext } from 'react'
 import { UserContext } from '../app/_layout'
 import { BackgroundSafeAreaView } from '../components/Common/BackgroundSafeAreaView'

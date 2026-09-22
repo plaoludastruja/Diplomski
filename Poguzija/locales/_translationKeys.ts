@@ -255,6 +255,14 @@ export namespace TranslationKeys {
         ALLSPICE = 'ingredientItem.allspice',
         GARLIC_POWDER = 'ingredientItem.garlicPowder',
         ONION_POWDER = 'ingredientItem.onionPowder',
+        MARJORAM = 'ingredientItem.marjoram',
+        FENUGREEK = 'ingredientItem.fenugreek',
+        STAR_ANISE = 'ingredientItem.starAnise',
+        MUSTARD_SEED = 'ingredientItem.mustardSeed',
+        FENNEL_SEED = 'ingredientItem.fennelSeed',
+        CAYENNE_PEPPER = 'ingredientItem.cayennePepper',
+        WHITE_PEPPER = 'ingredientItem.whitePepper',
+        SMOKED_PAPRIKA = 'ingredientItem.smokedPaprika',
 
         // Herbs
         BASIL = 'ingredientItem.basil',
@@ -267,6 +275,10 @@ export namespace TranslationKeys {
         CHIVES = 'ingredientItem.chives',
         TARRAGON = 'ingredientItem.tarragon',
         SAGE = 'ingredientItem.sage',
+        LOVAGE = 'ingredientItem.lovage',
+        LEMONGRASS = 'ingredientItem.lemongrass',
+        LEMON_BALM = 'ingredientItem.lemonBalm',
+        WATERCRESS = 'ingredientItem.watercress',
 
         // Vegetables
         CARROT = 'ingredientItem.carrot',
@@ -284,6 +296,15 @@ export namespace TranslationKeys {
         CELERY = 'ingredientItem.celery',
         PUMPKIN = 'ingredientItem.pumpkin',
         CORN = 'ingredientItem.corn',
+        LEEK = 'ingredientItem.leek',
+        ASPARAGUS = 'ingredientItem.asparagus',
+        ARTICHOKE = 'ingredientItem.artichoke',
+        OKRA = 'ingredientItem.okra',
+        FENNEL = 'ingredientItem.fennel',
+        KOHLRABI = 'ingredientItem.kohlrabi',
+        GREEN_BEANS = 'ingredientItem.greenBeans',
+        SPRING_ONION = 'ingredientItem.springOnion',
+        CHILI_PEPPER = 'ingredientItem.chiliPepper',
 
         // Root vegetables
         BEETROOT = 'ingredientItem.beetroot',
@@ -293,6 +314,9 @@ export namespace TranslationKeys {
         PARSNIP = 'ingredientItem.parsnip',
         HORSERADISH = 'ingredientItem.horseradish',
         CELERY_ROOT = 'ingredientItem.celeryRoot',
+        RUTABAGA = 'ingredientItem.rutabaga',
+        TARO = 'ingredientItem.taro',
+        CASSAVA = 'ingredientItem.cassava',
 
         // Leafy greens
         LETTUCE = 'ingredientItem.lettuce',
@@ -300,6 +324,10 @@ export namespace TranslationKeys {
         KALE = 'ingredientItem.kale',
         ARUGULA = 'ingredientItem.arugula',
         CHARD = 'ingredientItem.chard',
+        COLLARD_GREENS = 'ingredientItem.collardGreens',
+        ENDIVE = 'ingredientItem.endive',
+        SORREL = 'ingredientItem.sorrel',
+        BOK_CHOY = 'ingredientItem.bokChoy',
 
         // Fruits
         APPLE = 'ingredientItem.apple',
@@ -315,6 +343,13 @@ export namespace TranslationKeys {
         PINEAPPLE = 'ingredientItem.pineapple',
         APRICOT = 'ingredientItem.apricot',
         FIG = 'ingredientItem.fig',
+        CHERRY = 'ingredientItem.cherry',
+        NECTARINE = 'ingredientItem.nectarine',
+        PERSIMMON = 'ingredientItem.persimmon',
+        POMEGRANATE = 'ingredientItem.pomegranate',
+        GUAVA = 'ingredientItem.guava',
+        PAPAYA = 'ingredientItem.papaya',
+        DRAGON_FRUIT = 'ingredientItem.dragonFruit',
 
         // Citrus fruits
         LEMON = 'ingredientItem.lemon',
@@ -322,6 +357,8 @@ export namespace TranslationKeys {
         ORANGE = 'ingredientItem.orange',
         GRAPEFRUIT = 'ingredientItem.grapefruit',
         TANGERINE = 'ingredientItem.tangerine',
+        CLEMENTINE = 'ingredientItem.clementine',
+        POMELO = 'ingredientItem.pomelo',
 
         // Berries
         STRAWBERRY = 'ingredientItem.strawberry',
@@ -330,6 +367,10 @@ export namespace TranslationKeys {
         BLACKBERRY = 'ingredientItem.blackberry',
         CRANBERRY = 'ingredientItem.cranberry',
         CURRANT = 'ingredientItem.currant',
+        GOOSEBERRY = 'ingredientItem.gooseberry',
+        MULBERRY = 'ingredientItem.mulberry',
+        ELDERBERRY = 'ingredientItem.elderberry',
+        GOJI_BERRY = 'ingredientItem.gojiBerry',
 
         // Dried fruits
         RAISINS = 'ingredientItem.raisins',
@@ -337,6 +378,9 @@ export namespace TranslationKeys {
         PRUNES = 'ingredientItem.prunes',
         DRIED_FIGS = 'ingredientItem.driedFigs',
         DATES = 'ingredientItem.dates',
+        DRIED_CRANBERRIES = 'ingredientItem.driedCranberries',
+        DRIED_MANGO = 'ingredientItem.driedMango',
+        DRIED_BANANA = 'ingredientItem.driedBanana',
 
         // Meat
         BEEF = 'ingredientItem.beef',
@@ -347,6 +391,37 @@ export namespace TranslationKeys {
         BACON = 'ingredientItem.bacon',
         HAM = 'ingredientItem.ham',
         GROUND_MEAT = 'ingredientItem.groundMeat',
+        VEAL_LEG = 'ingredientItem.vealLeg',
+        VEAL_SHANK = 'ingredientItem.vealShank',
+        BEEF_STEAK = 'ingredientItem.beefSteak',
+        RUMP_STEAK = 'ingredientItem.rumpSteak',
+        BEEF_RIBS = 'ingredientItem.beefRibs',
+        PORK_LEG = 'ingredientItem.porkLeg',
+        PORK_SHOULDER = 'ingredientItem.porkShoulder',
+        PORK_CHOP = 'ingredientItem.porkChop',
+        LAMB_LEG = 'ingredientItem.lambLeg',
+        LAMB_CHOP = 'ingredientItem.lambChop',
+        BEEF_BRISKET = 'ingredientItem.beefBrisket',
+        BEEF_TENDERLOIN = 'ingredientItem.beefTenderloin',
+        SIRLOIN = 'ingredientItem.sirloin',
+        T_BONE_STEAK = 'ingredientItem.tBoneSteak',
+        PORK_BELLY = 'ingredientItem.porkBelly',
+        PORK_TENDERLOIN = 'ingredientItem.porkTenderloin',
+        PORK_NECK = 'ingredientItem.porkNeck',
+        LIVER = 'ingredientItem.liver',
+        SALAMI = 'ingredientItem.salami',
+        PROSCIUTTO = 'ingredientItem.prosciutto',
+        PANCETTA = 'ingredientItem.pancetta',
+        CEVAPI = 'ingredientItem.cevapi',
+        PLJESKAVICA = 'ingredientItem.pljeskavica',
+        KULEN = 'ingredientItem.kulen',
+        SUDZUK = 'ingredientItem.sudzuk',
+        CVARCI = 'ingredientItem.cvarci',
+        ODOJAK = 'ingredientItem.odojak',
+        KRVAVICA = 'ingredientItem.krvavica',
+        VESALICA = 'ingredientItem.vesalica',
+        BUDZOLA = 'ingredientItem.budzola',
+        PECENICA = 'ingredientItem.pecenica',
 
         // Poultry
         CHICKEN = 'ingredientItem.chicken',
@@ -355,6 +430,11 @@ export namespace TranslationKeys {
         CHICKEN_WING = 'ingredientItem.chickenWing',
         TURKEY = 'ingredientItem.turkey',
         DUCK = 'ingredientItem.duck',
+        CHICKEN_DRUMSTICK = 'ingredientItem.chickenDrumstick',
+        WHOLE_CHICKEN = 'ingredientItem.wholeChicken',
+        GOOSE = 'ingredientItem.goose',
+        QUAIL = 'ingredientItem.quail',
+        CHICKEN_LIVER = 'ingredientItem.chickenLiver',
 
         // Fish
         FISH = 'ingredientItem.fish',
@@ -365,6 +445,12 @@ export namespace TranslationKeys {
         MACKEREL = 'ingredientItem.mackerel',
         COD = 'ingredientItem.cod',
         ANCHOVY = 'ingredientItem.anchovy',
+        SEA_BASS = 'ingredientItem.seaBass',
+        SEA_BREAM = 'ingredientItem.seaBream',
+        HERRING = 'ingredientItem.herring',
+        CATFISH = 'ingredientItem.catfish',
+        CARP = 'ingredientItem.carp',
+        PERCH = 'ingredientItem.perch',
 
         // Seafood
         SHRIMP = 'ingredientItem.shrimp',
@@ -373,6 +459,10 @@ export namespace TranslationKeys {
         SQUID = 'ingredientItem.squid',
         OCTOPUS = 'ingredientItem.octopus',
         OYSTERS = 'ingredientItem.oysters',
+        LOBSTER = 'ingredientItem.lobster',
+        SCALLOPS = 'ingredientItem.scallops',
+        CLAMS = 'ingredientItem.clams',
+        CRAYFISH = 'ingredientItem.crayfish',
 
         // Milk products
         MILK = 'ingredientItem.milk',
@@ -381,6 +471,10 @@ export namespace TranslationKeys {
         BUTTER = 'ingredientItem.butter',
         KEFIR = 'ingredientItem.kefir',
         CONDENSED_MILK = 'ingredientItem.condensedMilk',
+        WHIPPED_CREAM = 'ingredientItem.whippedCream',
+        BUTTERMILK = 'ingredientItem.buttermilk',
+        GHEE = 'ingredientItem.ghee',
+        POWDERED_MILK = 'ingredientItem.powderedMilk',
 
         // Cheese
         CHEESE = 'ingredientItem.cheese',
@@ -391,23 +485,33 @@ export namespace TranslationKeys {
         PARMESAN = 'ingredientItem.parmesan',
         FETA = 'ingredientItem.feta',
         CREAM_CHEESE = 'ingredientItem.creamCheese',
+        GOUDA = 'ingredientItem.gouda',
+        CHEDDAR = 'ingredientItem.cheddar',
+        RICOTTA = 'ingredientItem.ricotta',
+        GRUYERE = 'ingredientItem.gruyere',
+        SMOKED_CHEESE = 'ingredientItem.smokedCheese',
 
         // Yogurt
         YOGURT = 'ingredientItem.yogurt',
         GREEK_YOGURT = 'ingredientItem.greekYogurt',
         PROBIOTIC_YOGURT = 'ingredientItem.probioticYogurt',
+        DRINKING_YOGURT = 'ingredientItem.drinkingYogurt',
+        FLAVORED_YOGURT = 'ingredientItem.flavoredYogurt',
 
         // Eggs
         EGG = 'ingredientItem.egg',
         EGG_WHITE = 'ingredientItem.eggWhite',
         EGG_YOLK = 'ingredientItem.eggYolk',
         QUAIL_EGG = 'ingredientItem.quailEgg',
+        DUCK_EGG = 'ingredientItem.duckEgg',
 
         // Cereals
         OATMEAL = 'ingredientItem.oatmeal',
         CORN_FLAKES = 'ingredientItem.cornFlakes',
         MUESLI = 'ingredientItem.muesli',
         BRAN = 'ingredientItem.bran',
+        GRANOLA = 'ingredientItem.granola',
+        CORN_GRITS = 'ingredientItem.cornGrits',
 
         // Flour
         WHEAT_FLOUR = 'ingredientItem.wheatFlour',
@@ -415,6 +519,10 @@ export namespace TranslationKeys {
         RICE_FLOUR = 'ingredientItem.riceFlour',
         WHOLE_WHEAT_FLOUR = 'ingredientItem.wholeWheatFlour',
         ALMOND_FLOUR = 'ingredientItem.almondFlour',
+        RYE_FLOUR = 'ingredientItem.ryeFlour',
+        SEMOLINA = 'ingredientItem.semolina',
+        SPELT_FLOUR = 'ingredientItem.speltFlour',
+        OAT_FLOUR = 'ingredientItem.oatFlour',
 
         // Bread
         BREAD = 'ingredientItem.bread',
@@ -424,6 +532,11 @@ export namespace TranslationKeys {
         TOAST_BREAD = 'ingredientItem.toastBread',
         PITA_BREAD = 'ingredientItem.pitaBread',
         CROISSANT = 'ingredientItem.croissant',
+        RYE_BREAD = 'ingredientItem.ryeBread',
+        SOURDOUGH_BREAD = 'ingredientItem.sourdoughBread',
+        FLATBREAD = 'ingredientItem.flatbread',
+        CORNBREAD = 'ingredientItem.cornbread',
+        BUN = 'ingredientItem.bun',
 
         // Pasta
         SPAGHETTI = 'ingredientItem.spaghetti',
@@ -432,6 +545,11 @@ export namespace TranslationKeys {
         LASAGNA_SHEETS = 'ingredientItem.lasagnaSheets',
         NOODLES = 'ingredientItem.noodles',
         MACARONI = 'ingredientItem.macaroni',
+        TAGLIATELLE = 'ingredientItem.tagliatelle',
+        RAVIOLI = 'ingredientItem.ravioli',
+        GNOCCHI = 'ingredientItem.gnocchi',
+        ORZO = 'ingredientItem.orzo',
+        TORTELLINI = 'ingredientItem.tortellini',
 
         // Legumes
         BEANS = 'ingredientItem.beans',
@@ -439,6 +557,10 @@ export namespace TranslationKeys {
         LENTILS = 'ingredientItem.lentils',
         PEAS = 'ingredientItem.peas',
         SOYBEANS = 'ingredientItem.soybeans',
+        BLACK_BEANS = 'ingredientItem.blackBeans',
+        MUNG_BEANS = 'ingredientItem.mungBeans',
+        FAVA_BEANS = 'ingredientItem.favaBeans',
+        EDAMAME = 'ingredientItem.edamame',
 
         // Nuts
         WALNUT = 'ingredientItem.walnut',
@@ -448,6 +570,10 @@ export namespace TranslationKeys {
         CASHEW = 'ingredientItem.cashew',
         PISTACHIO = 'ingredientItem.pistachio',
         PECAN = 'ingredientItem.pecan',
+        BRAZIL_NUT = 'ingredientItem.brazilNut',
+        MACADAMIA = 'ingredientItem.macadamia',
+        PINE_NUT = 'ingredientItem.pineNut',
+        CHESTNUT = 'ingredientItem.chestnut',
 
         // Seeds
         SUNFLOWER_SEEDS = 'ingredientItem.sunflowerSeeds',
@@ -456,12 +582,17 @@ export namespace TranslationKeys {
         CHIA_SEEDS = 'ingredientItem.chiaSeeds',
         FLAXSEED = 'ingredientItem.flaxseed',
         POPPY_SEEDS = 'ingredientItem.poppySeeds',
+        HEMP_SEEDS = 'ingredientItem.hempSeeds',
 
         // Oils
         OLIVE_OIL = 'ingredientItem.oliveOil',
         VEGETABLE_OIL = 'ingredientItem.vegetableOil',
         SESAME_OIL = 'ingredientItem.sesameOil',
         COCONUT_OIL = 'ingredientItem.coconutOil',
+        SUNFLOWER_OIL = 'ingredientItem.sunflowerOil',
+        CANOLA_OIL = 'ingredientItem.canolaOil',
+        AVOCADO_OIL = 'ingredientItem.avocadoOil',
+        GRAPESEED_OIL = 'ingredientItem.grapeseedOil',
 
         // Sauces
         SOY_SAUCE = 'ingredientItem.soySauce',
@@ -472,6 +603,12 @@ export namespace TranslationKeys {
         MUSTARD = 'ingredientItem.mustard',
         BBQ_SAUCE = 'ingredientItem.bbqSauce',
         WORCESTERSHIRE_SAUCE = 'ingredientItem.worcestershireSauce',
+        HOT_SAUCE = 'ingredientItem.hotSauce',
+        TZATZIKI = 'ingredientItem.tzatziki',
+        TERIYAKI_SAUCE = 'ingredientItem.teriyakiSauce',
+        SRIRACHA = 'ingredientItem.sriracha',
+        AJVAR = 'ingredientItem.ajvar',
+        GRAVY = 'ingredientItem.gravy',
 
         // Sweeteners
         SUGAR = 'ingredientItem.sugar',
@@ -480,6 +617,9 @@ export namespace TranslationKeys {
         MAPLE_SYRUP = 'ingredientItem.mapleSyrup',
         STEVIA = 'ingredientItem.stevia',
         POWDERED_SUGAR = 'ingredientItem.powderedSugar',
+        AGAVE_SYRUP = 'ingredientItem.agaveSyrup',
+        MOLASSES = 'ingredientItem.molasses',
+        VANILLA_SUGAR = 'ingredientItem.vanillaSugar',
 
         // Beverages
         WATER = 'ingredientItem.water',
@@ -488,6 +628,10 @@ export namespace TranslationKeys {
         JUICE = 'ingredientItem.juice',
         SODA = 'ingredientItem.soda',
         WINE = 'ingredientItem.wine',
+        BEER = 'ingredientItem.beer',
+        LEMONADE = 'ingredientItem.lemonade',
+        HOT_CHOCOLATE = 'ingredientItem.hotChocolate',
+        SPARKLING_WATER = 'ingredientItem.sparklingWater',
 
         // Frozen products
         FROZEN_PEAS = 'ingredientItem.frozenPeas',
@@ -495,6 +639,9 @@ export namespace TranslationKeys {
         FROZEN_VEGETABLES = 'ingredientItem.frozenVegetables',
         FROZEN_PIZZA = 'ingredientItem.frozenPizza',
         ICE_CREAM = 'ingredientItem.iceCream',
+        FROZEN_BERRIES = 'ingredientItem.frozenBerries',
+        FROZEN_SPINACH = 'ingredientItem.frozenSpinach',
+        FROZEN_FISH = 'ingredientItem.frozenFish',
 
         // Canned food
         CANNED_BEANS = 'ingredientItem.cannedBeans',
@@ -502,11 +649,15 @@ export namespace TranslationKeys {
         CANNED_TOMATOES = 'ingredientItem.cannedTomatoes',
         CANNED_TUNA = 'ingredientItem.cannedTuna',
         CANNED_PEAS = 'ingredientItem.cannedPeas',
+        CANNED_MUSHROOMS = 'ingredientItem.cannedMushrooms',
+        CANNED_CHICKPEAS = 'ingredientItem.cannedChickpeas',
+        CANNED_PEACHES = 'ingredientItem.cannedPeaches',
 
         // Ready meals
         INSTANT_NOODLES = 'ingredientItem.instantNoodles',
         INSTANT_SOUP = 'ingredientItem.instantSoup',
         CANNED_SOUP = 'ingredientItem.cannedSoup',
+        DUMPLINGS = 'ingredientItem.dumplings',
 
         // Baking ingredients
         BAKING_POWDER = 'ingredientItem.bakingPowder',
@@ -515,18 +666,25 @@ export namespace TranslationKeys {
         VANILLA_EXTRACT = 'ingredientItem.vanillaExtract',
         COCOA_POWDER = 'ingredientItem.cocoaPowder',
         GELATIN = 'ingredientItem.gelatin',
+        CORNSTARCH = 'ingredientItem.cornstarch',
+        CHOCOLATE_CHIPS = 'ingredientItem.chocolateChips',
+        ALMOND_EXTRACT = 'ingredientItem.almondExtract',
 
         // Additives
         FOOD_COLORING = 'ingredientItem.foodColoring',
         PRESERVATIVES = 'ingredientItem.preservatives',
         CITRIC_ACID = 'ingredientItem.citricAcid',
         XANTHAN_GUM = 'ingredientItem.xanthanGum',
+        MSG = 'ingredientItem.msg',
 
         // Snacks
         CHIPS = 'ingredientItem.chips',
         POPCORN = 'ingredientItem.popcorn',
         PRETZELS = 'ingredientItem.pretzels',
         CRACKERS = 'ingredientItem.crackers',
+        GRANOLA_BAR = 'ingredientItem.granolaBar',
+        TRAIL_MIX = 'ingredientItem.trailMix',
+        RICE_CAKES = 'ingredientItem.riceCakes',
 
         // Condiments
         VINEGAR = 'ingredientItem.vinegar',
@@ -534,12 +692,18 @@ export namespace TranslationKeys {
         PICKLES = 'ingredientItem.pickles',
         OLIVES = 'ingredientItem.olives',
         CAPERS = 'ingredientItem.capers',
+        RELISH = 'ingredientItem.relish',
+        CHUTNEY = 'ingredientItem.chutney',
+        PICKLED_PEPPERS = 'ingredientItem.pickledPeppers',
 
         // Mushrooms
         MUSHROOM = 'ingredientItem.mushroom',
         PORCINI = 'ingredientItem.porcini',
         OYSTER_MUSHROOM = 'ingredientItem.oysterMushroom',
         SHIITAKE = 'ingredientItem.shiitake',
+        CHANTERELLE = 'ingredientItem.chanterelle',
+        PORTOBELLO = 'ingredientItem.portobello',
+        TRUFFLE = 'ingredientItem.truffle',
 
         // Grains
         RICE = 'ingredientItem.rice',
@@ -548,5 +712,9 @@ export namespace TranslationKeys {
         BARLEY = 'ingredientItem.barley',
         QUINOA = 'ingredientItem.quinoa',
         BUCKWHEAT = 'ingredientItem.buckwheat',
+        MILLET = 'ingredientItem.millet',
+        BULGUR = 'ingredientItem.bulgur',
+        COUSCOUS = 'ingredientItem.couscous',
+        POLENTA = 'ingredientItem.polenta',
     }
 }

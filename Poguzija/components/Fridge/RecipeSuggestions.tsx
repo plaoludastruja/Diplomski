@@ -11,11 +11,11 @@ import { GetRandomFoodRecipe, GetSuggestedFoodRecipe } from '../../service/Recip
 export const RecipeSuggestions = () => {
     const { t } = useTranslation()
     const router = useRouter()
-    const [loading, setLoading] = useState(false)
+    const [activeAction, setActiveAction] = useState<'suggest' | 'random' | null>(null)
 
     const handleSuggestRecipe = async () => {
-        if (loading) return
-        setLoading(true)
+        if (activeAction) return
+        setActiveAction('suggest')
         try {
             const fridge = await GetMyFridge()
             const ingredientNames = fridge?.ingredients.map(ingredient => ingredient.name) ?? []
@@ -32,13 +32,13 @@ export const RecipeSuggestions = () => {
         } catch {
             Toast.show({ type: ALERT_TYPE.DANGER, title: t(TranslationKeys.Error.LOADING_FAILED) })
         } finally {
-            setLoading(false)
+            setActiveAction(null)
         }
     }
 
     const handleRandomRecipe = async () => {
-        if (loading) return
-        setLoading(true)
+        if (activeAction) return
+        setActiveAction('random')
         try {
             const recipe = await GetRandomFoodRecipe()
             if (!recipe) {
@@ -49,14 +49,14 @@ export const RecipeSuggestions = () => {
         } catch {
             Toast.show({ type: ALERT_TYPE.DANGER, title: t(TranslationKeys.Error.LOADING_FAILED) })
         } finally {
-            setLoading(false)
+            setActiveAction(null)
         }
     }
 
     return (
         <View style={styles.container}>
-            <PillButton onPress={handleSuggestRecipe}>{t(TranslationKeys.Fridge.SUGGEST_RECIPE)}</PillButton>
-            <PillButton onPress={handleRandomRecipe}>{t(TranslationKeys.Fridge.RANDOM_RECIPE)}</PillButton>
+            <PillButton onPress={handleSuggestRecipe} loading={activeAction === 'suggest'} disabled={activeAction !== null}>{t(TranslationKeys.Fridge.SUGGEST_RECIPE)}</PillButton>
+            <PillButton onPress={handleRandomRecipe} loading={activeAction === 'random'} disabled={activeAction !== null}>{t(TranslationKeys.Fridge.RANDOM_RECIPE)}</PillButton>
         </View>
     )
 }

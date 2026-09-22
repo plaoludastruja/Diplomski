@@ -1,14 +1,16 @@
 import { ReactNode } from 'react'
-import { Animated, GestureResponderEvent, Pressable, StyleProp, StyleSheet, Text, ViewStyle, useAnimatedValue } from 'react-native'
+import { ActivityIndicator, Animated, GestureResponderEvent, Pressable, StyleProp, StyleSheet, Text, ViewStyle, useAnimatedValue } from 'react-native'
 import { COLORS, SIZES } from '../../constants/Colors'
 
 interface PillButtonProps {
     children: ReactNode
     onPress?: (event: GestureResponderEvent) => void
     style?: StyleProp<ViewStyle>
+    loading?: boolean
+    disabled?: boolean
 }
 
-export const PillButton = ({ children, onPress, style }: PillButtonProps) => {
+export const PillButton = ({ children, onPress, style, loading, disabled }: PillButtonProps) => {
     const scaleAnim = useAnimatedValue(1)
 
     const handlePressIn = () => {
@@ -27,8 +29,10 @@ export const PillButton = ({ children, onPress, style }: PillButtonProps) => {
 
     return (
         <Animated.View style={[styles.button, style, { transform: [{ scale: scaleAnim }] }]}>
-            <Pressable onPress={onPress} onPressIn={handlePressIn} onPressOut={handlePressOut}>
-                <Text style={styles.buttonText}>{children}</Text>
+            <Pressable onPress={onPress} onPressIn={handlePressIn} onPressOut={handlePressOut} disabled={loading || disabled}>
+                {loading ?
+                    <ActivityIndicator color={COLORS.white} /> :
+                    <Text style={styles.buttonText}>{children}</Text>}
             </Pressable>
         </Animated.View>
     )

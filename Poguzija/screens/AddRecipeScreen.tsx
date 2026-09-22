@@ -38,6 +38,7 @@ export default function AddRecipeTab() {
     const [snapPoints, setSnapPoints] = useState(['66', '95'])
     const [loading, setLoading] = useState(true)
     const [isEdit, setIsEdit] = useState(addEditRecipeId !== undefined)
+    const [submitting, setSubmitting] = useState(false)
 
     const [categoryModalVisible, setCategoryModalVisible] = useState(false)
     const [categoryNumber, setCategoryNumber] = useState<number>(0)
@@ -95,11 +96,11 @@ export default function AddRecipeTab() {
         setCookingTime(recipe.cookingTime)
         setCookingTimeAll(`${recipe.cookingTime.hours}${recipe.cookingTime.minutes}`)
         setRefreshTime(true)
-        setStepList(recipe.steps)
-        setSelectedIngredients(recipe.ingredients)
-        setCategoryFields(recipe.categories)
-        setCategoryNumber(recipe.categories.length)
-        setSelectedImageArray([...recipe.images, PlaceholderImage])
+        setStepList(recipe.steps ?? [])
+        setSelectedIngredients(recipe.ingredients ?? [])
+        setCategoryFields(recipe.categories ?? [])
+        setCategoryNumber(recipe.categories?.length ?? 0)
+        setSelectedImageArray([...(recipe.images ?? []), PlaceholderImage])
         setSnapPoints(['35', '65', '95'])
         setStepsPlaceholder('ADD_NEXT_STEP')
     }
@@ -120,6 +121,7 @@ export default function AddRecipeTab() {
     }
 
     const handleCreateOrEditRecipe = async () => {
+        if (submitting) return
         if (!title || !servingSize || !(/\d/.test(cookingTimeAll) && Number(cookingTimeAll) !== 0) || stepList.length === 0 || selectedIngredients.length === 0 || (selectedImageToUpload.length === 0 && selectedImageArray.length === 1)) {
             Toast.show({
                 type: ALERT_TYPE.WARNING,
@@ -128,6 +130,7 @@ export default function AddRecipeTab() {
             return
         }
         const updatedStepList = step !== '' ? [...stepList, { number: stepList.length + 1, description: step }] : stepList
+        setSubmitting(true)
         try {
             await EnsureAnonymousSession()
             const newRecipe: FoodRecipes = {
@@ -176,6 +179,8 @@ export default function AddRecipeTab() {
                 type: ALERT_TYPE.DANGER,
                 title: t(TranslationKeys.Recipe.RECIPE_NOT_CREATED)
             })
+        } finally {
+            setSubmitting(false)
         }
     }
 
@@ -399,7 +404,7 @@ export default function AddRecipeTab() {
                                 blurOnSubmit={false}
                             />
                         </View>
-                        <PillButton onPress={handleCreateOrEditRecipe}>{isEdit ? t(TranslationKeys.Recipe.EDIT_RECIPE) : t(TranslationKeys.Recipe.CREATE_RECIPE)}</PillButton>
+                        <PillButton onPress={handleCreateOrEditRecipe} loading={submitting}>{isEdit ? t(TranslationKeys.Recipe.EDIT_RECIPE) : t(TranslationKeys.Recipe.CREATE_RECIPE)}</PillButton>
                     </BottomSheetScrollView>
                 </BottomSheet>
 

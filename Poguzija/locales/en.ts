@@ -237,6 +237,14 @@ export const en = {
         allspice: 'Allspice',
         garlicPowder: 'Garlic powder',
         onionPowder: 'Onion powder',
+        marjoram: 'Marjoram',
+        fenugreek: 'Fenugreek',
+        starAnise: 'Star anise',
+        mustardSeed: 'Mustard seed',
+        fennelSeed: 'Fennel seed',
+        cayennePepper: 'Cayenne pepper',
+        whitePepper: 'White pepper',
+        smokedPaprika: 'Smoked paprika',
 
         // Herbs
         basil: 'Basil',
@@ -249,6 +257,10 @@ export const en = {
         chives: 'Chives',
         tarragon: 'Tarragon',
         sage: 'Sage',
+        lovage: 'Lovage',
+        lemongrass: 'Lemongrass',
+        lemonBalm: 'Lemon balm',
+        watercress: 'Watercress',
 
         // Vegetables
         carrot: 'Carrot',
@@ -266,6 +278,15 @@ export const en = {
         celery: 'Celery',
         pumpkin: 'Pumpkin',
         corn: 'Corn',
+        leek: 'Leek',
+        asparagus: 'Asparagus',
+        artichoke: 'Artichoke',
+        okra: 'Okra',
+        fennel: 'Fennel',
+        kohlrabi: 'Kohlrabi',
+        greenBeans: 'Green beans',
+        springOnion: 'Spring onion',
+        chiliPepper: 'Chili pepper',
 
         // Root vegetables
         beetroot: 'Beetroot',
@@ -275,6 +296,9 @@ export const en = {
         parsnip: 'Parsnip',
         horseradish: 'Horseradish',
         celeryRoot: 'Celery root',
+        rutabaga: 'Rutabaga',
+        taro: 'Taro',
+        cassava: 'Cassava',
 
         // Leafy greens
         lettuce: 'Lettuce',
@@ -282,6 +306,10 @@ export const en = {
         kale: 'Kale',
         arugula: 'Arugula',
         chard: 'Chard',
+        collardGreens: 'Collard greens',
+        endive: 'Endive',
+        sorrel: 'Sorrel',
+        bokChoy: 'Bok choy',
 
         // Fruits
         apple: 'Apple',
@@ -297,6 +325,13 @@ export const en = {
         pineapple: 'Pineapple',
         apricot: 'Apricot',
         fig: 'Fig',
+        cherry: 'Cherry',
+        nectarine: 'Nectarine',
+        persimmon: 'Persimmon',
+        pomegranate: 'Pomegranate',
+        guava: 'Guava',
+        papaya: 'Papaya',
+        dragonFruit: 'Dragon fruit',
 
         // Citrus fruits
         lemon: 'Lemon',
@@ -304,6 +339,8 @@ export const en = {
         orange: 'Orange',
         grapefruit: 'Grapefruit',
         tangerine: 'Tangerine',
+        clementine: 'Clementine',
+        pomelo: 'Pomelo',
 
         // Berries
         strawberry: 'Strawberry',
@@ -312,6 +349,10 @@ export const en = {
         blackberry: 'Blackberry',
         cranberry: 'Cranberry',
         currant: 'Currant',
+        gooseberry: 'Gooseberry',
+        mulberry: 'Mulberry',
+        elderberry: 'Elderberry',
+        gojiBerry: 'Goji berry',
 
         // Dried fruits
         raisins: 'Raisins',
@@ -319,6 +360,9 @@ export const en = {
         prunes: 'Prunes',
         driedFigs: 'Dried figs',
         dates: 'Dates',
+        driedCranberries: 'Dried cranberries',
+        driedMango: 'Dried mango',
+        driedBanana: 'Dried banana',
 
         // Meat
         beef: 'Beef',
@@ -329,6 +373,37 @@ export const en = {
         bacon: 'Bacon',
         ham: 'Ham',
         groundMeat: 'Ground meat',
+        vealLeg: 'Veal leg',
+        vealShank: 'Veal shank',
+        beefSteak: 'Beef steak',
+        rumpSteak: 'Rump steak',
+        beefRibs: 'Beef ribs',
+        porkLeg: 'Pork leg',
+        porkShoulder: 'Pork shoulder',
+        porkChop: 'Pork chop',
+        lambLeg: 'Lamb leg',
+        lambChop: 'Lamb chop',
+        beefBrisket: 'Beef brisket',
+        beefTenderloin: 'Beef tenderloin',
+        sirloin: 'Sirloin',
+        tBoneSteak: 'T-bone steak',
+        porkBelly: 'Pork belly',
+        porkTenderloin: 'Pork tenderloin',
+        porkNeck: 'Pork neck',
+        liver: 'Liver',
+        salami: 'Salami',
+        prosciutto: 'Prosciutto',
+        pancetta: 'Pancetta',
+        cevapi: 'Ćevapi',
+        pljeskavica: 'Pljeskavica',
+        kulen: 'Kulen',
+        sudzuk: 'Sudžuk',
+        cvarci: 'Pork cracklings',
+        odojak: 'Suckling pig',
+        krvavica: 'Blood sausage',
+        vesalica: 'Grilled pork cut',
+        budzola: 'Cured pork cheek',
+        pecenica: 'Cured pork tenderloin',
 
         // Poultry
         chicken: 'Chicken',
@@ -337,6 +412,11 @@ export const en = {
         chickenWing: 'Chicken wing',
         turkey: 'Turkey',
         duck: 'Duck',
+        chickenDrumstick: 'Chicken drumstick',
+        wholeChicken: 'Whole chicken',
+        goose: 'Goose',
+        quail: 'Quail',
+        chickenLiver: 'Chicken liver',
 
         // Fish
         fish: 'Fish',
@@ -347,6 +427,12 @@ export const en = {
         mackerel: 'Mackerel',
         cod: 'Cod',
         anchovy: 'Anchovy',
+        seaBass: 'Sea bass',
+        seaBream: 'Sea bream',
+        herring: 'Herring',
+        catfish: 'Catfish',
+        carp: 'Carp',
+        perch: 'Perch',
 
         // Seafood
         shrimp: 'Shrimp',
@@ -355,6 +441,10 @@ export const en = {
         squid: 'Squid',
         octopus: 'Octopus',
         oysters: 'Oysters',
+        lobster: 'Lobster',
+        scallops: 'Scallops',
+        clams: 'Clams',
+        crayfish: 'Crayfish',
 
         // Milk products
         milk: 'Milk',
@@ -363,6 +453,10 @@ export const en = {
         butter: 'Butter',
         kefir: 'Kefir',
         condensedMilk: 'Condensed milk',
+        whippedCream: 'Whipped cream',
+        buttermilk: 'Buttermilk',
+        ghee: 'Ghee',
+        powderedMilk: 'Powdered milk',
 
         // Cheese
         cheese: 'Cheese',
@@ -373,23 +467,33 @@ export const en = {
         parmesan: 'Parmesan',
         feta: 'Feta',
         creamCheese: 'Cream cheese',
+        gouda: 'Gouda',
+        cheddar: 'Cheddar',
+        ricotta: 'Ricotta',
+        gruyere: 'Gruyère',
+        smokedCheese: 'Smoked cheese',
 
         // Yogurt
         yogurt: 'Yogurt',
         greekYogurt: 'Greek yogurt',
         probioticYogurt: 'Probiotic yogurt',
+        drinkingYogurt: 'Drinking yogurt',
+        flavoredYogurt: 'Flavored yogurt',
 
         // Eggs
         egg: 'Egg',
         eggWhite: 'Egg white',
         eggYolk: 'Egg yolk',
         quailEgg: 'Quail egg',
+        duckEgg: 'Duck egg',
 
         // Cereals
         oatmeal: 'Oatmeal',
         cornFlakes: 'Corn flakes',
         muesli: 'Muesli',
         bran: 'Bran',
+        granola: 'Granola',
+        cornGrits: 'Corn grits',
 
         // Flour
         wheatFlour: 'Wheat flour',
@@ -397,6 +501,10 @@ export const en = {
         riceFlour: 'Rice flour',
         wholeWheatFlour: 'Whole wheat flour',
         almondFlour: 'Almond flour',
+        ryeFlour: 'Rye flour',
+        semolina: 'Semolina',
+        speltFlour: 'Spelt flour',
+        oatFlour: 'Oat flour',
 
         // Bread
         bread: 'Bread',
@@ -406,6 +514,11 @@ export const en = {
         toastBread: 'Toast bread',
         pitaBread: 'Pita bread',
         croissant: 'Croissant',
+        ryeBread: 'Rye bread',
+        sourdoughBread: 'Sourdough bread',
+        flatbread: 'Flatbread',
+        cornbread: 'Cornbread',
+        bun: 'Bun',
 
         // Pasta
         spaghetti: 'Spaghetti',
@@ -414,6 +527,11 @@ export const en = {
         lasagnaSheets: 'Lasagna sheets',
         noodles: 'Noodles',
         macaroni: 'Macaroni',
+        tagliatelle: 'Tagliatelle',
+        ravioli: 'Ravioli',
+        gnocchi: 'Gnocchi',
+        orzo: 'Orzo',
+        tortellini: 'Tortellini',
 
         // Legumes
         beans: 'Beans',
@@ -421,6 +539,10 @@ export const en = {
         lentils: 'Lentils',
         peas: 'Peas',
         soybeans: 'Soybeans',
+        blackBeans: 'Black beans',
+        mungBeans: 'Mung beans',
+        favaBeans: 'Fava beans',
+        edamame: 'Edamame',
 
         // Nuts
         walnut: 'Walnut',
@@ -430,6 +552,10 @@ export const en = {
         cashew: 'Cashew',
         pistachio: 'Pistachio',
         pecan: 'Pecan',
+        brazilNut: 'Brazil nut',
+        macadamia: 'Macadamia',
+        pineNut: 'Pine nut',
+        chestnut: 'Chestnut',
 
         // Seeds
         sunflowerSeeds: 'Sunflower seeds',
@@ -438,12 +564,17 @@ export const en = {
         chiaSeeds: 'Chia seeds',
         flaxseed: 'Flaxseed',
         poppySeeds: 'Poppy seeds',
+        hempSeeds: 'Hemp seeds',
 
         // Oils
         oliveOil: 'Olive oil',
         vegetableOil: 'Vegetable oil',
         sesameOil: 'Sesame oil',
         coconutOil: 'Coconut oil',
+        sunflowerOil: 'Sunflower oil',
+        canolaOil: 'Canola oil',
+        avocadoOil: 'Avocado oil',
+        grapeseedOil: 'Grapeseed oil',
 
         // Sauces
         soySauce: 'Soy sauce',
@@ -454,6 +585,12 @@ export const en = {
         mustard: 'Mustard',
         bbqSauce: 'BBQ sauce',
         worcestershireSauce: 'Worcestershire sauce',
+        hotSauce: 'Hot sauce',
+        tzatziki: 'Tzatziki',
+        teriyakiSauce: 'Teriyaki sauce',
+        sriracha: 'Sriracha',
+        ajvar: 'Ajvar',
+        gravy: 'Gravy',
 
         // Sweeteners
         sugar: 'Sugar',
@@ -462,6 +599,9 @@ export const en = {
         mapleSyrup: 'Maple syrup',
         stevia: 'Stevia',
         powderedSugar: 'Powdered sugar',
+        agaveSyrup: 'Agave syrup',
+        molasses: 'Molasses',
+        vanillaSugar: 'Vanilla sugar',
 
         // Beverages
         water: 'Water',
@@ -470,6 +610,10 @@ export const en = {
         juice: 'Juice',
         soda: 'Soda',
         wine: 'Wine',
+        beer: 'Beer',
+        lemonade: 'Lemonade',
+        hotChocolate: 'Hot chocolate',
+        sparklingWater: 'Sparkling water',
 
         // Frozen products
         frozenPeas: 'Frozen peas',
@@ -477,6 +621,9 @@ export const en = {
         frozenVegetables: 'Frozen vegetables',
         frozenPizza: 'Frozen pizza',
         iceCream: 'Ice cream',
+        frozenBerries: 'Frozen berries',
+        frozenSpinach: 'Frozen spinach',
+        frozenFish: 'Frozen fish',
 
         // Canned food
         cannedBeans: 'Canned beans',
@@ -484,11 +631,15 @@ export const en = {
         cannedTomatoes: 'Canned tomatoes',
         cannedTuna: 'Canned tuna',
         cannedPeas: 'Canned peas',
+        cannedMushrooms: 'Canned mushrooms',
+        cannedChickpeas: 'Canned chickpeas',
+        cannedPeaches: 'Canned peaches',
 
         // Ready meals
         instantNoodles: 'Instant noodles',
         instantSoup: 'Instant soup',
         cannedSoup: 'Canned soup',
+        dumplings: 'Dumplings',
 
         // Baking ingredients
         bakingPowder: 'Baking powder',
@@ -497,18 +648,25 @@ export const en = {
         vanillaExtract: 'Vanilla extract',
         cocoaPowder: 'Cocoa powder',
         gelatin: 'Gelatin',
+        cornstarch: 'Cornstarch',
+        chocolateChips: 'Chocolate chips',
+        almondExtract: 'Almond extract',
 
         // Additives
         foodColoring: 'Food coloring',
         preservatives: 'Preservatives',
         citricAcid: 'Citric acid',
         xanthanGum: 'Xanthan gum',
+        msg: 'MSG',
 
         // Snacks
         chips: 'Chips',
         popcorn: 'Popcorn',
         pretzels: 'Pretzels',
         crackers: 'Crackers',
+        granolaBar: 'Granola bar',
+        trailMix: 'Trail mix',
+        riceCakes: 'Rice cakes',
 
         // Condiments
         vinegar: 'Vinegar',
@@ -516,12 +674,18 @@ export const en = {
         pickles: 'Pickles',
         olives: 'Olives',
         capers: 'Capers',
+        relish: 'Relish',
+        chutney: 'Chutney',
+        pickledPeppers: 'Pickled peppers',
 
         // Mushrooms
         mushroom: 'Mushroom',
         porcini: 'Porcini',
         oysterMushroom: 'Oyster mushroom',
         shiitake: 'Shiitake',
+        chanterelle: 'Chanterelle',
+        portobello: 'Portobello',
+        truffle: 'Truffle',
 
         // Grains
         rice: 'Rice',
@@ -530,5 +694,9 @@ export const en = {
         barley: 'Barley',
         quinoa: 'Quinoa',
         buckwheat: 'Buckwheat',
+        millet: 'Millet',
+        bulgur: 'Bulgur',
+        couscous: 'Couscous',
+        polenta: 'Polenta',
     },
 }

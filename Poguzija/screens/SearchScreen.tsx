@@ -48,6 +48,7 @@ export default function SearchScreen() {
     }
 
     const handleSearch = async () => {
+        if (loading) return
         setLoading(true)
         setEmptyResult(false)
         const searchData = search.toUpperCase().split(/[\s-\.,!?]/).filter(t => t.length >= 4)

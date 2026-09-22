@@ -235,7 +235,7 @@ export default function FoodRecipesItemScreen() {
                 </View>
 
                 <BottomSheet
-                    snapPoints={['35', '65', '95']}
+                    snapPoints={['35', '95']}
                     backgroundStyle={{ backgroundColor: COLORS.dark }}
                     handleIndicatorStyle={{ backgroundColor: COLORS.white }}
                 >
@@ -298,12 +298,9 @@ export default function FoodRecipesItemScreen() {
                         <SubtitleText>{t(TranslationKeys.Recipe.INSTRUCTIONS)}</SubtitleText>
                         {food?.steps?.map((step, index) => (
                             <View style={styles.ingredientItem} key={step.number} >
-                                <BottomSheetTextInput
-                                    style={styles.input}
-                                    multiline={true}
-                                    value={`${step.number}. ${step.description}`}
-                                    editable={false}
-                                />
+                                <View style={styles.input}>
+                                    <Text style={styles.inputText}>{step.number}. {step.description}</Text>
+                                </View>
                             </View>
                         ))}
                         <PillButton onPress={handleOpenComments}>{t(TranslationKeys.Review.SHOW_REVIEWS)}</PillButton>
@@ -355,9 +352,12 @@ const styles = StyleSheet.create({
     input: {
         width: '95%',
         minHeight: 60,
+        justifyContent: 'center',
         backgroundColor: COLORS.white,
         borderRadius: SIZES.extraLarge,
         paddingVertical: SIZES.base,
+    },
+    inputText: {
         color: COLORS.tint,
         fontSize: SIZES.large,
     },

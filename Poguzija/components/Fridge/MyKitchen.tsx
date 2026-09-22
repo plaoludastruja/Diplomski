@@ -1,4 +1,3 @@
-//ok
 import { useCallback, useState } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { SceneMap, TabBar, TabView } from 'react-native-tab-view'
