@@ -1,19 +1,36 @@
-import { Text, StyleSheet, View } from 'react-native'
+import { Pressable, Text, StyleSheet, View } from 'react-native'
 import { Image } from 'expo-image'
-import { memo } from 'react'
-import { Comment } from '../../model/model'
+import { memo, useEffect, useState } from 'react'
+import { useRouter } from 'expo-router'
+import { Comment, MyUser } from '../../model/model'
 import { COLORS, SIZES } from '../../constants/Colors'
+import { GetUser } from '../../service/UserService'
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 
 export const CardComment = memo(({ commentData }: { commentData: Comment }) => {
+    const [author, setAuthor] = useState<MyUser>()
+    const router = useRouter()
+
+    useEffect(() => {
+        if (!commentData.authorId) return
+        GetUser(commentData.authorId).then(setAuthor).catch(() => { })
+    }, [commentData.authorId])
+
+    const handleOpenAuthor = () => {
+        if (!author) return
+        router.push(`/authorRecipes/${author.id}`)
+    }
+
     return (
         <View style={styles.containerComment}>
             <View style={styles.containerAuthor}>
-                {commentData.authorProfilePhoto ?
-                    <Image source={{ uri: commentData.authorProfilePhoto }} style={styles.image} contentFit="cover" transition={300} /> :
-                    <FontAwesome6 name="bowl-food" color={COLORS.light} style={styles.image} size={1.2 * SIZES.tabIcon} />}
+                <Pressable onPress={handleOpenAuthor}>
+                    {author?.profilePhoto ?
+                        <Image source={{ uri: author.profilePhoto }} style={styles.image} contentFit="cover" transition={300} /> :
+                        <FontAwesome6 name="bowl-food" color={COLORS.light} style={styles.image} size={1.2 * SIZES.tabIcon} />}
+                </Pressable>
                 <View>
-                    <Text style={styles.textInputName}>{commentData.authorName}</Text>
+                    <Text style={styles.textInputName}>{author?.name}</Text>
                     <Text style={styles.textInputDate}>{` ${commentData.createdAt.toDate().getDate()}.${commentData.createdAt.toDate().getMonth()}.${commentData.createdAt.toDate().getFullYear()}.`}</Text>
                 </View>
             </View>
@@ -71,7 +88,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         width: 1.2 * SIZES.tabIcon,
         height: 1.2 * SIZES.tabIcon,
-        borderRadius: SIZES.large,
+        borderRadius: SIZES.small,
         marginEnd: SIZES.base,
     },
 })

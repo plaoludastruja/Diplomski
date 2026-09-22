@@ -18,16 +18,18 @@ import { SelectWeekModal } from '../components/Recipes/SelectWeekModal'
 import { SubtitleText } from '../components/Common/SubtitleText'
 import { COLORS, SIZES } from '../constants/Colors'
 import { TranslationKeys } from '../locales/_translationKeys'
-import { FoodRecipes, Day } from '../model/model'
+import { FoodRecipes, Day, MyUser } from '../model/model'
 import { IsRecipeBookmarked, RemoveFromMyBookmark, AddToMyBookmark } from '../service/BookmarkService'
 import { GetFoodRecipe, UpdateSavedCount, DeleteFoodRecipe } from '../service/RecipesService'
 import { AddToMyScheduler } from '../service/SchedulerService'
+import { GetUser } from '../service/UserService'
 
 export default function FoodRecipesItemScreen() {
     const { foodRecipesItemId } = useLocalSearchParams<{ foodRecipesItemId: string }>()
     const { user } = useContext(UserContext)
     const { setRefreshScheduler } = useContext(SchedulerContext)
     const [food, setFood] = useState<FoodRecipes>()
+    const [author, setAuthor] = useState<MyUser>()
     const [loading, setLoading] = useState(true)
     const [bookmarkIconType, setBookmarkIconType] = useState<'bookmark' | 'bookmark-o'>('bookmark-o')
     const [isRecipeBookmarked, setIsRecipeBookmarked] = useState(false)
@@ -56,6 +58,9 @@ export default function FoodRecipesItemScreen() {
             }
             const isRecipeBookmarkedData = await IsRecipeBookmarked(foodRecipesItemId)
             setFood(foodRecipesData)
+            if (foodRecipesData.author) {
+                GetUser(foodRecipesData.author).then(setAuthor).catch(() => { })
+            }
             if (isRecipeBookmarkedData) {
                 setBookmarkIconType('bookmark')
                 setIsRecipeBookmarked(true)
@@ -136,6 +141,11 @@ export default function FoodRecipesItemScreen() {
         router.push(`/comments/${foodRecipesItemId}`)
     }
 
+    const handleOpenAuthor = () => {
+        if (!author) return
+        router.push(`/authorRecipes/${author.id}`)
+    }
+
     const renderItem = ({ item }: { item: string }) => {
         return (
             <View style={[styles.images, { width: screenWidth, height: 2 / 3 * screenHeight }]} >
@@ -183,6 +193,7 @@ export default function FoodRecipesItemScreen() {
                 type: ALERT_TYPE.SUCCESS,
                 title: t(TranslationKeys.Recipe.RECIPE_DELETED)
             })
+            router.back()
         } catch {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
@@ -205,16 +216,22 @@ export default function FoodRecipesItemScreen() {
                         layout="default"
                     />
 
-                    {user &&
-                        <View style={styles.bookmarkContainer}>
-                            <Text style={styles.savedCount}>{savedCount}</Text>
-                            <FontAwesome name={bookmarkIconType} color={COLORS.white} size={1.2 * SIZES.tabIcon} onPress={handleAddToBookmarks} />
-                            <Ionicons name='calendar-outline' color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base }} onPress={handleAddToScheduler} />
-                            {user.id === food?.author &&
-                                <Pressable onPress={() => optionsSheetRef.current?.present()}>
-                                    <Ionicons name="options" color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base / 2, }} />
-                                </Pressable>}
-                        </View>}
+                    <View style={styles.bookmarkContainer}>
+                        {author &&
+                            <Pressable onPress={handleOpenAuthor}>
+                                <Image source={{ uri: author.profilePhoto }} style={styles.authorAvatar} contentFit="cover" transition={300} />
+                            </Pressable>}
+                        {user &&
+                            <>
+                                <Text style={styles.savedCount}>{savedCount}</Text>
+                                <FontAwesome name={bookmarkIconType} color={COLORS.white} size={1.2 * SIZES.tabIcon} onPress={handleAddToBookmarks} />
+                                <Ionicons name='calendar-outline' color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base }} onPress={handleAddToScheduler} />
+                                {user.id === food?.author &&
+                                    <Pressable onPress={() => optionsSheetRef.current?.present()}>
+                                        <Ionicons name="options" color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base / 2, }} />
+                                    </Pressable>}
+                            </>}
+                    </View>
                 </View>
 
                 <BottomSheet
@@ -383,12 +400,19 @@ const styles = StyleSheet.create({
     },
     bookmarkContainer: {
         flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'space-between',
         width: 'auto',
         position: 'absolute',
         top: SIZES.extraLarge,
         right: SIZES.extraLarge,
         paddingTop: SIZES.base,
+    },
+    authorAvatar: {
+        width: 1.2 * SIZES.tabIcon,
+        height: 1.2 * SIZES.tabIcon,
+        borderRadius: SIZES.small,
+        marginEnd: SIZES.base,
     },
     savedCount: {
         color: COLORS.white,

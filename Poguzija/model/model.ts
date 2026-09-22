@@ -2,7 +2,6 @@ import { Timestamp } from "firebase/firestore/lite"
 
 export interface MyUser {
     id: string
-    email: string
     name: string
     surname: string
     fullName: string
@@ -79,8 +78,7 @@ export interface Bookmark {
 
 export interface Comment {
     id: string
-    authorName: string
-    authorProfilePhoto: string
+    authorId: string
     text: string
     createdAt: Timestamp
 }

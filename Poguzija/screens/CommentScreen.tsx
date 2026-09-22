@@ -64,8 +64,7 @@ export default function CommentsScreen() {
         setAddCommentModalVisible(false)
         if (text !== '') {
             const comment: Partial<Comment> = {
-                authorName: user?.fullName || '',
-                authorProfilePhoto: user?.profilePhoto || '',
+                authorId: user?.id || '',
                 text: text
             }
             AddComment(commentRecipeId, comment)

@@ -1,5 +1,5 @@
 import { Animated, Pressable, StyleProp, TextStyle, useAnimatedValue } from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons'
+import { Ionicons } from '@expo/vector-icons'
 
 interface DeleteIconButtonProps {
     onPress: () => void
@@ -20,7 +20,7 @@ export const DeleteIconButton = ({ onPress, style }: DeleteIconButtonProps) => {
     return (
         <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
             <Pressable onPress={onPress} onPressIn={handlePressIn} onPressOut={handlePressOut}>
-                <MaterialIcons name="delete" style={style} />
+                <Ionicons name='trash-outline' style={style} />
             </Pressable>
         </Animated.View>
     )

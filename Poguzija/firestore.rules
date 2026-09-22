@@ -11,21 +11,27 @@ service cloud.firestore {
       return request.resource.data.diff(resource.data).affectedKeys();
     }
 
-    // One document per user, keyed by uid. Only that user ever reads/writes it.
+    // One document per user, keyed by uid. Readable by anyone so recipe
+    // authors' name/photo can be shown to other users; only the owner may write.
+    // Deletion happens server-side
     match /users/{userId} {
-      allow read, write: if isSignedIn() && request.auth.uid == userId;
+      allow read: if true;
+      allow create, update: if isSignedIn() && request.auth.uid == userId;
     }
 
     match /fridges/{userId} {
-      allow read, write: if isSignedIn() && request.auth.uid == userId;
+      allow read: if isSignedIn() && request.auth.uid == userId;
+      allow create, update: if isSignedIn() && request.auth.uid == userId;
     }
 
     match /bookmarks/{userId} {
-      allow read, write: if isSignedIn() && request.auth.uid == userId;
+      allow read: if isSignedIn() && request.auth.uid == userId;
+      allow create, update: if isSignedIn() && request.auth.uid == userId;
     }
 
     match /recipeSchedulers/{userId} {
-      allow read, write: if isSignedIn() && request.auth.uid == userId;
+      allow read: if isSignedIn() && request.auth.uid == userId;
+      allow create, update: if isSignedIn() && request.auth.uid == userId;
     }
 
     match /foodRecipes/{recipeId} {
@@ -45,11 +51,12 @@ service cloud.firestore {
 
       match /comments/{commentId} {
         allow read: if true;
-        allow create: if isSignedIn();
-        allow update: if false;
-        // Comments can't be edited or removed individually, but the recipe's
-        // author may delete them as part of deleting the recipe itself.
-        allow delete: if isSignedIn() && get(/databases/$(database)/documents/foodRecipes/$(recipeId)).data.author == request.auth.uid;
+        allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
+        // Comments can't be edited or removed by clients at all - cleanup
+        // (own comment removal, cascade on recipe/account deletion) happens
+        // server-side via Cloud Functions using the admin SDK, which bypasses
+        // rules entirely.
+        allow update, delete: if false;
       }
     }
   }

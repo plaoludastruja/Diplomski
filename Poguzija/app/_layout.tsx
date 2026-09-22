@@ -104,6 +104,7 @@ function RootLayoutNav() {
                 <Stack >
                     <Stack.Screen name="(tabs)" options={{ headerShown: false, }} />
                     <Stack.Screen name="(foodRecipesItem)/foodRecipesItem/[foodRecipesItemId]" options={{ headerShown: false, }}/>
+                    <Stack.Screen name="(authorRecipes)/authorRecipes/[authorId]" options={{ headerShown: false, }}/>
                     <Stack.Screen name="(addRecipe)/addRecipe" options={{ headerShown: false, }}/>
                     <Stack.Screen name="(bookmark)/bookmark" options={{ headerShown: false, }}/>
                     <Stack.Screen name="(comments)/comments/[commentRecipeId]" options={{ headerShown: false, }}/>

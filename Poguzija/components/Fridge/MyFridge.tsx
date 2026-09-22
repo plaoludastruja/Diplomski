@@ -126,6 +126,6 @@ const styles = StyleSheet.create({
     icon: {
         marginRight: 10,
         color: COLORS.white,
-        fontSize: SIZES.extraLarge,
+        fontSize: SIZES.tabIcon,
     },
 })

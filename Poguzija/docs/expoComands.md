@@ -64,7 +64,7 @@ npx expo whoami                # currently logged-in user
 ```bash
 npm install -g firebase-tools                          # install the Firebase CLI (one-time)
 firebase login                                          # log in to your Firebase account
-firebase deploy --only firestore:rules,storage          # deploy firestore.rules + storage.rules
+firebase deploy --only firestore:rules,storage,indexes,functions  # deploy firestore.rules + storage.rules + firestore.indexes + firestore.functions
 ```
 
 ## Upgrading Expo

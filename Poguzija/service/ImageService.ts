@@ -2,18 +2,20 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { storage } from "./firebase"
 import { v4 as uuidv4 } from 'uuid'
 import { StorageFolder } from "../model/model"
+import { GetCurrentAuthUid } from "./AuthService"
 
 async function UploadFoodRecipesImages(selectedImages: string[]): Promise<string[]> {
     const urls = []
     const folder = StorageFolder.FoodRecipesImages
-    for (var selectedImage of selectedImages) {
-        const url = await uploadImage(selectedImage, folder)
+    const ownerId = GetCurrentAuthUid() ?? ''
+    for (const selectedImage of selectedImages) {
+        const url = await uploadImage(selectedImage, folder, ownerId)
         urls.push(url)
     }
     return urls
 }
 
-async function uploadImage(selectedImage: string, folder: string): Promise<string> {
+async function uploadImage(selectedImage: string, folder: string, ownerId: string): Promise<string> {
     const imageName = generateUniqueName()
     const imageRef = ref(storage, `${folder}/${imageName}`)
     const blob: Blob = await new Promise((resolve, reject) => {
@@ -28,7 +30,7 @@ async function uploadImage(selectedImage: string, folder: string): Promise<strin
         xhr.open('GET', selectedImage, true)
         xhr.send(null)
     })
-    await uploadBytes(imageRef, blob)
+    await uploadBytes(imageRef, blob, { customMetadata: { ownerId } })
     const url = await getDownloadURL(imageRef)
     return url
 }

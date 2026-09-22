@@ -3,7 +3,7 @@ import * as SecureStore from 'expo-secure-store'
 import { GoogleAuthProvider, signInWithCredential, signInAnonymously, linkWithCredential, deleteUser, reauthenticateWithCredential } from 'firebase/auth'
 import { FirebaseError } from 'firebase/app'
 import { auth } from './firebase'
-import { GetOrAddUser, DeleteUserData } from './UserService'
+import { GetOrAddUser } from './UserService'
 import { MyUser } from '../model/model'
 
 async function EnsureAnonymousSession() {
@@ -63,7 +63,6 @@ async function SignOut() {
 async function DeleteAccount() {
     const authUser = auth.currentUser
     if (!authUser) return
-    await DeleteUserData(authUser.uid)
     try {
         await deleteUser(authUser)
     } catch (e) {

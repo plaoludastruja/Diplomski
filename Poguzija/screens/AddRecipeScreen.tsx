@@ -2,6 +2,7 @@ import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { View, Pressable, Text, StyleSheet, Dimensions, Animated, useAnimatedValue } from 'react-native'
 import { Image } from 'expo-image'
 import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons'
+import { LinearGradient } from 'expo-linear-gradient'
 import * as ImagePicker from 'expo-image-picker'
 import Carousel from 'react-native-snap-carousel'
 import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
@@ -107,11 +108,13 @@ export default function AddRecipeTab() {
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: false,
             quality: 0.4,
+            allowsMultipleSelection: true,
         })
 
         if (!result.canceled) {
-            setSelectedImageArray([...selectedImageArray.slice(0, -1), result.assets[0].uri, PlaceholderImage])
-            setSelectedImageToUpload([...selectedImageToUpload, result.assets[0].uri])
+            const newUris = result.assets.map((asset) => asset.uri)
+            setSelectedImageArray([...selectedImageArray.slice(0, -1), ...newUris, PlaceholderImage])
+            setSelectedImageToUpload([...selectedImageToUpload, ...newUris])
             setSnapPoints(['35', '65', '95'])
         }
     }
@@ -147,11 +150,11 @@ export default function AddRecipeTab() {
             }
 
             if (isEdit) {
-                newRecipe.images = [...selectedImageArray.slice(0, -1)]
-                if (selectedImageToUpload.length !== 0) {
-                    const uploadedImages = await UploadFoodRecipesImages(selectedImageToUpload)
-                    newRecipe.images.concat(uploadedImages)
-                }
+                const existingImages = selectedImageArray.slice(0, -1).filter((uri) => !selectedImageToUpload.includes(uri))
+                const uploadedImages = selectedImageToUpload.length !== 0
+                    ? await UploadFoodRecipesImages(selectedImageToUpload)
+                    : []
+                newRecipe.images = [...existingImages, ...uploadedImages]
                 await EditFoodRecipe(addEditRecipeId, newRecipe)
                 router.replace(`/foodRecipesItem/${addEditRecipeId}`)
                 Toast.show({
@@ -168,7 +171,7 @@ export default function AddRecipeTab() {
                     title: t(TranslationKeys.Recipe.RECIPE_CREATED)
                 })
             }
-        } catch (error) {
+        } catch {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
                 title: t(TranslationKeys.Recipe.RECIPE_NOT_CREATED)
@@ -178,10 +181,11 @@ export default function AddRecipeTab() {
 
     const handleDeleteImage = (image: string) => {
         confirmDeleteImageSheetRef.current?.present(() => {
-            const updatedItems = selectedImageToUpload.filter((item) => item !== image)
-            setSelectedImageArray([...updatedItems, PlaceholderImage])
-            setSelectedImageToUpload([...updatedItems])
-            if (updatedItems.length === 0) {
+            const updatedImageArray = selectedImageArray.filter((item) => item !== image)
+            const updatedImageToUpload = selectedImageToUpload.filter((item) => item !== image)
+            setSelectedImageArray(updatedImageArray)
+            setSelectedImageToUpload(updatedImageToUpload)
+            if (updatedImageArray.length === 1) {
                 setSnapPoints(['66', '95'])
             }
         })
@@ -266,9 +270,22 @@ export default function AddRecipeTab() {
                             </Pressable>
                         </Animated.View>
                     ) : (
-                        <Pressable style={[styles.images, { width: screenWidth, height: 2 * screenHeight / 3 }]} onLongPress={() => handleDeleteImage(item)}>
+                        <View style={[styles.images, { width: screenWidth, height: 2 * screenHeight / 3 }]}>
                             <Image source={{ uri: item }} style={[styles.image, { width: screenWidth, height: 2 * screenHeight / 3 }]} contentFit="cover" transition={300} />
-                        </Pressable>
+                            <LinearGradient
+                                colors={['rgba(0, 0, 0, 0.8)', 'rgba(255, 255, 255, 0)']}
+                                start={{ x: 0.5, y: -0.2 }}
+                                end={{ x: 0.5, y: 0.15 }}
+                                style={[styles.gradientTop, StyleSheet.absoluteFill]} />
+                            <LinearGradient
+                                colors={['rgba(255, 255, 255, 0)', 'rgba(0, 0, 0, 0.8)']}
+                                start={{ x: 0.5, y: 0.8 }}
+                                end={{ x: 0.5, y: 1.1 }}
+                                style={[styles.gradientBottom, StyleSheet.absoluteFill]} />
+                            <View style={styles.deleteImageButton}>
+                                <DeleteIconButton style={styles.deleteImageIcon} onPress={() => handleDeleteImage(item)} />
+                            </View>
+                        </View>
                     )
                 }
             </View>
@@ -433,6 +450,26 @@ const styles = StyleSheet.create({
         borderTopRightRadius: SIZES.extraLarge,
         marginTop: SIZES.extraLarge,
     },
+    gradientBottom: {
+        borderTopLeftRadius: SIZES.extraLarge,
+        borderTopRightRadius: SIZES.extraLarge,
+        marginBottom: - SIZES.small,
+    },
+    gradientTop: {
+        borderTopLeftRadius: SIZES.extraLarge,
+        borderTopRightRadius: SIZES.extraLarge,
+        marginTop: SIZES.small,
+    },
+    deleteImageButton: {
+        position: 'absolute',
+        top: SIZES.extraLarge,
+        right: SIZES.extraLarge,
+        paddingTop: SIZES.base,
+    },
+    deleteImageIcon: {
+        color: COLORS.white,
+        fontSize: 1.2 * SIZES.tabIcon,
+    },
     input: {
         width: '95%',
         minHeight: 60,
@@ -463,7 +500,7 @@ const styles = StyleSheet.create({
     icon: {
         marginRight: 10,
         color: COLORS.lightDark,
-        fontSize: SIZES.extraLarge,
+        fontSize: SIZES.tabIcon,
     },
     ingredientItem: {
         flexDirection: 'row',

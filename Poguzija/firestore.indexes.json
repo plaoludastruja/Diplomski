@@ -1,4 +1,22 @@
 {
-    "indexes": [],
-    "fieldOverrides": []
+    "indexes": [
+        {
+            "collectionGroup": "foodRecipes",
+            "queryScope": "COLLECTION",
+            "fields": [
+                { "fieldPath": "author", "order": "ASCENDING" },
+                { "fieldPath": "createdAt", "order": "DESCENDING" }
+            ]
+        }
+    ],
+    "fieldOverrides": [
+        {
+            "collectionGroup": "comments",
+            "fieldPath": "authorId",
+            "indexes": [
+                { "order": "ASCENDING", "queryScope": "COLLECTION_GROUP" },
+                { "order": "DESCENDING", "queryScope": "COLLECTION_GROUP" }
+            ]
+        }
+    ]
 }

@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         width: 1.2 * SIZES.tabIcon,
         height: 1.2 * SIZES.tabIcon,
-        borderRadius: SIZES.large,
+        borderRadius: SIZES.small,
         marginEnd: SIZES.base,
     },
     icon: {
