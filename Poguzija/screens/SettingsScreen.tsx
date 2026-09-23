@@ -1,12 +1,12 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react"
-import { Animated, Pressable, RefreshControl, StyleSheet, Text, View, useAnimatedValue } from "react-native"
+import { Animated, Pressable, StyleSheet, Text, useAnimatedValue } from "react-native"
 import { useTranslation } from "react-i18next"
 import { ScrollView } from "react-native-gesture-handler"
 import * as SecureStore from 'expo-secure-store'
-import i18next from "i18next"
+import { changeLanguage } from "i18next"
 import { useRouter } from "expo-router"
 import { ALERT_TYPE, Toast } from "react-native-alert-notification"
-import { FontAwesome, MaterialIcons } from "@expo/vector-icons"
+import { FontAwesome } from "@expo/vector-icons"
 import { UserContext } from "../app/_layout"
 import { BackgroundSafeAreaView } from "../components/Common/BackgroundSafeAreaView"
 import { ConfirmBottomSheet, ConfirmBottomSheetRef } from "../components/Common/ConfirmBottomSheet"
@@ -25,10 +25,6 @@ export default function SettingsScreen() {
     const router = useRouter()
     const confirmDeleteProfileSheetRef = useRef<ConfirmBottomSheetRef>(null)
 
-    useEffect(() => {
-        loadSettings()
-    }, [])
-
     const loadSettings = async () => {
         const lang = await SecureStore.getItemAsync('currentLanguage')
         const theme = await SecureStore.getItemAsync('currentTheme')
@@ -37,9 +33,13 @@ export default function SettingsScreen() {
         if (theme) setSelectedTheme(theme)
     }
 
+    useEffect(() => {
+        loadSettings()
+    }, [])
+
     const handleSelectedLanguage = useCallback(async (newLangugage: string) => {
         setSelectedLanguage(newLangugage)
-        await i18next.changeLanguage(newLangugage)
+        await changeLanguage(newLangugage)
         SecureStore.setItemAsync('currentLanguage', newLangugage)
     }, [])
 

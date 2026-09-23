@@ -1,7 +1,6 @@
 import { initializeApp } from 'firebase/app'
-import { initializeAuth } from "@firebase/auth"
 // @ts-expect-error
-import { getReactNativePersistence } from "@firebase/auth"
+import { initializeAuth, getReactNativePersistence } from "@firebase/auth"
 import { getStorage } from "firebase/storage"
 import { getFirestore } from 'firebase/firestore/lite'
 import { getFunctions } from 'firebase/functions'

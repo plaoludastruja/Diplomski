@@ -41,10 +41,6 @@ export default function FoodRecipesItemScreen() {
 
     const router = useRouter()
 
-    useEffect(() => {
-        fetchData()
-    }, [])
-
     const fetchData = async () => {
         try {
             const foodRecipesData = await GetFoodRecipe(foodRecipesItemId)
@@ -78,6 +74,10 @@ export default function FoodRecipesItemScreen() {
             setLoading(false)
         }
     }
+
+    useEffect(() => {
+        fetchData()
+    }, [])
 
     const screenWidth = Dimensions.get('window').width
     const screenHeight = Dimensions.get('window').height

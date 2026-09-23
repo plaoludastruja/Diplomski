@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useState } from "react"
 import { useLocalSearchParams } from "expo-router"
-import { Animated, Pressable, View, Text, StyleSheet, RefreshControl, useAnimatedValue } from "react-native"
+import { Animated, Pressable, View, StyleSheet, RefreshControl, useAnimatedValue } from "react-native"
 import { QueryDocumentSnapshot } from "firebase/firestore/lite"
 import { MaterialIcons } from "@expo/vector-icons"
 import { useTranslation } from "react-i18next"

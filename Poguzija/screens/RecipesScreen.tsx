@@ -23,10 +23,6 @@ export default function RecipesScreen() {
     const listRef = useRef(null)
     useScrollToTop(listRef)
 
-    useEffect(() => {
-        fetchData()
-    }, [])
-
     const fetchData = async () => {
         try {
             const { foodRecipesData, newLastVisible } = await GetAllFoodRecipes(undefined)
@@ -43,6 +39,10 @@ export default function RecipesScreen() {
             setLoading(false);
         }
     }
+
+    useEffect(() => {
+        fetchData()
+    }, [])
 
     const handleRefresh = useCallback(() => {
         setRefreshing(true)

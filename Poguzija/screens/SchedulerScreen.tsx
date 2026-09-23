@@ -18,16 +18,6 @@ export default function SchedulerScreen() {
     const [recipesWeek, setRecipesWeek] = useState<RecipeSchedulerReturn>()
     const [refreshing, setRefreshing] = useState(false)
 
-    useEffect(() => {
-        loadData()
-    }, [refreshScheduler, user])
-
-    const loadData = async () => {
-        setLoading(true)
-        await fetchData()
-        setRefreshScheduler(false)
-    }
-
     const fetchData = useCallback(async () => {
         try {
             const recipesWeekData = await GetRecipesScheduler()
@@ -42,6 +32,16 @@ export default function SchedulerScreen() {
             setRefreshing(false)
         }
     }, [t])
+
+    const loadData = async () => {
+        setLoading(true)
+        await fetchData()
+        setRefreshScheduler(false)
+    }
+
+    useEffect(() => {
+        loadData()
+    }, [refreshScheduler, user])
 
     const handleRefresh = useCallback(() => {
         setRefreshing(true)

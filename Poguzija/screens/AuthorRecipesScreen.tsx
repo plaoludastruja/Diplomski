@@ -29,10 +29,6 @@ export default function AuthorRecipesScreen() {
     const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot | null>()
     const [hasMore, setHasMore] = useState(true)
 
-    useEffect(() => {
-        fetchData()
-    }, [])
-
     const fetchData = async () => {
         try {
             const authorData = await GetUser(authorId)
@@ -59,6 +55,10 @@ export default function AuthorRecipesScreen() {
             setLoading(false)
         }
     }
+
+    useEffect(() => {
+        fetchData()
+    }, [])
 
     const handleRefresh = () => {
         setRefreshing(true)

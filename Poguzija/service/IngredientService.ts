@@ -1,4 +1,4 @@
-import { Category, IngredientNameUnit } from "../model/model"
+import { IngredientNameUnit } from "../model/model"
 import { GetCategoryData, GetIngredientsData, GetMeasurementUnitsData } from "./HelperService"
 
 function GetIngredientNameUnitCategory(type: string) {

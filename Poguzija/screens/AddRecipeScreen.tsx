@@ -37,8 +37,7 @@ export default function AddRecipeTab() {
     const screenWidth = Dimensions.get('window').width
     const screenHeight = Dimensions.get('window').height
     const [snapPoints, setSnapPoints] = useState(['66', '95'])
-    const [loading, setLoading] = useState(true)
-    const [isEdit, setIsEdit] = useState(addEditRecipeId !== undefined)
+    const [isEdit] = useState(addEditRecipeId !== undefined)
     const [submitting, setSubmitting] = useState(false)
     const [classifyingImages, setClassifyingImages] = useState(false)
 
@@ -60,7 +59,6 @@ export default function AddRecipeTab() {
     const [cookingTime, setCookingTime] = useState({ hours: '', minutes: '' })
     const [cookingTimeAll, setCookingTimeAll] = useState('')
     const [refreshTime, setRefreshTime] = useState(false)
-    const [author, setAuthor] = useState('')
 
     const [stepList, setStepList] = useState<Step[]>([])
     const [step, setStep] = useState('')
@@ -75,12 +73,6 @@ export default function AddRecipeTab() {
     const handleAddPhotoPressOut = () => {
         Animated.spring(addPhotoScale, { toValue: 1, useNativeDriver: true }).start()
     }
-
-    useEffect(() => {
-        if (isEdit) {
-            fetchData()
-        }
-    }, [])
 
     const fetchData = async () => {
         const recipe = await GetFoodRecipe(addEditRecipeId)
@@ -106,6 +98,12 @@ export default function AddRecipeTab() {
         setSnapPoints(['35', '65', '95'])
         setStepsPlaceholder('ADD_NEXT_STEP')
     }
+
+    useEffect(() => {
+        if (isEdit) {
+            fetchData()
+        }
+    }, [])
 
     const pickImageAsync = async () => {
         if (classifyingImages) return

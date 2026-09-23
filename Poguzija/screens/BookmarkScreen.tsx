@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react"
-import { StyleSheet, Text, View } from "react-native"
+import { StyleSheet } from "react-native"
 import { useTranslation } from "react-i18next"
 import { UserContext } from "../app/_layout"
 import { BackgroundSafeAreaView } from "../components/Common/BackgroundSafeAreaView"
@@ -7,7 +7,6 @@ import { CardFoodRecipes } from "../components/Recipes/CardFoodRecipes"
 import { LoadingScreen } from "../components/Common/LoadingScreen"
 import { Divider } from "../components/Common/Divider"
 import { SubtitleText } from "../components/Common/SubtitleText"
-import { COLORS, SIZES } from "../constants/Colors"
 import { TranslationKeys } from "../locales/_translationKeys"
 import { FoodRecipes } from "../model/model"
 import { GetMySavedFoodRecipes } from "../service/BookmarkService"
@@ -23,16 +22,6 @@ export default function BookmarkScreen() {
     const [lastVisible, setLastVisible] = useState<number>()
     const [hasMore, setHasMore] = useState(true)
     const { t } = useTranslation()
-
-    useEffect(() => {
-        if (user) {
-            setLoading(true)
-            fetchData()
-        } else {
-            setFood([])
-            setLoading(false)
-        }
-    }, [])
 
     const fetchData = async () => {
         try {
@@ -50,6 +39,16 @@ export default function BookmarkScreen() {
             setLoading(false);
         }
     }
+
+    useEffect(() => {
+        if (user) {
+            setLoading(true)
+            fetchData()
+        } else {
+            setFood([])
+            setLoading(false)
+        }
+    }, [user])
 
     const handleRefresh = () => {
         setRefreshing(true)

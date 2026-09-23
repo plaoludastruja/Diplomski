@@ -137,7 +137,7 @@ export default function SearchScreen() {
     ), [])
 
     const [scrollDirection, setScrollDirection] = useState('')
-    const positionAnimation = useRef(new Animated.Value(0)).current
+    const [positionAnimation] = useState(() => new Animated.Value(0))
 
     const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
         const currentScrollPos = event.nativeEvent.contentOffset.y
@@ -166,7 +166,7 @@ export default function SearchScreen() {
                 }),
             ]).start()
         }
-    }, [scrollDirection])
+    }, [scrollDirection, positionAnimation])
 
     return (
         <BackgroundSafeAreaView>
