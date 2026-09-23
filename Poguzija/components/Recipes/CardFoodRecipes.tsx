@@ -49,6 +49,12 @@ export const CardFoodRecipes = memo(({ data, route }: { data: FoodRecipes, route
     }
 
     useEffect(() => {
+        if (data.images && data.images.length > 1) {
+            Image.prefetch(data.images)
+        }
+    }, [data.images])
+
+    useEffect(() => {
         setImageIndex(0)
         if (!data.images || data.images.length <= 1) return
         let timeoutId: ReturnType<typeof setTimeout>

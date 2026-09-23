@@ -11,6 +11,8 @@ export const sr = {
         recipeNotCreated: 'Recept nije kreiran',
         deleteImage: 'Obrišite fotografiju',
         deleteImageConfirmation: 'Da li želite obrisati fotografiju?',
+        imageNotFood: 'Jedna ili više slika ne liči na hranu, pa nisu dodane',
+        imageUnsafe: 'Jedna ili više slika je označena kao neprimjerena, pa nisu dodane',
         addFirstStep: 'Dodajte prvi korak',
         addNextStep: 'Dodajte sledeći korak',
         selectedCategories: 'Odabrane kategorije',
@@ -287,6 +289,7 @@ export const sr = {
         greenBeans: 'Boranija',
         springOnion: 'Mladi luk',
         chiliPepper: 'Ljuta papričica',
+        squash: 'Tikva',
 
         // Korjenasto povrće
         beetroot: 'Cvekla',
@@ -519,6 +522,8 @@ export const sr = {
         flatbread: 'Lepinja',
         cornbread: 'Proja',
         bun: 'Zemička',
+        bagel: 'Bagl',
+        donut: 'Krofna',
 
         // Tjestenina
         spaghetti: 'Špageti',
@@ -614,6 +619,8 @@ export const sr = {
         lemonade: 'Limunada',
         hotChocolate: 'Topla čokolada',
         sparklingWater: 'Kisela voda',
+        espresso: 'Espreso',
+        cocktail: 'Koktel',
 
         // Smrznuti proizvodi
         frozenPeas: 'Smrznuti grašak',
@@ -667,6 +674,8 @@ export const sr = {
         granolaBar: 'Granola pločica',
         trailMix: 'Mešavina orašastih plodova',
         riceCakes: 'Rižini kolutići',
+        chocolate: 'Čokolada',
+        candy: 'Bombona',
 
         // Začinski dodaci
         vinegar: 'Sirće',

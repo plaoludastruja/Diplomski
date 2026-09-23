@@ -1,5 +1,5 @@
-import { useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { View, Pressable, Text, StyleSheet, Dimensions, Animated, useAnimatedValue } from 'react-native'
+import { useContext, useEffect, useRef, useState } from 'react'
+import { View, Pressable, Text, StyleSheet, Dimensions, Animated, useAnimatedValue, ActivityIndicator, InteractionManager } from 'react-native'
 import { Image } from 'expo-image'
 import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -21,6 +21,7 @@ import { TimeInput } from '../components/Recipes/TimeInput'
 import { COLORS, SIZES } from '../constants/Colors'
 import { TranslationKeys } from '../locales/_translationKeys'
 import { Ingredient, Step, FoodRecipes } from '../model/model'
+import { CheckImageContentResult, ValidateRecipeImage } from '../service/ImageClassificationService'
 import { UploadFoodRecipesImages } from '../service/ImageService'
 import { GetFoodRecipe, EditFoodRecipe, AddFoodRecipe } from '../service/RecipesService'
 import { EnsureAnonymousSession, GetCurrentAuthUid } from '../service/AuthService'
@@ -39,6 +40,7 @@ export default function AddRecipeTab() {
     const [loading, setLoading] = useState(true)
     const [isEdit, setIsEdit] = useState(addEditRecipeId !== undefined)
     const [submitting, setSubmitting] = useState(false)
+    const [classifyingImages, setClassifyingImages] = useState(false)
 
     const [categoryModalVisible, setCategoryModalVisible] = useState(false)
     const [categoryNumber, setCategoryNumber] = useState<number>(0)
@@ -106,6 +108,7 @@ export default function AddRecipeTab() {
     }
 
     const pickImageAsync = async () => {
+        if (classifyingImages) return
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: false,
             quality: 0.4,
@@ -113,10 +116,38 @@ export default function AddRecipeTab() {
         })
 
         if (!result.canceled) {
-            const newUris = result.assets.map((asset) => asset.uri)
-            setSelectedImageArray([...selectedImageArray.slice(0, -1), ...newUris, PlaceholderImage])
-            setSelectedImageToUpload([...selectedImageToUpload, ...newUris])
-            setSnapPoints(['35', '65', '95'])
+            setClassifyingImages(true)
+            try {
+                const pickedUris = result.assets.map((asset) => asset.uri)
+                const validations: CheckImageContentResult[] = await Promise.all(pickedUris.map((uri) =>
+                    ValidateRecipeImage(uri).catch(() => ({ approved: true }))
+                ))
+                const newUris = pickedUris.filter((_, index) => validations[index].approved)
+                const hasUnsafe = validations.some((validation) => validation.reason === 'unsafe')
+                const hasNotFood = validations.some((validation) => validation.reason === 'not_food')
+
+                if (hasUnsafe) {
+                    InteractionManager.runAfterInteractions(() => Toast.show({
+                        type: ALERT_TYPE.DANGER,
+                        title: t(TranslationKeys.Recipe.IMAGE_UNSAFE)
+                    }))
+                } else if (hasNotFood) {
+                    InteractionManager.runAfterInteractions(() => Toast.show({
+                        type: ALERT_TYPE.WARNING,
+                        title: t(TranslationKeys.Recipe.IMAGE_NOT_FOOD)
+                    }))
+                }
+
+                if (newUris.length > 0) {
+                    setSelectedImageArray([...selectedImageArray.slice(0, -1), ...newUris, PlaceholderImage])
+                    setSelectedImageToUpload([...selectedImageToUpload, ...newUris])
+                    if (snapPoints.length !== 3) {
+                        setSnapPoints(['35', '65', '95'])
+                    }
+                }
+            } finally {
+                setClassifyingImages(false)
+            }
         }
     }
 
@@ -271,7 +302,11 @@ export default function AddRecipeTab() {
                     item === PlaceholderImage ? (
                         <Animated.View style={[styles.images, { width: screenWidth, height: screenHeight / 3, transform: [{ scale: addPhotoScale }] }]}>
                             <Pressable style={styles.addPhotoPressable} onPress={pickImageAsync} onPressIn={handleAddPhotoPressIn} onPressOut={handleAddPhotoPressOut}>
-                                <MaterialIcons name="add-photo-alternate" size={128} color={COLORS.lightDark} />
+                                {classifyingImages ? (
+                                    <ActivityIndicator size="large" color={COLORS.primary} />
+                                ) : (
+                                    <MaterialIcons name="add-photo-alternate" size={128} color={COLORS.lightDark} />
+                                )}
                             </Pressable>
                         </Animated.View>
                     ) : (
@@ -311,7 +346,7 @@ export default function AddRecipeTab() {
                 </View>
 
                 <BottomSheet
-                    snapPoints={useMemo(() => snapPoints, [snapPoints])}
+                    snapPoints={snapPoints}
                     backgroundStyle={{ backgroundColor: COLORS.dark }}
                     handleIndicatorStyle={{ backgroundColor: COLORS.white }}
                     keyboardBehavior='extend'

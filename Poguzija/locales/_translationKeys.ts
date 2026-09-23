@@ -11,6 +11,8 @@ export namespace TranslationKeys {
         RECIPE_NOT_CREATED = 'recipe.recipeNotCreated',
         DELETE_IMAGE = 'recipe.deleteImage',
         DELETE_IMAGE_CONFIRMATION = 'recipe.deleteImageConfirmation',
+        IMAGE_NOT_FOOD = 'recipe.imageNotFood',
+        IMAGE_UNSAFE = 'recipe.imageUnsafe',
         ADD_FIRST_STEP = 'recipe.addFirstStep',
         ADD_NEXT_STEP = 'recipe.addNextStep',
         SELECTED_CATEGORIES = 'recipe.selectedCategories',
@@ -305,6 +307,7 @@ export namespace TranslationKeys {
         GREEN_BEANS = 'ingredientItem.greenBeans',
         SPRING_ONION = 'ingredientItem.springOnion',
         CHILI_PEPPER = 'ingredientItem.chiliPepper',
+        SQUASH = 'ingredientItem.squash',
 
         // Root vegetables
         BEETROOT = 'ingredientItem.beetroot',
@@ -537,6 +540,8 @@ export namespace TranslationKeys {
         FLATBREAD = 'ingredientItem.flatbread',
         CORNBREAD = 'ingredientItem.cornbread',
         BUN = 'ingredientItem.bun',
+        BAGEL = 'ingredientItem.bagel',
+        DONUT = 'ingredientItem.donut',
 
         // Pasta
         SPAGHETTI = 'ingredientItem.spaghetti',
@@ -632,6 +637,8 @@ export namespace TranslationKeys {
         LEMONADE = 'ingredientItem.lemonade',
         HOT_CHOCOLATE = 'ingredientItem.hotChocolate',
         SPARKLING_WATER = 'ingredientItem.sparklingWater',
+        ESPRESSO = 'ingredientItem.espresso',
+        COCKTAIL = 'ingredientItem.cocktail',
 
         // Frozen products
         FROZEN_PEAS = 'ingredientItem.frozenPeas',
@@ -685,6 +692,8 @@ export namespace TranslationKeys {
         GRANOLA_BAR = 'ingredientItem.granolaBar',
         TRAIL_MIX = 'ingredientItem.trailMix',
         RICE_CAKES = 'ingredientItem.riceCakes',
+        CHOCOLATE = 'ingredientItem.chocolate',
+        CANDY = 'ingredientItem.candy',
 
         // Condiments
         VINEGAR = 'ingredientItem.vinegar',

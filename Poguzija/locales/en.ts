@@ -11,6 +11,8 @@ export const en = {
         recipeNotCreated: 'Recipe is not created',
         deleteImage: 'Delete image',
         deleteImageConfirmation: 'Do you want to delete this image?',
+        imageNotFood: 'One or more photos don\'t look like food and were not added',
+        imageUnsafe: 'One or more photos were flagged as inappropriate and were not added',
         addFirstStep: 'Add first step',
         addNextStep: 'Add next step',
         selectedCategories: 'Selected categories',
@@ -287,6 +289,7 @@ export const en = {
         greenBeans: 'Green beans',
         springOnion: 'Spring onion',
         chiliPepper: 'Chili pepper',
+        squash: 'Squash',
 
         // Root vegetables
         beetroot: 'Beetroot',
@@ -519,6 +522,8 @@ export const en = {
         flatbread: 'Flatbread',
         cornbread: 'Cornbread',
         bun: 'Bun',
+        bagel: 'Bagel',
+        donut: 'Donut',
 
         // Pasta
         spaghetti: 'Spaghetti',
@@ -614,6 +619,8 @@ export const en = {
         lemonade: 'Lemonade',
         hotChocolate: 'Hot chocolate',
         sparklingWater: 'Sparkling water',
+        espresso: 'Espresso',
+        cocktail: 'Cocktail',
 
         // Frozen products
         frozenPeas: 'Frozen peas',
@@ -667,6 +674,8 @@ export const en = {
         granolaBar: 'Granola bar',
         trailMix: 'Trail mix',
         riceCakes: 'Rice cakes',
+        chocolate: 'Chocolate',
+        candy: 'Candy',
 
         // Condiments
         vinegar: 'Vinegar',

@@ -193,7 +193,8 @@ function GetIngredientsData() {
             'KOHLRABI',
             'GREEN_BEANS',
             'SPRING_ONION',
-            'CHILI_PEPPER'
+            'CHILI_PEPPER',
+            'SQUASH'
         ],
         ROOT_VEGETABLES: [
             'BEETROOT',
@@ -425,7 +426,9 @@ function GetIngredientsData() {
             'SOURDOUGH_BREAD',
             'FLATBREAD',
             'CORNBREAD',
-            'BUN'
+            'BUN',
+            'BAGEL',
+            'DONUT'
         ],
         PASTA: [
             'SPAGHETTI',
@@ -520,7 +523,9 @@ function GetIngredientsData() {
             'BEER',
             'LEMONADE',
             'HOT_CHOCOLATE',
-            'SPARKLING_WATER'
+            'SPARKLING_WATER',
+            'ESPRESSO',
+            'COCKTAIL'
         ],
         FROZEN_PRODUCTS: [
             'FROZEN_PEAS',
@@ -573,7 +578,9 @@ function GetIngredientsData() {
             'CRACKERS',
             'GRANOLA_BAR',
             'TRAIL_MIX',
-            'RICE_CAKES'
+            'RICE_CAKES',
+            'CHOCOLATE',
+            'CANDY'
         ],
         CONDIMENTS: [
             'VINEGAR',

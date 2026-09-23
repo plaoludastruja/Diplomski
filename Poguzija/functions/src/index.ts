@@ -2,10 +2,14 @@ import { initializeApp } from "firebase-admin/app"
 import { FieldValue, Query, WriteResult, getFirestore } from "firebase-admin/firestore"
 import { getStorage } from "firebase-admin/storage"
 import { onDocumentDeleted, onDocumentUpdated } from "firebase-functions/v2/firestore"
+import { HttpsError, onCall } from "firebase-functions/v2/https"
 import * as functionsV1 from "firebase-functions/v1"
 import { logger } from "firebase-functions"
+import { ImageAnnotatorClient } from "@google-cloud/vision"
 
 initializeApp()
+
+const visionClient = new ImageAnnotatorClient()
 
 interface RecipesByDay {
     day: string
@@ -122,4 +126,76 @@ export const cleanupDeletedUser = functionsV1.auth.user().onDelete(async (user) 
         db.doc(`bookmarks/${uid}`).delete(),
         db.doc(`recipeSchedulers/${uid}`).delete(),
     ])
+})
+
+// Keywords matched (case-insensitive, substring) against Cloud Vision label
+// descriptions to decide whether a photo counts as food-related.
+const FOOD_LABEL_KEYWORDS = [
+    "food", "dish", "meal", "cuisine", "recipe", "ingredient", "produce",
+    "fruit", "vegetable", "meat", "fish", "seafood", "dairy", "cheese",
+    "bread", "pastry", "pasta", "dessert", "baked goods", "snack",
+    "beverage", "drink", "cooking", "baking", "grilling", "kitchenware",
+    "tableware", "natural foods", "comfort food", "fast food", "produce",
+]
+
+const UNSAFE_LIKELIHOODS = ["LIKELY", "VERY_LIKELY"]
+
+interface CheckImageContentResult {
+    approved: boolean
+    reason?: "not_food" | "unsafe"
+}
+
+// Callable from the client before a picked photo is attached to a recipe.
+// Runs Cloud Vision's label detection (is this food?) and
+// SafeSearch detection (is this inappropriate?) in a single request.
+export const checkImageContent = onCall<{ imageBase64?: string }, Promise<CheckImageContentResult>>(async (request) => {
+    const imageBase64 = request.data.imageBase64
+    if (!imageBase64) {
+        throw new HttpsError("invalid-argument", "Missing imageBase64")
+    }
+
+    const [result] = await visionClient.annotateImage({
+        image: { content: imageBase64 },
+        features: [
+            { type: "LABEL_DETECTION", maxResults: 10 },
+            { type: "SAFE_SEARCH_DETECTION" },
+        ],
+    })
+
+    const safeSearch = result.safeSearchAnnotation
+    const labels = (result.labelAnnotations ?? []).map((label) => ({
+        description: label.description ?? "",
+        score: label.score ?? 0,
+    }))
+
+    logger.info("checkImageContent: Vision API result", {
+        labels,
+        safeSearch: {
+            adult: safeSearch?.adult,
+            racy: safeSearch?.racy,
+            violence: safeSearch?.violence,
+            medical: safeSearch?.medical,
+            spoof: safeSearch?.spoof,
+        },
+    })
+
+    const isUnsafe = UNSAFE_LIKELIHOODS.includes(String(safeSearch?.adult ?? ""))
+        || UNSAFE_LIKELIHOODS.includes(String(safeSearch?.racy ?? ""))
+        || UNSAFE_LIKELIHOODS.includes(String(safeSearch?.violence ?? ""))
+
+    if (isUnsafe) {
+        logger.info("checkImageContent: rejected (unsafe)")
+        return { approved: false, reason: "unsafe" }
+    }
+
+    const lowerLabels = labels.map((label) => label.description.toLowerCase())
+    const isFood = lowerLabels.some((label) => FOOD_LABEL_KEYWORDS.some((keyword) => label.includes(keyword)))
+
+    if (!isFood) {
+        logger.info("checkImageContent: rejected (not food)")
+        return { approved: false, reason: "not_food" }
+    }
+
+    logger.info("checkImageContent: approved")
+    return { approved: true }
 })
