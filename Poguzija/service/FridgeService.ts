@@ -8,7 +8,7 @@ function AddFridge(id: string) {
         id: id,
         ingredients: []
     }
-    setDoc(doc(db, DatabaseCollection.fridges, id).withConverter(fridgeConverter), fridge)
+    return setDoc(doc(db, DatabaseCollection.fridges, id).withConverter(fridgeConverter), fridge)
 }
 
 async function GetMyFridge() {

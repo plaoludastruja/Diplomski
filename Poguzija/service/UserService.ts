@@ -11,7 +11,7 @@ import { SetCurrentUser } from './AuthService'
 async function GetOrAddUser(user: User, authUser: AuthUser) {
     let userAdded = await GetUser(authUser.uid)
     if (!userAdded) {
-        AddUserAdditionalData(authUser.uid)
+        await AddUserAdditionalData(authUser.uid)
         userAdded = await AddUser(user, authUser)
     }
     await SetCurrentUser(userAdded)
@@ -27,7 +27,7 @@ async function AddUser(user: User, authUser: AuthUser): Promise<MyUser> {
         profilePhoto: user.user.photo || '',
         createdAt: serverTimestamp() as unknown as Timestamp
     }
-    setDoc(doc(db, DatabaseCollection.users, myUser.id), myUser)
+    await setDoc(doc(db, DatabaseCollection.users, myUser.id), myUser)
     return myUser
 }
 
@@ -51,10 +51,12 @@ async function GetUsers(ids: string[]): Promise<Map<string, MyUser>> {
     return usersById
 }
 
-function AddUserAdditionalData(uid: string) {
-    AddRecipesScheduler(uid)
-    AddFridge(uid)
-    AddBookmark(uid)
+async function AddUserAdditionalData(uid: string) {
+    await Promise.all([
+        AddRecipesScheduler(uid),
+        AddFridge(uid),
+        AddBookmark(uid),
+    ])
 }
 
 const userConverter = {

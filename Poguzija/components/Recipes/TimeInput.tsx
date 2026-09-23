@@ -21,13 +21,15 @@ export const TimeInput = ({ time, onTimeChange, refresh }: TimeInputProps) => {
     }, [refresh])
 
     const handleHoursChange = (text: string) => {
-        setHours(text.replace(/[^0-9]/g, ''))
-        onTimeChange({hours: text, minutes: minutes, all: `${text}${minutes}`})
+        const correctTime = text.replace(/[^0-9]/g, '')
+        setHours(correctTime)
+        onTimeChange({hours: correctTime, minutes: minutes, all: `${correctTime}${minutes}`})
     }
 
     const handleMinutesChange = (text: string) => {
-        setMinutes(text.replace(/[^0-9]/g, ''))
-        onTimeChange({hours: hours, minutes: text, all: `${hours}${text}`})
+        const correctTime = text.replace(/[^0-9]/g, '')
+        setMinutes(correctTime)
+        onTimeChange({hours: hours, minutes: correctTime, all: `${hours}${correctTime}`})
     }
 
     return (

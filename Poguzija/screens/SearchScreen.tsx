@@ -28,6 +28,7 @@ export default function SearchScreen() {
     const [ingredientModalVisible, setIngredientModalVisible] = useState(false)
 
     const [loading, setLoading] = useState(false)
+    const [loadingMore, setLoadingMore] = useState(false)
     const [search, setSearch] = useState('')
     const [ingredientData, setIngredientData] = useState<string[]>([])
     const [categoryData, setCategoryData] = useState<string[]>([])
@@ -84,7 +85,7 @@ export default function SearchScreen() {
     }
 
     const handleEndReached = useCallback(async () => {
-        if (!hasMore) return
+        if (!hasMore || loadingMore || loading) return
         const searchData = search.toUpperCase().split(/[\s-\.,!?]/).filter(t => t.length >= 4)
         const searchParams = [...categoryData, ...ingredientData, ...searchData]
 
@@ -92,9 +93,10 @@ export default function SearchScreen() {
             return
         }
         try {
+            setLoadingMore(true)
             const { foodRecipesData, newLastVisible } = await GetSearchResults(searchParams, lastVisible)
             if (foodRecipesData.length > 0) {
-                setFood([...food, ...foodRecipesData])
+                setFood(food => [...food, ...foodRecipesData])
                 setLastVisible(newLastVisible)
             } else {
                 setHasMore(false)
@@ -104,8 +106,10 @@ export default function SearchScreen() {
                 type: ALERT_TYPE.DANGER,
                 title: t(TranslationKeys.Error.LOADING_FAILED)
             })
+        } finally {
+            setLoadingMore(false)
         }
-    }, [hasMore, search, categoryData, ingredientData, lastVisible, food, t])
+    }, [hasMore, loadingMore, loading, search, categoryData, ingredientData, lastVisible, t])
 
     const onDeleteSelected = useCallback((type: string, selectedItem: string) => {
         if (type === 'ingredient') {

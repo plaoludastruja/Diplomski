@@ -98,18 +98,25 @@ export default function CommentsScreen() {
         }
     }, [hasMore, loadingMore, refreshing, lastVisible, commentRecipeId, t])
 
-    const onAddNewComment = (text: string, rating: number) => {
+    const onAddNewComment = async (text: string, rating: number) => {
         setAddCommentModalVisible(false)
-        if (text !== '') {
-            const comment: Partial<Comment> = {
-                authorId: user?.id || '',
-                text: text
+        try {
+            if (text !== '') {
+                const comment: Partial<Comment> = {
+                    authorId: user?.id || '',
+                    text: text
+                }
+                await AddComment(commentRecipeId, comment)
             }
-            AddComment(commentRecipeId, comment)
-        }
 
-        if (rating !== 0) {
-            UpdateRecipeRating(commentRecipeId, rating)
+            if (rating !== 0) {
+                await UpdateRecipeRating(commentRecipeId, rating)
+            }
+        } catch {
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: t(TranslationKeys.Error.LOADING_FAILED)
+            })
         }
     }
 

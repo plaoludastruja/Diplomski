@@ -284,7 +284,7 @@ export default function AddRecipeTab() {
     const handleChangeText = (text: string, index: number) => {
         setStepList(prevStepList => {
             const updatedStepList = [...prevStepList]
-            const updatedString = text.split('. ')[1] || ''
+            const updatedString = text.replace(/^\d+\.\s*/, '')
             updatedStepList[index] = { ...updatedStepList[index], description: updatedString }
             return updatedStepList
         })

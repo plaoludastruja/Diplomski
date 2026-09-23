@@ -17,7 +17,7 @@ function AddRecipesScheduler(id: string) {
             { day: Day.SUNDAY, recipes: [] }
         ]
     }
-    setDoc(doc(db, DatabaseCollection.recipeSchedulers, id).withConverter(recipesSchedulerConverter), recipeScheduler)
+    return setDoc(doc(db, DatabaseCollection.recipeSchedulers, id).withConverter(recipesSchedulerConverter), recipeScheduler)
 }
 
 async function GetRecipesScheduler() {
@@ -121,8 +121,9 @@ async function GetRecipesSchedulerRandom() {
 }
 
 const getRandomIndexes = (length: number) => {
+    const targetCount = Math.min(2, length)
     const indexes: number[] = []
-    while (indexes.length < 2) {
+    while (indexes.length < targetCount) {
         const randomIndex = Math.floor(Math.random() * length)
         if (!indexes.includes(randomIndex)) {
             indexes.push(randomIndex)

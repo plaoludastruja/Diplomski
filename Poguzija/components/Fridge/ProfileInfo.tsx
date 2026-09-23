@@ -3,6 +3,7 @@ import { Image } from 'expo-image'
 import { useContext, useRef } from 'react'
 import { FontAwesome } from '@expo/vector-icons'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 import { COLORS, SIZES } from '../../constants/Colors'
 import { OptionsBottomSheet, OptionsBottomSheetRef } from '../Common/OptionsBottomSheet'
 import { UserContext } from '../../app/_layout'
@@ -29,10 +30,21 @@ export const ProfileInfo = () => {
     const handleOpenBookmarks = () => { router.push(`/bookmark`) }
     const handleOpenSettings = () => { router.push(`/settings`) }
 
+    const handleAuthAction = async (action: () => Promise<void>) => {
+        try {
+            await action()
+        } catch {
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: t(TranslationKeys.Error.LOADING_FAILED)
+            })
+        }
+    }
+
     const handleSelect = (code: string) => {
         switch (code) {
-            case 'signIn': { signInFn(); break; }
-            case 'signOut': { signOutFn(); break; }
+            case 'signIn': { handleAuthAction(signInFn); break; }
+            case 'signOut': { handleAuthAction(signOutFn); break; }
             case 'settings': { handleOpenSettings(); break; }
         }
     }

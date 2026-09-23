@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
 import { SIZES } from '../../constants/Colors'
@@ -9,10 +8,7 @@ interface StarRatingProps {
 }
 
 export const StarRating = ({ ratingValue, onRatingChange }: StarRatingProps) => {
-    const [rating, setRating] = useState(ratingValue)
-
     const handleStarPress = (newRating: number) => {
-        setRating(newRating)
         if (onRatingChange) {
             onRatingChange(newRating)
         }
@@ -27,7 +23,7 @@ export const StarRating = ({ ratingValue, onRatingChange }: StarRatingProps) => 
                         key={starNumber}
                         onPress={() => handleStarPress(starNumber)} >
                         <FontAwesome
-                            name={starNumber <= rating ? 'star' : 'star-o'}
+                            name={starNumber <= ratingValue ? 'star' : 'star-o'}
                             size={32}
                             color="#FFD700"
                             style={styles.star} />

@@ -9,7 +9,7 @@ function AddBookmark(id: string) {
         id: id,
         savedFoodRecipesIds: []
     }
-    setDoc(doc(db, DatabaseCollection.bookmarks, id).withConverter(bookmarkConverter), bookmark)
+    return setDoc(doc(db, DatabaseCollection.bookmarks, id).withConverter(bookmarkConverter), bookmark)
 }
 
 async function GetMySavedFoodRecipes(lastIndex: number = 0): Promise<{foodRecipesData: FoodRecipes[], newLastIndex: number}> {

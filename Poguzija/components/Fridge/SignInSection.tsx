@@ -3,6 +3,7 @@ import { UserContext } from '../../app/_layout'
 import { View, StyleSheet, Dimensions } from 'react-native'
 import { Image } from 'expo-image'
 import { useTranslation } from 'react-i18next'
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 import { ProfileInfo } from './ProfileInfo'
 import { PillButton } from '../Common/PillButton'
 import { TranslationKeys } from '../../locales/_translationKeys'
@@ -20,6 +21,11 @@ export const SignInSection = () => {
         setSigningIn(true)
         try {
             await signInFn()
+        } catch {
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: t(TranslationKeys.Error.LOADING_FAILED)
+            })
         } finally {
             setSigningIn(false)
         }

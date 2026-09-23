@@ -25,6 +25,7 @@ export default function AuthorRecipesScreen() {
     const [food, setFood] = useState<FoodRecipes[]>([])
     const [refreshing, setRefreshing] = useState(false)
     const [loading, setLoading] = useState(true)
+    const [loadingMore, setLoadingMore] = useState(false)
     const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot | null>()
     const [hasMore, setHasMore] = useState(true)
 
@@ -65,8 +66,9 @@ export default function AuthorRecipesScreen() {
     }
 
     const handleEndReached = useCallback(async () => {
-        if (!hasMore) return
+        if (!hasMore || loadingMore || refreshing) return
         try {
+            setLoadingMore(true)
             const { foodRecipesData, newLastVisible } = await GetFoodRecipesByAuthor(authorId, lastVisible)
             if (foodRecipesData.length > 0) {
                 setFood(food => [...food, ...foodRecipesData])
@@ -79,8 +81,10 @@ export default function AuthorRecipesScreen() {
                 type: ALERT_TYPE.DANGER,
                 title: t(TranslationKeys.Error.LOADING_FAILED)
             })
+        } finally {
+            setLoadingMore(false)
         }
-    }, [hasMore, lastVisible, authorId, t])
+    }, [hasMore, loadingMore, refreshing, lastVisible, authorId, t])
 
     const renderItem = useCallback(({ item }: { item: FoodRecipes }) => (
         <CardFoodRecipes data={item} route={''} />

@@ -24,7 +24,7 @@ export const CardComment = memo(({ commentData, author }: { commentData: Comment
                 </Pressable>
                 <View>
                     <Text style={styles.textInputName}>{author?.name}</Text>
-                    <Text style={styles.textInputDate}>{` ${commentData.createdAt.toDate().getDate()}.${commentData.createdAt.toDate().getMonth()}.${commentData.createdAt.toDate().getFullYear()}.`}</Text>
+                    <Text style={styles.textInputDate}>{` ${commentData.createdAt.toDate().getDate()}.${commentData.createdAt.toDate().getMonth() + 1}.${commentData.createdAt.toDate().getFullYear()}.`}</Text>
                 </View>
             </View>
             <View style={styles.textContainer}>

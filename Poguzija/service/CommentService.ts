@@ -18,7 +18,7 @@ async function GetCommentsForRecipe(recipeId: string, lastVisible: QueryDocument
 async function AddComment(recipeId: string, comment: Partial<Comment>) {
     const user = await GetCurrentUser()
     if (!user) return
-    addDoc(collection(db, DatabaseCollection.recipes, recipeId, DatabaseCollection.comments).withConverter(commentConverter), comment)
+    await addDoc(collection(db, DatabaseCollection.recipes, recipeId, DatabaseCollection.comments).withConverter(commentConverter), comment)
 }
 
 const commentConverter = {
