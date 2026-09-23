@@ -1,5 +1,5 @@
 import { doc, updateDoc, getDoc, QueryDocumentSnapshot, collection, getDocs, query, setDoc, limit } from "firebase/firestore/lite"
-import { RecipeScheduler, DatabaseCollection, FoodRecipes, Day, RecipeSchedulerReturn } from "../model/model"
+import { RecipeScheduler, DatabaseCollection, FoodRecipes, Day, RecipeSchedulerReturn, MyUser } from "../model/model"
 import { db } from "./firebase"
 import { GetCurrentUser } from "./AuthService"
 import { foodRecipesConverter } from "./RecipesService"
@@ -20,8 +20,7 @@ function AddRecipesScheduler(id: string) {
     return setDoc(doc(db, DatabaseCollection.recipeSchedulers, id).withConverter(recipesSchedulerConverter), recipeScheduler)
 }
 
-async function GetRecipesScheduler() {
-    const user = await GetCurrentUser()
+async function GetRecipesScheduler(user: MyUser | undefined) {
     if (user) {
         return GetMyRecipesScheduler(user.id)
     } else {

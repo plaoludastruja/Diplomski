@@ -14,7 +14,7 @@ const PlaceholderImage = require('../../assets/images/icon.png')
 
 export const CardFoodRecipes = memo(({ data, route }: { data: FoodRecipes, route: string }) => {
     const router = useRouter()
-    const { setRefreshScheduler } = useContext(SchedulerContext)
+    const { triggerSchedulerRefresh } = useContext(SchedulerContext)
     const { user } = useContext(UserContext)
     const [imageIndex, setImageIndex] = useState(0)
     const scaleAnim = useAnimatedValue(1)
@@ -74,7 +74,7 @@ export const CardFoodRecipes = memo(({ data, route }: { data: FoodRecipes, route
         router.push(`/foodRecipesItem/${data.id}`)
         if (route.split('/')[0] === 'schedulerAdd' && false){
             await AddToMyScheduler(data, route.split('/')[1] as keyof typeof Day)
-            setRefreshScheduler(true)
+            triggerSchedulerRefresh()
             router.back()
         }
     }
@@ -89,14 +89,14 @@ export const CardFoodRecipes = memo(({ data, route }: { data: FoodRecipes, route
         event.stopPropagation()
         if(route.split('/')[0] !== 'scheduler' || !user)return
         await RemoveFromScheduler(data, route.split('/')[1])
-        setRefreshScheduler(true)
+        triggerSchedulerRefresh()
     }
 
     const handleSwapFromScheduler = async (event: GestureResponderEvent, data: FoodRecipes) => {
         event.stopPropagation()
         if(route.split('/')[0] !== 'scheduler' || !user) return
         //await SwapFromScheduler(data, route.split('/')[1])
-        setRefreshScheduler(true)
+        triggerSchedulerRefresh()
     }
 
     return (

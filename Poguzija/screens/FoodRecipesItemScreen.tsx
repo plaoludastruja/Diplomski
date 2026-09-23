@@ -27,7 +27,7 @@ import { GetUser } from '../service/UserService'
 export default function FoodRecipesItemScreen() {
     const { foodRecipesItemId } = useLocalSearchParams<{ foodRecipesItemId: string }>()
     const { user } = useContext(UserContext)
-    const { setRefreshScheduler } = useContext(SchedulerContext)
+    const { triggerSchedulerRefresh } = useContext(SchedulerContext)
     const [food, setFood] = useState<FoodRecipes>()
     const [author, setAuthor] = useState<MyUser>()
     const [loading, setLoading] = useState(true)
@@ -122,7 +122,7 @@ export default function FoodRecipesItemScreen() {
         if (day && food) {
             const recipe = await AddToMyScheduler(food, day)
             if (recipe) {
-                setRefreshScheduler(true)
+                triggerSchedulerRefresh()
                 Toast.show({
                     type: ALERT_TYPE.SUCCESS,
                     title: t(TranslationKeys.Scheduler.RECIPE_ADDED_TO_SCHEDULER)

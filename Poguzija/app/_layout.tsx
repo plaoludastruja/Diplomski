@@ -1,7 +1,7 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useFonts } from 'expo-font'
 import { DefaultTheme, SplashScreen, Stack, ThemeProvider } from 'expo-router'
-import { Dispatch, SetStateAction, createContext, useEffect, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { COLORS, ALERT_COLORS } from '../constants/Colors'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -56,16 +56,17 @@ interface UserContextType {
 }
 
 interface SchedulerContextType {
-    refreshScheduler: boolean,
-    setRefreshScheduler: Dispatch<SetStateAction<boolean>>
+    refreshSchedulerTick: number,
+    triggerSchedulerRefresh: () => void
 }
 
 export const UserContext = createContext<UserContextType>({ user: undefined, signInFn: async () => { }, signOutFn: async () => { } })
-export const SchedulerContext = createContext<SchedulerContextType>({ refreshScheduler: false, setRefreshScheduler: () => { } })
+export const SchedulerContext = createContext<SchedulerContextType>({ refreshSchedulerTick: 0, triggerSchedulerRefresh: () => { } })
 
 function RootLayoutNav() {
     const [user, setUser] = useState<MyUser>()
-    const [refreshScheduler, setRefreshScheduler] = useState(true)
+    const [refreshSchedulerTick, setRefreshSchedulerTick] = useState(0)
+    const triggerSchedulerRefresh = () => setRefreshSchedulerTick(tick => tick + 1)
 
     const getCurrentUserFn = async () => {
         const user = await GetCurrentUser()
@@ -98,7 +99,7 @@ function RootLayoutNav() {
             <BottomSheetModalProvider>
             <ThemeProvider value={theme}>
             <UserContext.Provider value={{ user, signInFn, signOutFn }}>
-            <SchedulerContext.Provider value={{ refreshScheduler, setRefreshScheduler }}>
+            <SchedulerContext.Provider value={{ refreshSchedulerTick, triggerSchedulerRefresh }}>
             <AlertNotificationRoot colors={[ALERT_COLORS, ALERT_COLORS]}>
             <I18nextProvider i18n={i18n}>
                 <Stack >

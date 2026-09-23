@@ -12,7 +12,7 @@ import { TranslationKeys } from "../locales/_translationKeys"
 
 export default function SchedulerScreen() {
     const { user } = useContext(UserContext)
-    const { refreshScheduler, setRefreshScheduler } = useContext(SchedulerContext)
+    const { refreshSchedulerTick } = useContext(SchedulerContext)
     const { t } = useTranslation()
     const [loading, setLoading] = useState(true)
     const [recipesWeek, setRecipesWeek] = useState<RecipeSchedulerReturn>()
@@ -20,7 +20,7 @@ export default function SchedulerScreen() {
 
     const fetchData = useCallback(async () => {
         try {
-            const recipesWeekData = await GetRecipesScheduler()
+            const recipesWeekData = await GetRecipesScheduler(user)
             setRecipesWeek(recipesWeekData)
         } catch {
             Toast.show({
@@ -31,17 +31,16 @@ export default function SchedulerScreen() {
             setLoading(false)
             setRefreshing(false)
         }
-    }, [t])
+    }, [t, user])
 
     const loadData = async () => {
         setLoading(true)
         await fetchData()
-        setRefreshScheduler(false)
     }
 
     useEffect(() => {
         loadData()
-    }, [refreshScheduler, user])
+    }, [refreshSchedulerTick, user])
 
     const handleRefresh = useCallback(() => {
         setRefreshing(true)
