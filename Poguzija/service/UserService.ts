@@ -40,6 +40,17 @@ async function GetUser(id: string): Promise<MyUser | undefined> {
     return
 }
 
+async function GetUsers(ids: string[]): Promise<Map<string, MyUser>> {
+    const uniqueIds = [...new Set(ids)]
+    const users = await Promise.all(uniqueIds.map((id) => GetUser(id)))
+    const usersById = new Map<string, MyUser>()
+    uniqueIds.forEach((id, index) => {
+        const user = users[index]
+        if (user) usersById.set(id, user)
+    })
+    return usersById
+}
+
 function AddUserAdditionalData(uid: string) {
     AddRecipesScheduler(uid)
     AddFridge(uid)
@@ -66,5 +77,6 @@ const userConverter = {
 export {
     GetOrAddUser,
     GetUser,
+    GetUsers,
     userConverter
 }

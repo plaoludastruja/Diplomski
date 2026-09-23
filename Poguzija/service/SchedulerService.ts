@@ -82,22 +82,22 @@ async function GetMyRecipesScheduler(id: string) {
         recipeScheduler = data.data()
     }
 
-    const recipePromises = recipeScheduler.recipeByDay.map(day =>  day.recipes.map(id => getDoc(doc(db, DatabaseCollection.recipes, id)))).flat()
-    const recipeSnapshots = await Promise.all(recipePromises)
+    const uniqueRecipeIds = [...new Set(recipeScheduler.recipeByDay.flatMap(day => day.recipes))]
+    const recipeSnapshots = await Promise.all(uniqueRecipeIds.map(id => getDoc(doc(db, DatabaseCollection.recipes, id))))
 
-    const allFoodRecipes = recipeSnapshots
-    .filter(doc => doc.exists()).
-        map(docE =>  ({
-            id: docE.id,
-            ...docE.data()
-        } as FoodRecipes))
+    const recipesById = new Map<string, FoodRecipes>()
+    recipeSnapshots.forEach((docE, index) => {
+        if (docE.exists()) {
+            recipesById.set(uniqueRecipeIds[index], { id: docE.id, ...docE.data() } as FoodRecipes)
+        }
+    })
 
     const recipeSchedulerData: RecipeSchedulerReturn = {
         id: id,
         recipeByDay: recipeScheduler.recipeByDay.map((day) => {
             return {
                 day: day.day,
-                recipes: day.recipes.map(id => allFoodRecipes.find(recipe => recipe.id === id)).filter(r => r !== undefined)
+                recipes: day.recipes.map(id => recipesById.get(id)).filter(r => r !== undefined)
             }
         })
     }

@@ -1,20 +1,13 @@
 import { Pressable, Text, StyleSheet, View } from 'react-native'
 import { Image } from 'expo-image'
-import { memo, useEffect, useState } from 'react'
+import { memo } from 'react'
 import { useRouter } from 'expo-router'
 import { Comment, MyUser } from '../../model/model'
 import { COLORS, SIZES } from '../../constants/Colors'
-import { GetUser } from '../../service/UserService'
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 
-export const CardComment = memo(({ commentData }: { commentData: Comment }) => {
-    const [author, setAuthor] = useState<MyUser>()
+export const CardComment = memo(({ commentData, author }: { commentData: Comment, author?: MyUser }) => {
     const router = useRouter()
-
-    useEffect(() => {
-        if (!commentData.authorId) return
-        GetUser(commentData.authorId).then(setAuthor).catch(() => { })
-    }, [commentData.authorId])
 
     const handleOpenAuthor = () => {
         if (!author) return
