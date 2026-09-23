@@ -135,7 +135,7 @@ export default function AddRecipeTab() {
                         type: ALERT_TYPE.DANGER,
                         title: t(TranslationKeys.Recipe.IMAGE_UNSAFE)
                     }))
-                } else 
+                } 
 
                 if (newUris.length > 0) {
                     setSelectedImageArray([...selectedImageArray.slice(0, -1), ...newUris, PlaceholderImage])
