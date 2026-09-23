@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from 'react'
-import { View, Pressable, Text, StyleSheet, Dimensions, Animated, useAnimatedValue, ActivityIndicator, InteractionManager } from 'react-native'
+import { View, Pressable, Text, StyleSheet, Dimensions, Animated, useAnimatedValue, ActivityIndicator, InteractionManager, Keyboard } from 'react-native'
 import { Image } from 'expo-image'
 import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -107,6 +107,7 @@ export default function AddRecipeTab() {
 
     const pickImageAsync = async () => {
         if (classifyingImages) return
+        Keyboard.dismiss()
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: false,
             quality: 0.4,
@@ -124,17 +125,17 @@ export default function AddRecipeTab() {
                 const hasUnsafe = validations.some((validation) => validation.reason === 'unsafe')
                 const hasNotFood = validations.some((validation) => validation.reason === 'not_food')
 
-                if (hasUnsafe) {
-                    InteractionManager.runAfterInteractions(() => Toast.show({
-                        type: ALERT_TYPE.DANGER,
-                        title: t(TranslationKeys.Recipe.IMAGE_UNSAFE)
-                    }))
-                } else if (hasNotFood) {
+                if (hasNotFood) {
                     InteractionManager.runAfterInteractions(() => Toast.show({
                         type: ALERT_TYPE.WARNING,
                         title: t(TranslationKeys.Recipe.IMAGE_NOT_FOOD)
                     }))
-                }
+                } else if (hasUnsafe) {
+                    InteractionManager.runAfterInteractions(() => Toast.show({
+                        type: ALERT_TYPE.DANGER,
+                        title: t(TranslationKeys.Recipe.IMAGE_UNSAFE)
+                    }))
+                } else 
 
                 if (newUris.length > 0) {
                     setSelectedImageArray([...selectedImageArray.slice(0, -1), ...newUris, PlaceholderImage])
@@ -389,7 +390,7 @@ export default function AddRecipeTab() {
                                 style={styles.textInput}
                                 placeholder={t(TranslationKeys.Recipe.SERVING_SIZE)}
                                 value={servingSize}
-                                onChangeText={text => setServingSize(text)}
+                                onChangeText={text => setServingSize(text.replace(/[^0-9]/g, ''))}
                                 autoComplete='off'
                                 maxLength={3}
                                 keyboardType='numeric'

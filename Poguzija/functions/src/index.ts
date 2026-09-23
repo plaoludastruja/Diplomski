@@ -135,10 +135,27 @@ const FOOD_LABEL_KEYWORDS = [
     "fruit", "vegetable", "meat", "fish", "seafood", "dairy", "cheese",
     "bread", "pastry", "pasta", "dessert", "baked goods", "snack",
     "beverage", "drink", "cooking", "baking", "grilling", "kitchenware",
-    "tableware", "natural foods", "comfort food", "fast food", "produce",
+    "tableware", "natural foods", "comfort food", "fast food",
+    "spice", "seasoning", "herb", "condiment", "masala", "curry",
+    "powder", "flavoring", "seed", "grain", "legume", "nut", "sauce",
+    "poultry", "chicken", "turkey", "pork", "beef", "steak", "sausage",
+    "bacon", "ham", "mushroom", "egg", "milk", "yogurt", "cream", "butter",
+    "oil", "rice", "cereal", "flour", "noodle", "dough", "batter",
+    "candy", "chocolate", "confectionery", "sugar", "syrup", "honey",
+    "sweetener", "juice", "tea", "coffee", "wine", "beer", "smoothie",
+    "cocktail", "soup", "stew", "salad", "sandwich", "pizza", "burger",
+    "stir fry", "casserole", "appetizer", "side dish", "main course",
+    "superfood", "whole food", "health food", "organic food",
+    "vegetarian food", "vegan food", "garnish", "dressing", "broth",
+    "pickle", "fermented food", "cake", "kitchen", "plate", "bowl",
+    "oven", "stove", "stovetop", "kettle", "mixer", "blender", "toaster",
+    "microwave", "cookware", "saucepan", "frying pan", "whisk", "cutlery",
+    "kitchen utensil", "pot", "pan", "baking sheet", "baking pan",
+    "bay leaf", "laurel", "basil", "parsley", "cilantro", "dill",
 ]
 
 const UNSAFE_LIKELIHOODS = ["LIKELY", "VERY_LIKELY"]
+const RACY_UNSAFE_LIKELIHOODS = ["VERY_LIKELY"]
 
 interface CheckImageContentResult {
     approved: boolean
@@ -157,7 +174,7 @@ export const checkImageContent = onCall<{ imageBase64?: string }, Promise<CheckI
     const [result] = await visionClient.annotateImage({
         image: { content: imageBase64 },
         features: [
-            { type: "LABEL_DETECTION", maxResults: 10 },
+            { type: "LABEL_DETECTION", maxResults: 20 },
             { type: "SAFE_SEARCH_DETECTION" },
         ],
     })
@@ -180,7 +197,7 @@ export const checkImageContent = onCall<{ imageBase64?: string }, Promise<CheckI
     })
 
     const isUnsafe = UNSAFE_LIKELIHOODS.includes(String(safeSearch?.adult ?? ""))
-        || UNSAFE_LIKELIHOODS.includes(String(safeSearch?.racy ?? ""))
+        || RACY_UNSAFE_LIKELIHOODS.includes(String(safeSearch?.racy ?? ""))
         || UNSAFE_LIKELIHOODS.includes(String(safeSearch?.violence ?? ""))
 
     if (isUnsafe) {
