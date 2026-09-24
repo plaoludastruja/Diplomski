@@ -2,7 +2,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { View, Text, StyleSheet, Dimensions, Pressable } from 'react-native'
 import { Image } from 'expo-image'
-import Carousel from 'react-native-snap-carousel'
+import { Carousel } from 'react-native-reanimated-carousel'
 import { FontAwesome, FontAwesome6, Ionicons, MaterialIcons } from '@expo/vector-icons'
 import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -152,7 +152,7 @@ export default function FoodRecipesItemScreen() {
     const renderItem = ({ item, index }: { item: string, index: number }) => {
         return (
             <Pressable style={[styles.images, { width: screenWidth, height: 2 / 3 * screenHeight }]} onPress={() => { setPreviewIndex(index); setPreviewVisible(true) }}>
-                <Image source={{ uri: item }} style={[styles.image, { width: screenWidth, height: 2 * screenHeight / 3 }]} contentFit="cover" transition={300} />
+                <Image source={{ uri: item }} style={[styles.image, { width: screenWidth, height: 2 / 3 * screenHeight }]} contentFit="cover" transition={300} />
                 <LinearGradient
                     colors={['rgba(0, 0, 0, 0.8)', 'rgba(255, 255, 255, 0)']}
                     start={{ x: 0.5, y: - 0.2 }}
@@ -163,6 +163,22 @@ export default function FoodRecipesItemScreen() {
                     start={{ x: 0.5, y: 0.8 }}
                     end={{ x: 0.5, y: 1.1 }}
                     style={[styles.gradientBottom, StyleSheet.absoluteFill]} />
+                <View style={styles.bookmarkContainer}>
+                    {author &&
+                        <Pressable onPress={handleOpenAuthor}>
+                            <Image source={{ uri: author.profilePhoto }} style={styles.authorAvatar} contentFit="cover" transition={300} />
+                        </Pressable>}
+                    {user &&
+                        <>
+                            <Text style={styles.savedCount}>{savedCount}</Text>
+                            <FontAwesome name={bookmarkIconType} color={COLORS.white} size={1.2 * SIZES.tabIcon} onPress={handleAddToBookmarks} />
+                            <Ionicons name='calendar-outline' color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base }} onPress={handleAddToScheduler} />
+                            {user.id === food?.author &&
+                                <Pressable onPress={() => optionsSheetRef.current?.present()}>
+                                    <Ionicons name="options" color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base / 2, }} />
+                                </Pressable>}
+                        </>}
+                </View>
             </Pressable>
         )
     }
@@ -210,31 +226,13 @@ export default function FoodRecipesItemScreen() {
     return (
         <BackgroundSafeAreaView>
             <View style={[styles.scrollViewContent, styles.flex]}>
-                <View style={[styles.flex, { flexDirection: 'row' }]}>
+                <View style={styles.flex}>
                     <Carousel
                         data={food?.images ?? []}
                         renderItem={renderItem}
-                        sliderWidth={screenWidth}
-                        itemWidth={screenWidth}
-                        layout="default"
+                        style={{ width: screenWidth, flex: 1 }}
+                        layout={{ type: 'parallax', offset: 0, scale: 1, adjacentScale: 0.9 }}
                     />
-
-                    <View style={styles.bookmarkContainer}>
-                        {author &&
-                            <Pressable onPress={handleOpenAuthor}>
-                                <Image source={{ uri: author.profilePhoto }} style={styles.authorAvatar} contentFit="cover" transition={300} />
-                            </Pressable>}
-                        {user &&
-                            <>
-                                <Text style={styles.savedCount}>{savedCount}</Text>
-                                <FontAwesome name={bookmarkIconType} color={COLORS.white} size={1.2 * SIZES.tabIcon} onPress={handleAddToBookmarks} />
-                                <Ionicons name='calendar-outline' color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base }} onPress={handleAddToScheduler} />
-                                {user.id === food?.author &&
-                                    <Pressable onPress={() => optionsSheetRef.current?.present()}>
-                                        <Ionicons name="options" color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base / 2, }} />
-                                    </Pressable>}
-                            </>}
-                    </View>
                 </View>
 
                 <BottomSheet

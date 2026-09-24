@@ -4,7 +4,7 @@ import { Image } from 'expo-image'
 import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
 import * as ImagePicker from 'expo-image-picker'
-import Carousel from 'react-native-snap-carousel'
+import { Carousel } from 'react-native-reanimated-carousel'
 import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 import { useTranslation } from 'react-i18next'
@@ -341,9 +341,8 @@ export default function AddRecipeTab() {
                     <Carousel
                         data={selectedImageArray}
                         renderItem={renderItem}
-                        sliderWidth={screenWidth}
-                        itemWidth={screenWidth}
-                        layout="default"
+                        style={{ width: screenWidth, flex: 1 }}
+                        layout={{ type: 'parallax', offset: 0, scale: 1, adjacentScale: 0.9 }}
                     />
                 </View>
 
