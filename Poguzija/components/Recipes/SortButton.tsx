@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     button: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: COLORS.tint,
+        backgroundColor: COLORS.lightDark,
         borderRadius: SIZES.extraLarge,
         paddingHorizontal: SIZES.small,
         paddingVertical: 0.5 * SIZES.base,

@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next'
 import { UserContext, SchedulerContext } from '../app/_layout'
 import { BackgroundSafeAreaView } from '../components/Common/BackgroundSafeAreaView'
 import { ConfirmBottomSheet, ConfirmBottomSheetRef } from '../components/Common/ConfirmBottomSheet'
+import { ImagePreviewModal } from '../components/Common/ImagePreviewModal'
 import { LoadingScreen } from '../components/Common/LoadingScreen'
 import { OptionsBottomSheet, OptionsBottomSheetRef } from '../components/Common/OptionsBottomSheet'
 import { PillButton } from '../components/Common/PillButton'
@@ -35,6 +36,8 @@ export default function FoodRecipesItemScreen() {
     const [isRecipeBookmarked, setIsRecipeBookmarked] = useState(false)
     const [savedCount, setSavedCount] = useState(0)
     const [selectWeekModalVisible, setSelectWeekModalVisible] = useState(false)
+    const [previewVisible, setPreviewVisible] = useState(false)
+    const [previewIndex, setPreviewIndex] = useState(0)
     const { t } = useTranslation()
     const optionsSheetRef = useRef<OptionsBottomSheetRef>(null)
     const confirmDeleteSheetRef = useRef<ConfirmBottomSheetRef>(null)
@@ -146,9 +149,9 @@ export default function FoodRecipesItemScreen() {
         router.push(`/authorRecipes/${author.id}`)
     }
 
-    const renderItem = ({ item }: { item: string }) => {
+    const renderItem = ({ item, index }: { item: string, index: number }) => {
         return (
-            <View style={[styles.images, { width: screenWidth, height: 2 / 3 * screenHeight }]} >
+            <Pressable style={[styles.images, { width: screenWidth, height: 2 / 3 * screenHeight }]} onPress={() => { setPreviewIndex(index); setPreviewVisible(true) }}>
                 <Image source={{ uri: item }} style={[styles.image, { width: screenWidth, height: 2 * screenHeight / 3 }]} contentFit="cover" transition={300} />
                 <LinearGradient
                     colors={['rgba(0, 0, 0, 0.8)', 'rgba(255, 255, 255, 0)']}
@@ -160,7 +163,7 @@ export default function FoodRecipesItemScreen() {
                     start={{ x: 0.5, y: 0.8 }}
                     end={{ x: 0.5, y: 1.1 }}
                     style={[styles.gradientBottom, StyleSheet.absoluteFill]} />
-            </View>
+            </Pressable>
         )
     }
 
@@ -314,6 +317,12 @@ export default function FoodRecipesItemScreen() {
                 ref={confirmDeleteSheetRef}
                 title={t(TranslationKeys.Recipe.DELETE_RECIPE)}
                 message={t(TranslationKeys.Recipe.DELETE_RECIPE_CONFIRMATION)}
+            />
+            <ImagePreviewModal
+                visible={previewVisible}
+                images={food?.images ?? []}
+                initialIndex={previewIndex}
+                onClose={() => setPreviewVisible(false)}
             />
         </BackgroundSafeAreaView>
     )

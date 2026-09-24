@@ -14,6 +14,7 @@ import { AddIngredientsModal } from '../components/IngredientUnitCategory/AddIng
 import { BackgroundSafeAreaView } from '../components/Common/BackgroundSafeAreaView'
 import { ConfirmBottomSheet, ConfirmBottomSheetRef } from '../components/Common/ConfirmBottomSheet'
 import { DeleteIconButton } from '../components/Common/DeleteIconButton'
+import { ImagePreviewModal } from '../components/Common/ImagePreviewModal'
 import { PillButton } from '../components/Common/PillButton'
 import { SelectCategoryList } from '../components/IngredientUnitCategory/SelectCategoryList'
 import { SubtitleText } from '../components/Common/SubtitleText'
@@ -53,6 +54,8 @@ export default function AddRecipeTab() {
 
     const [selectedImageArray, setSelectedImageArray] = useState<string[]>([PlaceholderImage])
     const [selectedImageToUpload, setSelectedImageToUpload] = useState<string[]>([])
+    const [previewVisible, setPreviewVisible] = useState(false)
+    const [previewIndex, setPreviewIndex] = useState(0)
     const confirmDeleteImageSheetRef = useRef<ConfirmBottomSheetRef>(null)
 
     const [title, setTitle] = useState('')
@@ -294,7 +297,7 @@ export default function AddRecipeTab() {
         setCookingTimeAll(newTime.all)
     }
 
-    const renderItem = ({ item }: { item: string }) => {
+    const renderItem = ({ item, index }: { item: string, index: number }) => {
         return (
             <View>
                 {
@@ -309,7 +312,7 @@ export default function AddRecipeTab() {
                             </Pressable>
                         </Animated.View>
                     ) : (
-                        <View style={[styles.images, { width: screenWidth, height: 2 * screenHeight / 3 }]}>
+                        <Pressable style={[styles.images, { width: screenWidth, height: 2 * screenHeight / 3 }]} onPress={() => { setPreviewIndex(index); setPreviewVisible(true) }}>
                             <Image source={{ uri: item }} style={[styles.image, { width: screenWidth, height: 2 * screenHeight / 3 }]} contentFit="cover" transition={300} />
                             <LinearGradient
                                 colors={['rgba(0, 0, 0, 0.8)', 'rgba(255, 255, 255, 0)']}
@@ -324,7 +327,7 @@ export default function AddRecipeTab() {
                             <View style={styles.deleteImageButton}>
                                 <DeleteIconButton style={styles.deleteImageIcon} onPress={() => handleDeleteImage(item)} />
                             </View>
-                        </View>
+                        </Pressable>
                     )
                 }
             </View>
@@ -456,6 +459,13 @@ export default function AddRecipeTab() {
                     ref={confirmDeleteImageSheetRef}
                     title={t(TranslationKeys.Recipe.DELETE_IMAGE)}
                     message={t(TranslationKeys.Recipe.DELETE_IMAGE_CONFIRMATION)}
+                />
+
+                <ImagePreviewModal
+                    visible={previewVisible}
+                    images={selectedImageArray.filter((uri) => uri !== PlaceholderImage)}
+                    initialIndex={previewIndex}
+                    onClose={() => setPreviewVisible(false)}
                 />
             </View>
         </BackgroundSafeAreaView>
