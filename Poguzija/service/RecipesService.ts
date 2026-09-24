@@ -1,12 +1,12 @@
 import { getDocs, query, collection, orderBy, getDoc, doc, addDoc, QueryDocumentSnapshot, QueryConstraint, serverTimestamp, where, updateDoc, increment, limit, startAfter, deleteDoc } from "firebase/firestore/lite"
-import { DatabaseCollection, FoodRecipes } from "../model/model"
+import { DatabaseCollection, FoodRecipes, Rating } from "../model/model"
 import { db } from "./firebase"
 import { GetCurrentUser } from "./AuthService"
 import { RESULT_LIMIT } from "../constants/Firestore"
 import 'react-native-get-random-values'
 
-async function GetAllFoodRecipes(lastVisible: QueryDocumentSnapshot | undefined) {
-    const constraints: QueryConstraint[] = [orderBy('createdAt', "desc"), limit(RESULT_LIMIT)]
+async function GetAllFoodRecipes(lastVisible: QueryDocumentSnapshot | undefined, sortMode: RecipeSortMode = 'newest') {
+    const constraints: QueryConstraint[] = [...GetSortConstraints(sortMode), limit(RESULT_LIMIT)]
     if (lastVisible) {
         constraints.push(startAfter(lastVisible))
     }
@@ -112,9 +112,14 @@ async function UpdateSavedCount(id: string, toIncrease: boolean) {
 async function UpdateRecipeRating(id: string, rating: number) {
     const user = await GetCurrentUser()
     if (!user) return
+    const recipeDoc = await getDoc(doc(db, DatabaseCollection.recipes, id))
+    const currentRating = (recipeDoc.data()?.rating as Rating | undefined) ?? { sum: 0, count: 0, weighted: RATING_PRIOR_MEAN }
+    const newSum = currentRating.sum + rating
+    const newCount = currentRating.count + 1
     await updateDoc(doc(db, DatabaseCollection.recipes, id), {
-        'rating.sum': increment(rating),
-        'rating.count': increment(1)
+        'rating.sum': newSum,
+        'rating.count': newCount,
+        'rating.weighted': ComputeWeightedRating(newSum, newCount)
     })
 }
 
@@ -125,6 +130,25 @@ function CreateSearchFields(foodRecipe: FoodRecipes) {
     const titleFieldsData = Array.from(new Set(titleFields))
     const searchFields = [...searchFieldsData, ...ingredientNames, ...titleFieldsData]
     foodRecipe.searchFields = searchFields
+}
+
+export type RecipeSortMode = 'newest' | 'topRated'
+
+const RATING_PRIOR_COUNT = 5
+const RATING_PRIOR_MEAN = 3
+
+function ComputeWeightedRating(sum: number, count: number): number {
+    if (count === 0) return RATING_PRIOR_MEAN
+    const average = sum / count
+    return (count / (count + RATING_PRIOR_COUNT)) * average + (RATING_PRIOR_COUNT / (count + RATING_PRIOR_COUNT)) * RATING_PRIOR_MEAN
+}
+
+function GetSortConstraints(sortMode: RecipeSortMode): QueryConstraint[] {
+    switch (sortMode) {
+        case 'topRated': return [orderBy('rating.weighted', 'desc')]
+        case 'newest':
+        default: return [orderBy('createdAt', 'desc')]
+    }
 }
 
 const foodRecipesConverter = {
@@ -141,7 +165,11 @@ const foodRecipesConverter = {
             categories: foodRecipe.categories,
             searchFields: foodRecipe.searchFields,
             savedCount: foodRecipe.savedCount,
-            rating: foodRecipe.rating,
+            rating: {
+                sum: foodRecipe.rating.sum,
+                count: foodRecipe.rating.count,
+                weighted: ComputeWeightedRating(foodRecipe.rating.sum, foodRecipe.rating.count),
+            },
             randomValue: Math.random(),
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp()
@@ -166,4 +194,5 @@ export {
     UpdateSavedCount,
     UpdateRecipeRating,
     foodRecipesConverter,
+    GetSortConstraints,
 }

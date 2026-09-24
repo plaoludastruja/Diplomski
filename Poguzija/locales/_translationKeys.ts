@@ -24,6 +24,8 @@ export namespace TranslationKeys {
         DELETE_RECIPE = 'recipe.deleteRecipe',
         DELETE_RECIPE_CONFIRMATION = 'recipe.deleteRecipeConfirmation',
         RECIPE_DELETED = 'recipe.recipeDeleted',
+        NEWEST = 'recipe.newest',
+        TOP_RATED = 'recipe.topRated',
     }
 
     export enum Ingredient {

@@ -27,7 +27,8 @@ async function GetMySavedFoodRecipes(lastIndex: number = 0): Promise<{foodRecipe
         return { foodRecipesData: [], newLastIndex: -1 }
     }
     const batchSize = RESULT_LIMIT
-    const nextBatchIds = bookmark.savedFoodRecipesIds.slice(lastIndex, lastIndex + batchSize)
+    const orderedIds = [...bookmark.savedFoodRecipesIds].reverse()
+    const nextBatchIds = orderedIds.slice(lastIndex, lastIndex + batchSize)
     if (nextBatchIds.length === 0) {
         return { foodRecipesData: [], newLastIndex: -1 }
     }

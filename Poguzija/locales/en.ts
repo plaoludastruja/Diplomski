@@ -24,6 +24,8 @@ export const en = {
         deleteRecipe: 'Delete recipe',
         deleteRecipeConfirmation: 'Do you want to delete this recipe?',
         recipeDeleted: 'Recipe is deleted',
+        newest: 'Newest',
+        topRated: 'Top rated',
     },
     ingredient: {
         name: 'Ingredient',

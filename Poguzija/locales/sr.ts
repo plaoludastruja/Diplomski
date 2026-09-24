@@ -24,6 +24,8 @@ export const sr = {
         deleteRecipe: 'Obrišite recept',
         deleteRecipeConfirmation: 'Da li želite obrisati recept?',
         recipeDeleted: 'Recept je obrisan',
+        newest: 'Najnovije',
+        topRated: 'Top ocjena',
     },
     ingredient: {
         name: 'Sastojak',

@@ -101,6 +101,7 @@ export interface SelectedIngredient {
 export interface Rating {
     sum: number
     count: number
+    weighted: number
 }
 
 export enum Day {

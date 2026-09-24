@@ -7,6 +7,22 @@
                 { "fieldPath": "author", "order": "ASCENDING" },
                 { "fieldPath": "createdAt", "order": "DESCENDING" }
             ]
+        },
+        {
+            "collectionGroup": "foodRecipes",
+            "queryScope": "COLLECTION",
+            "fields": [
+                { "fieldPath": "searchFields", "arrayConfig": "CONTAINS" },
+                { "fieldPath": "createdAt", "order": "DESCENDING" }
+            ]
+        },
+        {
+            "collectionGroup": "foodRecipes",
+            "queryScope": "COLLECTION",
+            "fields": [
+                { "fieldPath": "searchFields", "arrayConfig": "CONTAINS" },
+                { "fieldPath": "rating.weighted", "order": "DESCENDING" }
+            ]
         }
     ],
     "fieldOverrides": [

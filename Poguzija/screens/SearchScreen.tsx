@@ -5,6 +5,7 @@ import { ALERT_TYPE, Toast } from "react-native-alert-notification"
 import { Animated, View, StyleSheet, Text, NativeSyntheticEvent, NativeScrollEvent } from "react-native"
 import { BackgroundSafeAreaView } from "../components/Common/BackgroundSafeAreaView"
 import { CardFoodRecipes } from "../components/Recipes/CardFoodRecipes"
+import { SortButton } from "../components/Recipes/SortButton"
 import { FilterChip } from "../components/Common/FilterChip"
 import { LoadingScreen } from "../components/Common/LoadingScreen"
 import { PillButton } from "../components/Common/PillButton"
@@ -15,6 +16,7 @@ import { SIZES, COLORS } from "../constants/Colors"
 import { TranslationKeys } from "../locales/_translationKeys"
 import { FoodRecipes } from "../model/model"
 import { GetSearchResults } from "../service/SearchService"
+import { RecipeSortMode } from "../service/RecipesService"
 import GestureRecognizer from 'react-native-swipe-gestures'
 import { FlashList } from "@shopify/flash-list"
 import { useScrollToTop } from "expo-router"
@@ -35,6 +37,7 @@ export default function SearchScreen() {
     const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot>()
     const [hasMore, setHasMore] = useState(true)
     const [emptyResult, setEmptyResult] = useState(false)
+    const [sortMode, setSortMode] = useState<RecipeSortMode>('newest')
     const listRef = useRef(null)
     useScrollToTop(listRef)
 
@@ -48,7 +51,7 @@ export default function SearchScreen() {
         setIngredientModalVisible(false)
     }
 
-    const handleSearch = async () => {
+    const handleSearch = async (currentSortMode: RecipeSortMode = sortMode) => {
         if (loading) return
         setLoading(true)
         setEmptyResult(false)
@@ -68,7 +71,7 @@ export default function SearchScreen() {
         }
 
         try {
-            const { foodRecipesData, newLastVisible } = await GetSearchResults(searchParams, null)
+            const { foodRecipesData, newLastVisible } = await GetSearchResults(searchParams, null, currentSortMode)
             setFood(foodRecipesData)
             setLastVisible(newLastVisible)
             setHasMore(foodRecipesData.length > 0)
@@ -84,6 +87,12 @@ export default function SearchScreen() {
         }
     }
 
+    const handleToggleSort = () => {
+        const newSortMode = sortMode === 'newest' ? 'topRated' : 'newest'
+        setSortMode(newSortMode)
+        handleSearch(newSortMode)
+    }
+
     const handleEndReached = useCallback(async () => {
         if (!hasMore || loadingMore || loading) return
         const searchData = search.toUpperCase().split(/[\s-\.,!?]/).filter(t => t.length >= 4)
@@ -94,7 +103,7 @@ export default function SearchScreen() {
         }
         try {
             setLoadingMore(true)
-            const { foodRecipesData, newLastVisible } = await GetSearchResults(searchParams, lastVisible)
+            const { foodRecipesData, newLastVisible } = await GetSearchResults(searchParams, lastVisible, sortMode)
             if (foodRecipesData.length > 0) {
                 setFood(food => [...food, ...foodRecipesData])
                 setLastVisible(newLastVisible)
@@ -109,7 +118,7 @@ export default function SearchScreen() {
         } finally {
             setLoadingMore(false)
         }
-    }, [hasMore, loadingMore, loading, search, categoryData, ingredientData, lastVisible, t])
+    }, [hasMore, loadingMore, loading, search, categoryData, ingredientData, lastVisible, sortMode, t])
 
     const onDeleteSelected = useCallback((type: string, selectedItem: string) => {
         if (type === 'ingredient') {
@@ -137,36 +146,49 @@ export default function SearchScreen() {
     ), [])
 
     const [scrollDirection, setScrollDirection] = useState('')
+    const [sortButtonScrollDirection, setSortButtonScrollDirection] = useState('')
     const [positionAnimation] = useState(() => new Animated.Value(0))
+    const [sortButtonPositionAnimation] = useState(() => new Animated.Value(-200))
+    const lastScrollY = useRef(0)
 
     const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
         const currentScrollPos = event.nativeEvent.contentOffset.y
+
+        // Search bar only reappears once you scroll all the way back to the top.
         if (currentScrollPos > 0) {
             setScrollDirection('down')
         } else if (currentScrollPos <= 0) {
             setScrollDirection('up')
         }
+
+        // Sort button reacts to actual scroll direction, unlike the search bar.
+        if (currentScrollPos <= 0) {
+            setSortButtonScrollDirection('up')
+        } else if (currentScrollPos > lastScrollY.current) {
+            setSortButtonScrollDirection('down')
+        } else if (currentScrollPos < lastScrollY.current) {
+            setSortButtonScrollDirection('up')
+        }
+        lastScrollY.current = currentScrollPos
     }
 
     useEffect(() => {
-        if (scrollDirection === 'down') {
-            Animated.parallel([
-                Animated.timing(positionAnimation, {
-                    toValue: -400,
-                    duration: 300,
-                    useNativeDriver: true,
-                }),
-            ]).start()
-        } else if (scrollDirection === 'up') {
-            Animated.parallel([
-                Animated.timing(positionAnimation, {
-                    toValue: 0,
-                    duration: 300,
-                    useNativeDriver: true,
-                }),
-            ]).start()
-        }
+        Animated.timing(positionAnimation, {
+            toValue: scrollDirection === 'down' ? -400 : 0,
+            duration: 300,
+            useNativeDriver: true,
+        }).start()
     }, [scrollDirection, positionAnimation])
+
+    useEffect(() => {
+        // Sort button shows only while scrolling up, and never while the search bar is visible at the top.
+        const isSortButtonVisible = sortButtonScrollDirection === 'up' && scrollDirection === 'down'
+        Animated.timing(sortButtonPositionAnimation, {
+            toValue: isSortButtonVisible ? 0 : -200,
+            duration: 300,
+            useNativeDriver: true,
+        }).start()
+    }, [sortButtonScrollDirection, scrollDirection, sortButtonPositionAnimation])
 
     return (
         <BackgroundSafeAreaView>
@@ -198,6 +220,7 @@ export default function SearchScreen() {
                     />
                     {emptyResult && <Text style={styles.emptyText}>{t(TranslationKeys.Search.NO_RESULTS)}</Text>}
                 </Animated.View>
+                <SortButton sortMode={sortMode} onToggle={handleToggleSort} positionAnimation={sortButtonPositionAnimation} />
                 {loading ? <LoadingScreen /> :
                     <GestureRecognizer style={styles.flex} onSwipeDown={(state) => { if (food.length !== 0) { setScrollDirection('up') } }} onSwipeUp={(state) => { if (food.length !== 0) { setScrollDirection('down') } }} >
                         <View style={[styles.flex]}>
