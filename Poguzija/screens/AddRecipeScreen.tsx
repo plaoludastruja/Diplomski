@@ -28,6 +28,8 @@ import { EnsureAnonymousSession, GetCurrentAuthUid } from '../service/AuthServic
 import { Timestamp } from 'firebase/firestore/lite'
 
 const PlaceholderImage = require('../assets/images/icon.png')
+const hasImagesSnapPoints = ['33', '95']
+const noImagesSnapPoints = ['66', '95']
 
 export default function AddRecipeTab() {
     const { addEditRecipeId } = useLocalSearchParams<{ addEditRecipeId: string }>()
@@ -36,7 +38,7 @@ export default function AddRecipeTab() {
 
     const screenWidth = Dimensions.get('window').width
     const screenHeight = Dimensions.get('window').height
-    const [snapPoints, setSnapPoints] = useState(['66', '95'])
+    const [snapPoints, setSnapPoints] = useState(noImagesSnapPoints)
     const [isEdit] = useState(addEditRecipeId !== undefined)
     const [submitting, setSubmitting] = useState(false)
     const [classifyingImages, setClassifyingImages] = useState(false)
@@ -95,7 +97,7 @@ export default function AddRecipeTab() {
         setCategoryFields(recipe.categories ?? [])
         setCategoryNumber(recipe.categories?.length ?? 0)
         setSelectedImageArray([...(recipe.images ?? []), PlaceholderImage])
-        setSnapPoints(['35', '65', '95'])
+        setSnapPoints(hasImagesSnapPoints)
         setStepsPlaceholder('ADD_NEXT_STEP')
     }
 
@@ -140,9 +142,7 @@ export default function AddRecipeTab() {
                 if (newUris.length > 0) {
                     setSelectedImageArray([...selectedImageArray.slice(0, -1), ...newUris, PlaceholderImage])
                     setSelectedImageToUpload([...selectedImageToUpload, ...newUris])
-                    if (snapPoints.length !== 3) {
-                        setSnapPoints(['35', '65', '95'])
-                    }
+                    setSnapPoints(hasImagesSnapPoints)
                 }
             } finally {
                 setClassifyingImages(false)
@@ -221,7 +221,7 @@ export default function AddRecipeTab() {
             setSelectedImageArray(updatedImageArray)
             setSelectedImageToUpload(updatedImageToUpload)
             if (updatedImageArray.length === 1) {
-                setSnapPoints(['66', '95'])
+                setSnapPoints(noImagesSnapPoints)
             }
         })
     }
