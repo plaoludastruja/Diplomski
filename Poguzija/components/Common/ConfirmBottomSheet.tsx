@@ -1,5 +1,5 @@
 import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react'
-import { InteractionManager, Pressable, StyleSheet, Text } from 'react-native'
+import { Pressable, StyleSheet, Text } from 'react-native'
 import { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
 import { useTranslation } from 'react-i18next'
 import { ALERT_COLORS, COLORS, SIZES } from '../../constants/Colors'
@@ -30,7 +30,7 @@ export const ConfirmBottomSheet = forwardRef<ConfirmBottomSheetRef, ConfirmBotto
 
     const handleConfirm = useCallback(() => {
         bottomSheetModalRef.current?.dismiss()
-        InteractionManager.runAfterInteractions(() => onConfirmRef.current())
+        requestIdleCallback(() => onConfirmRef.current())
     }, [])
 
     const handleCancel = useCallback(() => {

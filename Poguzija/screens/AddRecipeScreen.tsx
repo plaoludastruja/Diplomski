@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from 'react'
-import { View, Pressable, Text, StyleSheet, Dimensions, Animated, useAnimatedValue, ActivityIndicator, InteractionManager, Keyboard } from 'react-native'
+import { View, Pressable, Text, StyleSheet, Dimensions, Animated, useAnimatedValue, ActivityIndicator, Keyboard } from 'react-native'
 import { Image } from 'expo-image'
 import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -128,16 +128,16 @@ export default function AddRecipeTab() {
                 const hasNotFood = validations.some((validation) => validation.reason === 'not_food')
 
                 if (hasNotFood) {
-                    InteractionManager.runAfterInteractions(() => Toast.show({
+                    requestIdleCallback(() => Toast.show({
                         type: ALERT_TYPE.WARNING,
                         title: t(TranslationKeys.Recipe.IMAGE_NOT_FOOD)
                     }))
                 } else if (hasUnsafe) {
-                    InteractionManager.runAfterInteractions(() => Toast.show({
+                    requestIdleCallback(() => Toast.show({
                         type: ALERT_TYPE.DANGER,
                         title: t(TranslationKeys.Recipe.IMAGE_UNSAFE)
                     }))
-                } 
+                }
 
                 if (newUris.length > 0) {
                     setSelectedImageArray([...selectedImageArray.slice(0, -1), ...newUris, PlaceholderImage])
@@ -435,7 +435,6 @@ export default function AddRecipeTab() {
                                 onChangeText={(text) => setStep(text)}
                                 onEndEditing={() => handleNextStep(step)}
                                 onSubmitEditing={() => handleNextStep(step)}
-                                blurOnSubmit={false}
                             />
                         </View>
                         <PillButton onPress={handleCreateOrEditRecipe} loading={submitting}>{isEdit ? t(TranslationKeys.Recipe.EDIT_RECIPE) : t(TranslationKeys.Recipe.CREATE_RECIPE)}</PillButton>
