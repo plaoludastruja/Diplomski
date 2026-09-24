@@ -1,4 +1,4 @@
-import { Animated, NativeScrollEvent, NativeSyntheticEvent, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { QueryDocumentSnapshot } from 'firebase/firestore/lite'
 import { FoodRecipes } from '../model/model'
@@ -7,6 +7,7 @@ import { CardFoodRecipes } from '../components/Recipes/CardFoodRecipes'
 import { SortButton } from '../components/Recipes/SortButton'
 import { LoadingScreen } from '../components/Common/LoadingScreen'
 import { GetAllFoodRecipes, RecipeSortMode } from '../service/RecipesService'
+import { useSortButtonAutoHide } from '../hooks/useSortButtonAutoHide'
 import { FlashList } from '@shopify/flash-list'
 import { useScrollToTop } from 'expo-router'
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
@@ -81,30 +82,7 @@ export default function RecipesScreen() {
         <CardFoodRecipes data={item} route={''} />
     ), [])
 
-    const [scrollDirection, setScrollDirection] = useState('')
-    const [positionAnimation] = useState(() => new Animated.Value(0))
-
-    const lastScrollY = useRef(0)
-
-    const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-        const currentScrollPos = event.nativeEvent.contentOffset.y
-        if (currentScrollPos <= 0) {
-            setScrollDirection('up')
-        } else if (currentScrollPos > lastScrollY.current) {
-            setScrollDirection('down')
-        } else if (currentScrollPos < lastScrollY.current) {
-            setScrollDirection('up')
-        }
-        lastScrollY.current = currentScrollPos
-    }
-
-    useEffect(() => {
-        Animated.timing(positionAnimation, {
-            toValue: scrollDirection === 'down' ? -200 : 0,
-            duration: 300,
-            useNativeDriver: true,
-        }).start()
-    }, [scrollDirection, positionAnimation])
+    const { positionAnimation, handleScroll } = useSortButtonAutoHide()
 
     if (loading) return <LoadingScreen />
 

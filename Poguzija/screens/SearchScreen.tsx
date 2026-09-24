@@ -17,6 +17,7 @@ import { TranslationKeys } from "../locales/_translationKeys"
 import { FoodRecipes } from "../model/model"
 import { GetSearchResults } from "../service/SearchService"
 import { RecipeSortMode } from "../service/RecipesService"
+import { useSortButtonAutoHide } from "../hooks/useSortButtonAutoHide"
 import GestureRecognizer from 'react-native-swipe-gestures'
 import { FlashList } from "@shopify/flash-list"
 import { useScrollToTop } from "expo-router"
@@ -146,9 +147,8 @@ export default function SearchScreen() {
     ), [])
 
     const [scrollDirection, setScrollDirection] = useState('')
-    const [sortButtonScrollDirection, setSortButtonScrollDirection] = useState('')
     const [positionAnimation] = useState(() => new Animated.Value(0))
-    const [sortButtonPositionAnimation] = useState(() => new Animated.Value(-200))
+    const { positionAnimation: sortButtonPositionAnimation, showSortButton, hideSortButton } = useSortButtonAutoHide()
     const lastScrollY = useRef(0)
 
     const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -157,17 +157,17 @@ export default function SearchScreen() {
         // Search bar only reappears once you scroll all the way back to the top.
         if (currentScrollPos > 0) {
             setScrollDirection('down')
-        } else if (currentScrollPos <= 0) {
+        } else {
             setScrollDirection('up')
         }
 
-        // Sort button reacts to actual scroll direction, unlike the search bar.
+        // Sort button reacts to actual scroll direction, and stays hidden while the search bar is visible at the top.
         if (currentScrollPos <= 0) {
-            setSortButtonScrollDirection('up')
+            hideSortButton()
         } else if (currentScrollPos > lastScrollY.current) {
-            setSortButtonScrollDirection('down')
+            hideSortButton()
         } else if (currentScrollPos < lastScrollY.current) {
-            setSortButtonScrollDirection('up')
+            showSortButton()
         }
         lastScrollY.current = currentScrollPos
     }
@@ -179,16 +179,6 @@ export default function SearchScreen() {
             useNativeDriver: true,
         }).start()
     }, [scrollDirection, positionAnimation])
-
-    useEffect(() => {
-        // Sort button shows only while scrolling up, and never while the search bar is visible at the top.
-        const isSortButtonVisible = sortButtonScrollDirection === 'up' && scrollDirection === 'down'
-        Animated.timing(sortButtonPositionAnimation, {
-            toValue: isSortButtonVisible ? 0 : -200,
-            duration: 300,
-            useNativeDriver: true,
-        }).start()
-    }, [sortButtonScrollDirection, scrollDirection, sortButtonPositionAnimation])
 
     return (
         <BackgroundSafeAreaView>

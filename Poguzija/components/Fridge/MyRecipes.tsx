@@ -1,10 +1,11 @@
-import { Animated, NativeScrollEvent, NativeSyntheticEvent, StyleSheet, View } from 'react-native'
-import { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { FoodRecipes } from '../../model/model'
 import { UserContext } from '../../app/_layout'
 import { CardFoodRecipes } from '../Recipes/CardFoodRecipes'
 import { SortButton } from '../Recipes/SortButton'
 import { GetMyFoodRecipes, RecipeSortMode } from '../../service/RecipesService'
+import { useSortButtonAutoHide } from '../../hooks/useSortButtonAutoHide'
 import { LoadingScreen } from '../Common/LoadingScreen'
 import { QueryDocumentSnapshot } from 'firebase/firestore/lite'
 import { FlashList } from '@shopify/flash-list'
@@ -84,29 +85,7 @@ export const MyRecipes = () => {
         <CardFoodRecipes data={item} route={''} />
     ), [])
 
-    const [scrollDirection, setScrollDirection] = useState('')
-    const [positionAnimation] = useState(() => new Animated.Value(0))
-    const lastScrollY = useRef(0)
-
-    const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-        const currentScrollPos = event.nativeEvent.contentOffset.y
-        if (currentScrollPos <= 0) {
-            setScrollDirection('up')
-        } else if (currentScrollPos > lastScrollY.current) {
-            setScrollDirection('down')
-        } else if (currentScrollPos < lastScrollY.current) {
-            setScrollDirection('up')
-        }
-        lastScrollY.current = currentScrollPos
-    }
-
-    useEffect(() => {
-        Animated.timing(positionAnimation, {
-            toValue: scrollDirection === 'down' ? -200 : 0,
-            duration: 300,
-            useNativeDriver: true,
-        }).start()
-    }, [scrollDirection, positionAnimation])
+    const { positionAnimation, handleScroll } = useSortButtonAutoHide()
 
     if (loading) return <LoadingScreen />
 

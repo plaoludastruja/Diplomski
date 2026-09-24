@@ -10,7 +10,7 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "postinstall": "patch-package",
-    "lint": "expo lint app components screens service constants model locales"
+    "lint": "expo lint app components screens service constants model locales hooks"
   },
   "jest": {
     "preset": "jest-expo"
