@@ -1,8 +1,10 @@
 import { initializeApp } from "firebase-admin/app"
+import { getAuth } from "firebase-admin/auth"
 import { FieldValue, Query, WriteResult, getFirestore } from "firebase-admin/firestore"
 import { getStorage } from "firebase-admin/storage"
 import { onDocumentDeleted, onDocumentUpdated } from "firebase-functions/v2/firestore"
 import { HttpsError, onCall } from "firebase-functions/v2/https"
+import { onSchedule } from "firebase-functions/v2/scheduler"
 import * as functionsV1 from "firebase-functions/v1"
 import { logger } from "firebase-functions"
 import { ImageAnnotatorClient } from "@google-cloud/vision"
@@ -215,4 +217,41 @@ export const checkImageContent = onCall<{ imageBase64?: string }, Promise<CheckI
 
     logger.info("checkImageContent: approved")
     return { approved: true }
+})
+
+// Runs daily. Replaces Firebase Auth's built-in anonymous account auto-clean-up,
+// which has no way to exempt specific accounts - and would otherwise trigger
+// cleanupDeletedUser (above), wiping out any recipes an anonymous author made.
+// Same 30-day/unlinked rule, but skips accounts that authored a recipe.
+const ANONYMOUS_ACCOUNT_MAX_AGE_DAYS = 30
+
+export const cleanupStaleAnonymousUsers = onSchedule("every 24 hours", async () => {
+    const auth = getAuth()
+    const db = getFirestore()
+    const cutoff = Date.now() - ANONYMOUS_ACCOUNT_MAX_AGE_DAYS * 24 * 60 * 60 * 1000
+
+    let pageToken: string | undefined
+    let deletedCount = 0
+
+    do {
+        const page = await auth.listUsers(1000, pageToken)
+        pageToken = page.pageToken
+
+        const staleAnonymousUsers = page.users.filter((user) => {
+            if (user.providerData.length > 0) return false
+            const lastActivity = new Date(user.metadata.lastRefreshTime ?? user.metadata.creationTime).getTime()
+            return lastActivity < cutoff
+        })
+
+        const candidateUids = await Promise.all(staleAnonymousUsers.map(async (user) => {
+            const recipesSnap = await db.collection("foodRecipes").where("author", "==", user.uid).limit(1).get()
+            return recipesSnap.empty ? user.uid : null
+        }))
+
+        const uidsToDelete = candidateUids.filter((uid): uid is string => uid !== null)
+        await Promise.all(uidsToDelete.map((uid) => auth.deleteUser(uid)))
+        deletedCount += uidsToDelete.length
+    } while (pageToken)
+
+    logger.info(`cleanupStaleAnonymousUsers: deleted ${deletedCount} stale anonymous accounts`)
 })
