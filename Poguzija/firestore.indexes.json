@@ -12,6 +12,14 @@
             "collectionGroup": "foodRecipes",
             "queryScope": "COLLECTION",
             "fields": [
+                { "fieldPath": "author", "order": "ASCENDING" },
+                { "fieldPath": "rating.weighted", "order": "DESCENDING" }
+            ]
+        },
+        {
+            "collectionGroup": "foodRecipes",
+            "queryScope": "COLLECTION",
+            "fields": [
                 { "fieldPath": "searchFields", "arrayConfig": "CONTAINS" },
                 { "fieldPath": "createdAt", "order": "DESCENDING" }
             ]

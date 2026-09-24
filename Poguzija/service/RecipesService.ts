@@ -83,14 +83,14 @@ async function DeleteFoodRecipe(recipeId: string) {
     await deleteDoc(doc(db, DatabaseCollection.recipes, recipeId))
 }
 
-async function GetMyFoodRecipes(lastVisible: QueryDocumentSnapshot | null | undefined) {
+async function GetMyFoodRecipes(lastVisible: QueryDocumentSnapshot | null | undefined, sortMode: RecipeSortMode = 'newest') {
     const user = await GetCurrentUser()
     if (!user) return { foodRecipesData: [] as FoodRecipes[], newLastVisible: null }
-    return GetFoodRecipesByAuthor(user.id, lastVisible)
+    return GetFoodRecipesByAuthor(user.id, lastVisible, sortMode)
 }
 
-async function GetFoodRecipesByAuthor(authorId: string, lastVisible: QueryDocumentSnapshot | null | undefined) {
-    const constraints: QueryConstraint[] = [where("author", "==", authorId), orderBy('createdAt', "desc"), limit(RESULT_LIMIT)]
+async function GetFoodRecipesByAuthor(authorId: string, lastVisible: QueryDocumentSnapshot | null | undefined, sortMode: RecipeSortMode = 'newest') {
+    const constraints: QueryConstraint[] = [where("author", "==", authorId), ...GetSortConstraints(sortMode), limit(RESULT_LIMIT)]
     if (lastVisible) {
         constraints.push(startAfter(lastVisible))
     }

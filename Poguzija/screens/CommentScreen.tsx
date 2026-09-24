@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useState } from "react"
 import { useLocalSearchParams } from "expo-router"
-import { Animated, Pressable, View, StyleSheet, RefreshControl, useAnimatedValue } from "react-native"
+import { Animated, Pressable, View, StyleSheet, useAnimatedValue } from "react-native"
 import { QueryDocumentSnapshot } from "firebase/firestore/lite"
 import { MaterialIcons } from "@expo/vector-icons"
 import { useTranslation } from "react-i18next"
@@ -148,12 +148,8 @@ export default function CommentsScreen() {
                 style={styles.flex}
                 onEndReached={handleEndReached}
                 onEndReachedThreshold={0.5}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={handleRefresh}
-                    />
-                }
+                onRefresh={handleRefresh}
+                refreshing={refreshing}
             />
             <AddCommentModal
                 visible={addCommentModalVisible}
