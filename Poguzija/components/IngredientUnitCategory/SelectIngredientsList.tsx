@@ -38,9 +38,15 @@ export const SelectIngredientsList = ({ alreadySelected, visible, onClose }: Sel
 
     const filterData = (search: string) => {
         const safeData = data ?? []
+        const lowerSearch = search.toLowerCase()
         const filteredData = search === '' ? safeData : safeData.map(item => {
-            const filteredInnerData = item.data.filter(dataItem => 
-                t(TranslationKeys.IngredientItem[dataItem.name as keyof typeof TranslationKeys.IngredientItem]).toLowerCase().includes(search.toLowerCase())
+            const categoryLabel = t(TranslationKeys.IngredientType[item.type as keyof typeof TranslationKeys.IngredientType])
+            if ((categoryLabel || item.type).toLowerCase().includes(lowerSearch)) {
+                return item
+            }
+
+            const filteredInnerData = item.data.filter(dataItem =>
+                t(TranslationKeys.IngredientItem[dataItem.name as keyof typeof TranslationKeys.IngredientItem]).toLowerCase().includes(lowerSearch)
             )
             if (filteredInnerData.length > 0) {
                 return {

@@ -40,8 +40,9 @@ eas build --profile development --platform android
 ## Update (EAS Update / OTA)
 
 ```bash
+npx eas update:configure                                                       # one-time setup (installs expo-updates, adds updates/runtimeVersion config)
 npx eas update --branch preview --message "change description"
-npx eas update:configure
+npx eas update --channel preview --message "change description" --environment preview
 ```
 
 ## Submit (EAS)
