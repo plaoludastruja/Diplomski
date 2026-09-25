@@ -41,6 +41,7 @@ export default {
       "expo-localization",
       ["expo-splash-screen", {
         image: "./assets/images/splashScreen.png",
+        imageWidth: 300,
         resizeMode: "contain",
         backgroundColor: "#FCF8E8"
       }],
