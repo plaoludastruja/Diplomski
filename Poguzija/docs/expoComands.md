@@ -27,22 +27,22 @@ npm run web
 ## Build (EAS)
 
 ```bash
-npx eas login                       # log in to your Expo/EAS account
-npx eas build:configure             # initial EAS configuration (eas.json)
-npx eas build --platform android    # build for Android
-npx eas build --platform ios        # build for iOS
-npx eas build --platform all        # build for both platforms
-npx eas build --profile preview     # build with the preview profile (internal testing)
-npx eas build --profile development # dev-client build
-eas build --profile development --platform android
+npx eas login                                       # log in to your Expo/EAS account
+npx eas build:configure                             # initial EAS configuration (eas.json)
+npx eas build --platform android                    # build for Android
+npx eas build --platform ios                        # build for iOS
+npx eas build --platform all                        # build for both platforms
+npx eas build --profile preview                     # build with the preview profile (internal testing)
+npx eas build --profile development                 # dev-client build
+eas build --profile development --platform android  # development build
+eas build --profile development --platform preview  # preview build
 ```
 
 ## Update (EAS Update / OTA)
 
 ```bash
-npx eas update:configure                                                       # one-time setup (installs expo-updates, adds updates/runtimeVersion config)
-npx eas update --branch preview --message "change description"
-npx eas update --channel preview --message "change description" --environment preview
+npx eas update:configure                                                                # one-time setup
+npx eas update --channel preview --message "change description" --environment preview   # eas update for preview
 ```
 
 ## Submit (EAS)
@@ -63,9 +63,9 @@ npx expo whoami                # currently logged-in user
 ## Firebase (Firestore/Storage rules)
 
 ```bash
-npm install -g firebase-tools                          # install the Firebase CLI (one-time)
-firebase login                                          # log in to your Firebase account
-firebase deploy --only firestore:rules,storage,indexes,functions  # deploy firestore.rules + storage.rules + firestore.indexes + firestore.functions
+npm install -g firebase-tools                                       # install the Firebase CLI (one-time)
+firebase login                                                      # log in to your Firebase account
+firebase deploy --only firestore:rules,storage,indexes,functions    # deploy firestore.rules + storage.rules + firestore.indexes + firestore.functions
 ```
 
 ## Upgrading Expo
