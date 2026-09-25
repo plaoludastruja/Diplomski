@@ -5,7 +5,7 @@ import { Image } from 'expo-image'
 import { useTranslation } from 'react-i18next'
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 import { ProfileInfo } from './ProfileInfo'
-import { GoogleSigninButton } from '@react-native-google-signin/google-signin'
+import { GoogleSignInButton } from '../Common/GoogleSignInButton'
 import { TranslationKeys } from '../../locales/_translationKeys'
 
 const RegisterImage = require('../../assets/images/registerImage.png')
@@ -36,12 +36,7 @@ export const SignInSection = () => {
             <ProfileInfo />
             <View style={styles.containerRegister}>
                 <Image source={RegisterImage} style={[{ width: '100%', height: screenHeight / 2 }]} contentFit="contain" transition={300} />
-                <GoogleSigninButton
-                    style={styles.googleButton}
-                    size={GoogleSigninButton.Size.Wide}
-                    color={GoogleSigninButton.Color.Light}
-                    onPress={handleSignIn}
-                    disabled={signingIn} />
+                <GoogleSignInButton onPress={handleSignIn} loading={signingIn}>{t(TranslationKeys.Button.LOG_IN)}</GoogleSignInButton>
             </View>
         </>
     )
@@ -52,9 +47,5 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '95%',
         alignItems: 'center',
-    },
-    googleButton: {
-        width: 240,
-        height: 48,
     },
 })

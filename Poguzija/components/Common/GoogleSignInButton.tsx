@@ -1,16 +1,17 @@
-import { ReactNode } from 'react'
-import { ActivityIndicator, Animated, GestureResponderEvent, Pressable, StyleProp, StyleSheet, Text, ViewStyle, useAnimatedValue } from 'react-native'
+import { ActivityIndicator, Animated, GestureResponderEvent, Pressable, StyleSheet, Text, useAnimatedValue } from 'react-native'
+import { Image } from 'expo-image'
 import { COLORS, SIZES } from '../../constants/Colors'
 
-interface PillButtonProps {
-    children: ReactNode
+const GoogleIcon = require('../../assets/images/googleIcon.png')
+
+interface GoogleSignInButtonProps {
+    children: string
     onPress?: (event: GestureResponderEvent) => void
-    style?: StyleProp<ViewStyle>
     loading?: boolean
     disabled?: boolean
 }
 
-export const PillButton = ({ children, onPress, style, loading, disabled }: PillButtonProps) => {
+export const GoogleSignInButton = ({ children, onPress, loading, disabled }: GoogleSignInButtonProps) => {
     const scaleAnim = useAnimatedValue(1)
 
     const handlePressIn = () => {
@@ -29,10 +30,13 @@ export const PillButton = ({ children, onPress, style, loading, disabled }: Pill
 
     return (
         <Animated.View style={[styles.container, { transform: [{ scale: scaleAnim }] }]}>
-            <Pressable style={[styles.button, style]} onPress={onPress} onPressIn={handlePressIn} onPressOut={handlePressOut} disabled={loading || disabled}>
+            <Pressable style={styles.content} onPress={onPress} onPressIn={handlePressIn} onPressOut={handlePressOut} disabled={loading || disabled}>
                 {loading ?
                     <ActivityIndicator color={COLORS.white} /> :
-                    <Text style={styles.buttonText}>{children}</Text>}
+                    <>
+                        <Image source={GoogleIcon} style={styles.icon} contentFit="contain" />
+                        <Text style={styles.buttonText}>{children}</Text>
+                    </>}
             </Pressable>
         </Animated.View>
     )
@@ -42,14 +46,22 @@ const styles = StyleSheet.create({
     container: {
         width: '85%',
     },
-    button: {
+    content: {
+        flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: COLORS.tint,
+        gap: SIZES.small,
+        minHeight: SIZES.tabIcon + 2 * SIZES.small,
+        backgroundColor: COLORS.lightDark,
         borderRadius: SIZES.extraLarge,
-        padding: SIZES.base,
+        padding: SIZES.small,
         marginVertical: SIZES.base,
         elevation: 2,
         shadowColor: COLORS.dark,
+    },
+    icon: {
+        width: SIZES.tabIcon,
+        height: SIZES.tabIcon,
     },
     buttonText: {
         color: COLORS.white,

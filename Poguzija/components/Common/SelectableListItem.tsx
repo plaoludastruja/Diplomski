@@ -25,8 +25,10 @@ export const SelectableListItem = ({ label, selected, onPress }: SelectableListI
     }
 
     return (
-        <Animated.View style={[selected ? styles.buttonModalSelected : styles.buttonModal, { transform: [{ scale: scaleAnim }] }]}>
-            <Pressable onPress={onPress} onPressIn={handlePressIn} onPressOut={handlePressOut}>
+        <Animated.View style={[styles.container, { transform: [{ scale: scaleAnim }] }]}>
+            <Pressable
+                style={selected ? styles.buttonModalSelected : styles.buttonModal}
+                onPress={onPress} onPressIn={handlePressIn} onPressOut={handlePressOut}>
                 <Text style={styles.textStyle}>{label}</Text>
             </Pressable>
         </Animated.View>
@@ -34,6 +36,9 @@ export const SelectableListItem = ({ label, selected, onPress }: SelectableListI
 }
 
 const styles = StyleSheet.create({
+    container: {
+        width: '100%',
+    },
     buttonModal: {
         borderRadius: SIZES.extraLarge,
         padding: SIZES.small,
