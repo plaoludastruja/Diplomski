@@ -35,7 +35,7 @@ npx eas build --platform all                        # build for both platforms
 npx eas build --profile preview                     # build with the preview profile (internal testing)
 npx eas build --profile development                 # dev-client build
 eas build --profile development --platform android  # development build
-eas build --profile development --platform preview  # preview build
+eas build --profile preview --platform android      # preview build
 ```
 
 ## Update (EAS Update / OTA)
