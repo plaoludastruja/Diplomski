@@ -7,6 +7,7 @@ import * as ImagePicker from 'expo-image-picker'
 import { Carousel } from 'react-native-reanimated-carousel'
 import { useSharedValue } from 'react-native-reanimated'
 import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 import { useTranslation } from 'react-i18next'
 import { router, useLocalSearchParams } from 'expo-router'
@@ -59,6 +60,7 @@ export default function AddRecipeTab() {
     const [previewVisible, setPreviewVisible] = useState(false)
     const [previewIndex, setPreviewIndex] = useState(0)
     const carouselProgress = useSharedValue(0)
+    const insets = useSafeAreaInsets()
     const confirmDeleteImageSheetRef = useRef<ConfirmBottomSheetRef>(null)
 
     const [title, setTitle] = useState('')
@@ -352,7 +354,7 @@ export default function AddRecipeTab() {
                         <CarouselPagination
                             count={selectedImageArray.length}
                             progress={carouselProgress}
-                            top={0.64 * screenHeight - SIZES.extraLarge - SIZES.small}
+                            top={0.66 * screenHeight - SIZES.extraLarge - SIZES.small - insets.bottom}
                         />}
                 </View>
 

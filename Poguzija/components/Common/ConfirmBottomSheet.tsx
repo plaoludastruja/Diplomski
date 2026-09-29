@@ -1,6 +1,7 @@
 import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react'
 import { Pressable, StyleSheet, Text } from 'react-native'
 import { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import { ALERT_COLORS, COLORS, SIZES } from '../../constants/Colors'
 import { TranslationKeys } from '../../locales/_translationKeys'
@@ -19,6 +20,7 @@ interface ConfirmBottomSheetProps {
 export const ConfirmBottomSheet = forwardRef<ConfirmBottomSheetRef, ConfirmBottomSheetProps>(({ title, message, confirmText }, ref) => {
     const bottomSheetModalRef = useRef<BottomSheetModal>(null)
     const onConfirmRef = useRef<() => void>(() => {})
+    const insets = useSafeAreaInsets()
     const { t } = useTranslation()
 
     useImperativeHandle(ref, () => ({
@@ -44,6 +46,7 @@ export const ConfirmBottomSheet = forwardRef<ConfirmBottomSheetRef, ConfirmBotto
     return (
         <BottomSheetModal
             ref={bottomSheetModalRef}
+            bottomInset={insets.bottom}
             backgroundStyle={styles.background}
             handleIndicatorStyle={styles.handleIndicator}
             backdropComponent={renderBackdrop}

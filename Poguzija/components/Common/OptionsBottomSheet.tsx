@@ -1,6 +1,7 @@
 import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { COLORS, SIZES } from '../../constants/Colors'
 
 export interface OptionItem {
@@ -19,6 +20,7 @@ interface OptionsBottomSheetProps {
 
 export const OptionsBottomSheet = forwardRef<OptionsBottomSheetRef, OptionsBottomSheetProps>(({ options, onSelect }, ref) => {
     const bottomSheetModalRef = useRef<BottomSheetModal>(null)
+    const insets = useSafeAreaInsets()
 
     useImperativeHandle(ref, () => ({
         present: () => bottomSheetModalRef.current?.present(),
@@ -36,6 +38,7 @@ export const OptionsBottomSheet = forwardRef<OptionsBottomSheetRef, OptionsBotto
     return (
         <BottomSheetModal
             ref={bottomSheetModalRef}
+            bottomInset={insets.bottom}
             backgroundStyle={styles.background}
             handleIndicatorStyle={styles.handleIndicator}
             backdropComponent={renderBackdrop}
