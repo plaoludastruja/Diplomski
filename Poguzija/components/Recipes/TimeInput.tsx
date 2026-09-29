@@ -42,6 +42,7 @@ export const TimeInput = ({ time, onTimeChange, refresh }: TimeInputProps) => {
                 maxLength={2}
                 keyboardType='numeric'
                 placeholder="00"
+                placeholderTextColor={COLORS.lightDark}
             />
             <Text style={styles.textInputTime}>h</Text>
             <BottomSheetTextInput
@@ -51,6 +52,7 @@ export const TimeInput = ({ time, onTimeChange, refresh }: TimeInputProps) => {
                 maxLength={2}
                 keyboardType='numeric'
                 placeholder="00"
+                placeholderTextColor={COLORS.lightDark}
             />
             <Text style={styles.textInputTime}>min</Text>
         </View>

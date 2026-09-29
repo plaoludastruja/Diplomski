@@ -5,6 +5,7 @@ import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
 import * as ImagePicker from 'expo-image-picker'
 import { Carousel } from 'react-native-reanimated-carousel'
+import { useSharedValue } from 'react-native-reanimated'
 import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 import { useTranslation } from 'react-i18next'
@@ -12,6 +13,7 @@ import { router, useLocalSearchParams } from 'expo-router'
 import { UserContext } from '../app/_layout'
 import { AddIngredientsModal } from '../components/IngredientUnitCategory/AddIngredientsModal'
 import { BackgroundSafeAreaView } from '../components/Common/BackgroundSafeAreaView'
+import { CarouselPagination } from '../components/Common/CarouselPagination'
 import { ConfirmBottomSheet, ConfirmBottomSheetRef } from '../components/Common/ConfirmBottomSheet'
 import { DeleteIconButton } from '../components/Common/DeleteIconButton'
 import { ImagePreviewModal } from '../components/Common/ImagePreviewModal'
@@ -56,6 +58,7 @@ export default function AddRecipeTab() {
     const [selectedImageToUpload, setSelectedImageToUpload] = useState<string[]>([])
     const [previewVisible, setPreviewVisible] = useState(false)
     const [previewIndex, setPreviewIndex] = useState(0)
+    const carouselProgress = useSharedValue(0)
     const confirmDeleteImageSheetRef = useRef<ConfirmBottomSheetRef>(null)
 
     const [title, setTitle] = useState('')
@@ -343,7 +346,14 @@ export default function AddRecipeTab() {
                         renderItem={renderItem}
                         style={{ width: screenWidth, flex: 1 }}
                         layout={{ type: 'parallax', offset: 0, scale: 1, adjacentScale: 0.9 }}
+                        progress={carouselProgress}
                     />
+                    {selectedImageArray.length > 2 &&
+                        <CarouselPagination
+                            count={selectedImageArray.length}
+                            progress={carouselProgress}
+                            top={0.64 * screenHeight - SIZES.extraLarge - SIZES.small}
+                        />}
                 </View>
 
                 <BottomSheet
@@ -363,6 +373,7 @@ export default function AddRecipeTab() {
                             <BottomSheetTextInput
                                 style={styles.textInput}
                                 placeholder={t(TranslationKeys.Recipe.NAME)}
+                                placeholderTextColor={COLORS.lightDark}
                                 multiline={true}
                                 value={title}
                                 autoComplete='off'
@@ -377,6 +388,7 @@ export default function AddRecipeTab() {
                             <BottomSheetTextInput
                                 style={styles.textInput}
                                 placeholder={t(TranslationKeys.Recipe.DESCRIPTION)}
+                                placeholderTextColor={COLORS.lightDark}
                                 multiline={true}
                                 value={description}
                                 autoComplete='off'
@@ -391,6 +403,7 @@ export default function AddRecipeTab() {
                             <BottomSheetTextInput
                                 style={styles.textInput}
                                 placeholder={t(TranslationKeys.Recipe.SERVING_SIZE)}
+                                placeholderTextColor={COLORS.lightDark}
                                 value={servingSize}
                                 onChangeText={text => setServingSize(text.replace(/[^0-9]/g, ''))}
                                 autoComplete='off'
@@ -432,11 +445,13 @@ export default function AddRecipeTab() {
                             <BottomSheetTextInput
                                 style={styles.input}
                                 placeholder={t(TranslationKeys.Recipe[stepsPlaceholder as keyof typeof TranslationKeys.Recipe]) || stepsPlaceholder}
+                                placeholderTextColor={COLORS.lightDark}
                                 value={step}
                                 autoComplete='off'
                                 onChangeText={(text) => setStep(text)}
                                 onEndEditing={() => handleNextStep(step)}
                                 onSubmitEditing={() => handleNextStep(step)}
+                                submitBehavior="submit"
                             />
                         </View>
                         <PillButton onPress={handleCreateOrEditRecipe} loading={submitting}>{isEdit ? t(TranslationKeys.Recipe.EDIT_RECIPE) : t(TranslationKeys.Recipe.CREATE_RECIPE)}</PillButton>

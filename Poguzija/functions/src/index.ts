@@ -156,6 +156,8 @@ const FOOD_LABEL_KEYWORDS = [
     "bay leaf", "laurel", "basil", "parsley", "cilantro", "dill",
 ]
 
+const FOOD_LABEL_KEYWORD_PATTERNS = FOOD_LABEL_KEYWORDS.map((keyword) => new RegExp(`\\b${keyword}\\b`))
+
 const UNSAFE_LIKELIHOODS = ["LIKELY", "VERY_LIKELY"]
 const RACY_UNSAFE_LIKELIHOODS = ["VERY_LIKELY"]
 
@@ -208,7 +210,7 @@ export const checkImageContent = onCall<{ imageBase64?: string }, Promise<CheckI
     }
 
     const lowerLabels = labels.map((label) => label.description.toLowerCase())
-    const isFood = lowerLabels.some((label) => FOOD_LABEL_KEYWORDS.some((keyword) => label.includes(keyword)))
+    const isFood = lowerLabels.some((label) => FOOD_LABEL_KEYWORD_PATTERNS.some((pattern) => pattern.test(label)))
 
     if (!isFood) {
         logger.info("checkImageContent: rejected (not food)")

@@ -63,14 +63,14 @@ export const AddIngredientsModal = ({ visible, dataEdit, onAdd, onClose }: AddIn
             <ModalBackdrop visible={visible} onClose={handleOnClose} cardStyle={styles.card}>
                 <Pressable style={styles.nameInput} onPress={() => {if(!dataEdit?.name) openModal('ingredient')}}>
                     <MaterialIcons name="search" style={styles.icon} />
-                    <TextInput value={t(TranslationKeys.IngredientItem[name as keyof typeof TranslationKeys.IngredientItem]) || name} placeholder={t(TranslationKeys.Ingredient.NAME)} editable={false} style={styles.textInput} />
+                    <TextInput value={t(TranslationKeys.IngredientItem[name as keyof typeof TranslationKeys.IngredientItem]) || name} placeholder={t(TranslationKeys.Ingredient.NAME)} placeholderTextColor={COLORS.lightDark} editable={false} style={styles.textInput} />
                 </Pressable>
                 <View style={styles.amountAndUnitContainer}>
                     <View style={[styles.amountAndUnitInput, styles.amountInput]}>
-                        <TextInput value={amount} placeholder={t(TranslationKeys.Ingredient.AMOUNT)} style={styles.textInput} keyboardType='numeric' onChangeText={text => setAmount(text)} />
+                        <TextInput value={amount} placeholder={t(TranslationKeys.Ingredient.AMOUNT)} placeholderTextColor={COLORS.lightDark} style={styles.textInput} keyboardType='numeric' onChangeText={text => setAmount(text)} />
                     </View>
                     <Pressable style={[styles.amountAndUnitInput, styles.unitInput]} onPress={() => openModal('unit')}>
-                        <TextInput value={t(TranslationKeys.UnitItem[unit as keyof typeof TranslationKeys.UnitItem]) || unit} placeholder={t(TranslationKeys.Ingredient.UNIT)} editable={false} style={styles.textInput} onChangeText={text => setUnit(text)} />
+                        <TextInput value={t(TranslationKeys.UnitItem[unit as keyof typeof TranslationKeys.UnitItem]) || unit} placeholder={t(TranslationKeys.Ingredient.UNIT)} placeholderTextColor={COLORS.lightDark} editable={false} style={styles.textInput} onChangeText={text => setUnit(text)} />
                     </Pressable>
                 </View>
                 <PillButton onPress={ handleOnAdd } style={styles.addButton}>{t(dataEdit ? TranslationKeys.Button.EDIT : TranslationKeys.Button.ADD)}</PillButton>

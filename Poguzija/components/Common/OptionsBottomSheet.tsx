@@ -1,5 +1,5 @@
 import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react'
-import { Pressable, StyleSheet, Text } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
 import { COLORS, SIZES } from '../../constants/Colors'
 
@@ -41,10 +41,13 @@ export const OptionsBottomSheet = forwardRef<OptionsBottomSheetRef, OptionsBotto
             backdropComponent={renderBackdrop}
         >
             <BottomSheetView style={styles.container}>
-                {options.map(option => (
-                    <Pressable key={option.code} style={styles.item} onPress={() => handleSelect(option.code)}>
-                        <Text style={styles.itemText}>{option.title}</Text>
-                    </Pressable>
+                {options.map((option, index) => (
+                    <View key={option.code}>
+                        {index > 0 && <View style={styles.separator} />}
+                        <Pressable style={styles.item} onPress={() => handleSelect(option.code)}>
+                            <Text style={styles.itemText}>{option.title}</Text>
+                        </Pressable>
+                    </View>
                 ))}
             </BottomSheetView>
         </BottomSheetModal>
@@ -66,6 +69,13 @@ const styles = StyleSheet.create({
     },
     item: {
         paddingVertical: SIZES.medium,
+    },
+    separator: {
+        height: 3 * StyleSheet.hairlineWidth,
+        width: '75%',
+        alignSelf: 'center',
+        backgroundColor: COLORS.tint,
+        opacity: 0.5,
     },
     itemText: {
         color: COLORS.white,

@@ -3,6 +3,7 @@ import { useContext, useEffect, useRef, useState } from 'react'
 import { View, Text, StyleSheet, Dimensions, Pressable } from 'react-native'
 import { Image } from 'expo-image'
 import { Carousel } from 'react-native-reanimated-carousel'
+import { useSharedValue } from 'react-native-reanimated'
 import { FontAwesome, FontAwesome6, Ionicons, MaterialIcons } from '@expo/vector-icons'
 import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -10,6 +11,7 @@ import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 import { useTranslation } from 'react-i18next'
 import { UserContext, SchedulerContext } from '../app/_layout'
 import { BackgroundSafeAreaView } from '../components/Common/BackgroundSafeAreaView'
+import { CarouselPagination } from '../components/Common/CarouselPagination'
 import { ConfirmBottomSheet, ConfirmBottomSheetRef } from '../components/Common/ConfirmBottomSheet'
 import { ImagePreviewModal } from '../components/Common/ImagePreviewModal'
 import { LoadingScreen } from '../components/Common/LoadingScreen'
@@ -38,6 +40,7 @@ export default function FoodRecipesItemScreen() {
     const [selectWeekModalVisible, setSelectWeekModalVisible] = useState(false)
     const [previewVisible, setPreviewVisible] = useState(false)
     const [previewIndex, setPreviewIndex] = useState(0)
+    const carouselProgress = useSharedValue(0)
     const { t } = useTranslation()
     const optionsSheetRef = useRef<OptionsBottomSheetRef>(null)
     const confirmDeleteSheetRef = useRef<ConfirmBottomSheetRef>(null)
@@ -232,11 +235,18 @@ export default function FoodRecipesItemScreen() {
                         renderItem={renderItem}
                         style={{ width: screenWidth, flex: 1 }}
                         layout={{ type: 'parallax', offset: 0, scale: 1, adjacentScale: 0.9 }}
+                        progress={carouselProgress}
                     />
+                    {(food?.images?.length ?? 0) > 1 &&
+                        <CarouselPagination
+                            count={food?.images?.length ?? 0}
+                            progress={carouselProgress}
+                            top={0.64 * screenHeight - SIZES.extraLarge - SIZES.small}
+                        />}
                 </View>
 
                 <BottomSheet
-                    snapPoints={['35', '95']}
+                    snapPoints={['33', '95']}
                     backgroundStyle={{ backgroundColor: COLORS.dark }}
                     handleIndicatorStyle={{ backgroundColor: COLORS.white }}
                 >
@@ -247,6 +257,7 @@ export default function FoodRecipesItemScreen() {
                             <BottomSheetTextInput
                                 style={styles.textInput}
                                 placeholder={t(TranslationKeys.Recipe.NAME)}
+                                placeholderTextColor={COLORS.lightDark}
                                 multiline={true}
                                 value={food?.title}
                                 autoComplete='off'
@@ -261,6 +272,7 @@ export default function FoodRecipesItemScreen() {
                                 style={styles.textInput}
                                 multiline={true}
                                 placeholder={t(TranslationKeys.Recipe.DESCRIPTION)}
+                                placeholderTextColor={COLORS.lightDark}
                                 value={food?.description}
                                 autoComplete='off'
                                 editable={false}
@@ -273,6 +285,7 @@ export default function FoodRecipesItemScreen() {
                             <BottomSheetTextInput
                                 style={styles.textInput}
                                 placeholder={t(TranslationKeys.Recipe.SERVING_SIZE)}
+                                placeholderTextColor={COLORS.lightDark}
                                 value={food?.servingSize}
                                 editable={false}
                             />
@@ -284,6 +297,7 @@ export default function FoodRecipesItemScreen() {
                             <BottomSheetTextInput
                                 style={styles.textInput}
                                 placeholder={t(TranslationKeys.Recipe.TIME_TO_PREPARE)}
+                                placeholderTextColor={COLORS.lightDark}
                                 value={timeDisplay()}
                                 editable={false}
                             />

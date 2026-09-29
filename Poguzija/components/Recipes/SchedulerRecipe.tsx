@@ -19,7 +19,7 @@ export const SchedulerRecipe = ({ recipesWeek, day }: { recipesWeek: FoodRecipes
                 <View style={[styles.flex, styles.emptyContainer]}>
                     <Text style={styles.emptyText}>{t(TranslationKeys.Scheduler.NO_RECIPES_FOR_DAY)}</Text>
                 </View> :
-                <ScrollView horizontal={true} style={styles.flex}>
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.flex}>
                     {recipesWeek.map((recipe, index) =>
                         <View key={index} style={{ width: 0.8 * screenWidth }}>
                             <CardFoodRecipes data={recipe} route={'scheduler/' + day} />

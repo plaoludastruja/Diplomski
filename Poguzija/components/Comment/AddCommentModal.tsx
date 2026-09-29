@@ -36,6 +36,7 @@ export const AddCommentModal = ({ visible, onAdd, onClose }: AddCommentModalProp
                     <TextInput
                         style={styles.commentInput}
                         placeholder={t(TranslationKeys.Review.WRITE_REVIEW)}
+                        placeholderTextColor={COLORS.lightDark}
                         multiline={true}
                         value={text}
                         autoComplete='off'

@@ -18,6 +18,7 @@ export const SearchInput = ({ value, onChangeText }: SearchInputProps) => {
             <TextInput
                 style={styles.textInput}
                 placeholder={t(TranslationKeys.Button.SEARCH)}
+                placeholderTextColor={COLORS.lightDark}
                 value={value}
                 autoComplete='off'
                 onChangeText={onChangeText}
