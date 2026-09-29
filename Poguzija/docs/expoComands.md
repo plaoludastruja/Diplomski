@@ -41,8 +41,8 @@ eas build --profile preview --platform android      # preview build
 ## Update (EAS Update / OTA)
 
 ```bash
-npx eas update:configure                                                                # one-time setup
-npx eas update --channel preview --message "change description" --environment preview   # eas update for preview
+npx eas update:configure                                                                       # one-time setup
+eas update --channel preview --message "Changes..." --environment preview --platform android   # eas update for preview
 ```
 
 ## Submit (EAS)
