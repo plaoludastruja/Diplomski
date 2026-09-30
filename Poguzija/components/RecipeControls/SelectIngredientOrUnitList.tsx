@@ -1,5 +1,5 @@
 import { StyleSheet, Pressable } from 'react-native'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { IngredientNameUnit } from '../../model/model'
 import { COLORS } from '../../constants/Colors'
 import { GetIngredientNameUnitCategory } from '../../service/IngredientService'
@@ -19,7 +19,7 @@ interface SelectIngredientOrUnitListProps {
 }
 
 export const SelectIngredientOrUnitList = ({ modalDataType, visible, onAdd, onClose }: SelectIngredientOrUnitListProps) => {
-    const {t} = useTranslation()
+    const { t } = useTranslation()
     const [search, setSearch] = useState('')
     const [data, setData] = useState<IngredientNameUnit[]>([])
     const [dataFilter, setDataFilter] = useState<IngredientNameUnit[]>([])
@@ -38,17 +38,12 @@ export const SelectIngredientOrUnitList = ({ modalDataType, visible, onAdd, onCl
     }, [])
 
     const fetchData = useCallback(() => {
-        if(modalDataType === 'ingredient'){
+        if (modalDataType === 'ingredient') {
             GetIngredientsList()
-        }else if(modalDataType === 'unit'){
+        } else if (modalDataType === 'unit') {
             GetUnitsList()
         }
     }, [modalDataType, GetIngredientsList, GetUnitsList])
-
-    useEffect(() => {
-        if(visible)
-            fetchData()
-    }, [visible, fetchData])
 
     const handlePress = (ingredient: { name: string }) => {
         onAdd(ingredient)
@@ -73,9 +68,9 @@ export const SelectIngredientOrUnitList = ({ modalDataType, visible, onAdd, onCl
             }
 
             const filteredInnerData = item.data.filter(itemData => {
-                if(modalDataType === 'ingredient'){
+                if (modalDataType === 'ingredient') {
                     return t(TranslationKeys.IngredientItem[itemData.name as keyof typeof TranslationKeys.IngredientItem]).toLowerCase().includes(lowerSearch)
-                }else if(modalDataType === 'unit'){
+                } else if (modalDataType === 'unit') {
                     return t(TranslationKeys.UnitItem[itemData.name as keyof typeof TranslationKeys.UnitItem]).toLowerCase().includes(lowerSearch)
                 }
             })
@@ -92,38 +87,38 @@ export const SelectIngredientOrUnitList = ({ modalDataType, visible, onAdd, onCl
     }
 
     return (
-            <ModalBackdrop visible={visible} onClose={handleOnClose} cardStyle={styles.card}>
-                <SearchInput
-                    value={search}
-                    onChangeText={text => {
-                        setSearch(text)
-                        filterData(text)
-                    }}
-                />
-                { addButtonVisible && <SelectableListItem label={t(TranslationKeys.Button.ADD)} onPress={() => handlePress({ name: search})} />}
-                <FlashList
-                    data={dataFilter}
-                    showsVerticalScrollIndicator={false}
-                    keyboardShouldPersistTaps="always"
-                    style={styles.flex}
-                    keyExtractor={item => item.type}
-                    renderItem={({ item }) =>
-                        <Pressable style={styles.itemContainer}>
-                            { modalDataType === 'ingredient' && <SubtitleText style={styles.itemSubtitleText}>{t(TranslationKeys.IngredientType[item.type as keyof typeof TranslationKeys.IngredientType]) || item.type}</SubtitleText> }
-                            { modalDataType === 'unit' && <SubtitleText style={styles.itemSubtitleText}>{t(TranslationKeys.UnitType[item.type as keyof typeof TranslationKeys.UnitType]) || item.type}</SubtitleText> }
-                            { item.data?.map((itemData, index) => (
-                                <SelectableListItem
-                                    key={itemData.name}
-                                    label={modalDataType === 'ingredient'
-                                        ? (t(TranslationKeys.IngredientItem[itemData.name as keyof typeof TranslationKeys.IngredientItem]) || itemData.name)
-                                        : (t(TranslationKeys.UnitItem[itemData.name as keyof typeof TranslationKeys.UnitItem]) || itemData.name)}
-                                    onPress={ () => handlePress(itemData) }
-                                />
-                            ))}
-                        </Pressable>
-                    }
-                />
-            </ModalBackdrop>
+        <ModalBackdrop visible={visible} onClose={handleOnClose} onShow={fetchData} cardStyle={styles.card}>
+            <SearchInput
+                value={search}
+                onChangeText={text => {
+                    setSearch(text)
+                    filterData(text)
+                }}
+            />
+            {addButtonVisible && <SelectableListItem label={t(TranslationKeys.Button.ADD)} onPress={() => handlePress({ name: search })} />}
+            <FlashList
+                data={dataFilter}
+                showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps="always"
+                style={styles.flex}
+                keyExtractor={item => item.type}
+                renderItem={({ item }) =>
+                    <Pressable style={styles.itemContainer}>
+                        {modalDataType === 'ingredient' && <SubtitleText style={styles.itemSubtitleText}>{t(TranslationKeys.IngredientType[item.type as keyof typeof TranslationKeys.IngredientType]) || item.type}</SubtitleText>}
+                        {modalDataType === 'unit' && <SubtitleText style={styles.itemSubtitleText}>{t(TranslationKeys.UnitType[item.type as keyof typeof TranslationKeys.UnitType]) || item.type}</SubtitleText>}
+                        {item.data?.map((itemData, index) => (
+                            <SelectableListItem
+                                key={itemData.name}
+                                label={modalDataType === 'ingredient'
+                                    ? (t(TranslationKeys.IngredientItem[itemData.name as keyof typeof TranslationKeys.IngredientItem]) || itemData.name)
+                                    : (t(TranslationKeys.UnitItem[itemData.name as keyof typeof TranslationKeys.UnitItem]) || itemData.name)}
+                                onPress={() => handlePress(itemData)}
+                            />
+                        ))}
+                    </Pressable>
+                }
+            />
+        </ModalBackdrop>
     )
 }
 

@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, Dimensions, Pressable, Share } from 'react-nati
 import { Image } from 'expo-image'
 import { Carousel } from 'react-native-reanimated-carousel'
 import { useSharedValue } from 'react-native-reanimated'
-import { FontAwesome, FontAwesome6, Ionicons, MaterialIcons, AntDesign } from '@expo/vector-icons'
+import { FontAwesome, Ionicons, MaterialIcons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'
 import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { UserContext, SchedulerContext } from '../app/_layout'
 import { BackgroundSafeAreaView } from '../components/Common/BackgroundSafeAreaView'
 import { CarouselPagination } from '../components/Common/CarouselPagination'
+import { GroupHeaderChip } from '../components/Common/GroupHeaderChip'
 import { ConfirmBottomSheet, ConfirmBottomSheetRef } from '../components/Common/ConfirmBottomSheet'
 import { ImagePreviewModal } from '../components/Common/ImagePreviewModal'
 import { LoadingScreen } from '../components/Common/LoadingScreen'
@@ -25,8 +26,11 @@ import { TranslationKeys } from '../locales/_translationKeys'
 import { FoodRecipes, Day, MyUser } from '../model/model'
 import { IsRecipeBookmarked, RemoveFromMyBookmark, AddToMyBookmark } from '../service/BookmarkService'
 import { GetFoodRecipe, UpdateSavedCount, DeleteFoodRecipe } from '../service/RecipesService'
+import { GetIngredientSections, GroupIngredientsBySections } from '../service/IngredientService'
 import { AddToMyScheduler } from '../service/SchedulerService'
 import { GetUser } from '../service/UserService'
+
+const PlaceholderImage = require('../assets/images/icon.png')
 
 export default function FoodRecipesItemScreen() {
     const { foodRecipesItemId } = useLocalSearchParams<{ foodRecipesItemId: string }>()
@@ -164,11 +168,19 @@ export default function FoodRecipesItemScreen() {
                 food.description && `${t(TranslationKeys.Recipe.DESCRIPTION)}: ${food.description}`,
             ].filter(Boolean).join('\n')
 
-            const ingredientsText = (food.ingredients ?? []).map(ingredient => {
+            const formatIngredient = (ingredient: FoodRecipes['ingredients'][number]) => {
                 const name = t(TranslationKeys.IngredientItem[ingredient.name as keyof typeof TranslationKeys.IngredientItem]) || ingredient.name
                 const unit = t(TranslationKeys.UnitItem[ingredient.unit as keyof typeof TranslationKeys.UnitItem])?.toLowerCase() || ingredient.unit
                 return `- ${name} - ${ingredient.amount} ${unit}`
-            }).join('\n')
+            }
+
+            const ingredients = food.ingredients ?? []
+            const sections = GetIngredientSections(ingredients)
+            const { ungrouped, grouped } = GroupIngredientsBySections(ingredients, sections)
+            const ingredientsText = [
+                ungrouped.map(formatIngredient).join('\n'),
+                ...grouped.map(group => `${group.section}:\n${group.ingredients.map(formatIngredient).join('\n')}`),
+            ].filter(Boolean).join('\n')
 
             const stepsText = (food.steps ?? []).map(step => `${step.number}. ${step.description}`).join('\n')
 
@@ -189,9 +201,10 @@ export default function FoodRecipesItemScreen() {
     }
 
     const renderItem = ({ item, index }: { item: string, index: number }) => {
+        const isPlaceholder = item === ''
         return (
-            <Pressable style={[styles.images, { width: screenWidth, height: 2 / 3 * screenHeight }]} onPress={() => { setPreviewIndex(index); setPreviewVisible(true) }}>
-                <Image source={{ uri: item }} style={[styles.image, { width: screenWidth, height: 2 / 3 * screenHeight }]} contentFit="cover" transition={300} />
+            <Pressable style={[styles.images, { width: screenWidth, height: 2 / 3 * screenHeight }]} onPress={() => { if (!isPlaceholder) { setPreviewIndex(index); setPreviewVisible(true) } }}>
+                <Image source={isPlaceholder ? PlaceholderImage : { uri: item }} style={[styles.image, { width: screenWidth, height: 2 / 3 * screenHeight }]} contentFit="cover" transition={300} />
                 <LinearGradient
                     colors={['rgba(0, 0, 0, 0.8)', 'rgba(255, 255, 255, 0)']}
                     start={{ x: 0.5, y: - 0.2 }}
@@ -209,7 +222,7 @@ export default function FoodRecipesItemScreen() {
                             <FontAwesome name={bookmarkIconType} color={COLORS.white} size={1.2 * SIZES.tabIcon} onPress={handleAddToBookmarks} />
                             <Ionicons name='calendar-outline' color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base }} onPress={handleAddToScheduler} />
                         </>}
-                    <AntDesign name="share-alt" color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base / 2}} onPress={handleShareRecipe} />
+                    <AntDesign name="share-alt" color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base / 2 }} onPress={handleShareRecipe} />
                     {user?.id === food?.author &&
                         <Pressable onPress={() => optionsSheetRef.current?.present()}>
                             <Ionicons name="options" color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base / 2, }} />
@@ -263,20 +276,24 @@ export default function FoodRecipesItemScreen() {
 
     if (loading) return <LoadingScreen />
 
+    const ingredientSections = GetIngredientSections(food?.ingredients ?? [])
+    const { ungrouped: ungroupedIngredients, grouped: groupedIngredients } = GroupIngredientsBySections(food?.ingredients ?? [], ingredientSections)
+    const displayImages = food?.images && food.images.length > 0 ? food.images : ['']
+
     return (
         <BackgroundSafeAreaView>
             <View style={[styles.scrollViewContent, styles.flex]}>
                 <View style={styles.flex}>
                     <Carousel
-                        data={food?.images ?? []}
+                        data={displayImages}
                         renderItem={renderItem}
                         style={{ width: screenWidth, flex: 1 }}
                         layout={{ type: 'parallax', offset: 0, scale: 1, adjacentScale: 0.9 }}
                         progress={carouselProgress}
                     />
-                    {(food?.images?.length ?? 0) > 1 &&
+                    {displayImages.length > 1 &&
                         <CarouselPagination
-                            count={food?.images?.length ?? 0}
+                            count={displayImages.length}
                             progress={carouselProgress}
                             top={0.66 * screenHeight - SIZES.extraLarge - SIZES.small - insets.bottom}
                         />}
@@ -290,7 +307,7 @@ export default function FoodRecipesItemScreen() {
                     <BottomSheetScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
                         <SubtitleText>{t(TranslationKeys.Recipe.NAME)}</SubtitleText>
                         <View style={styles.inputContainer}>
-                            <FontAwesome6 name="bread-slice" style={styles.icon} />
+                            <MaterialCommunityIcons name="food-fork-drink" style={styles.icon} />
                             <BottomSheetTextInput
                                 style={styles.textInput}
                                 placeholder={t(TranslationKeys.Recipe.NAME)}
@@ -302,19 +319,22 @@ export default function FoodRecipesItemScreen() {
                             />
                         </View>
 
-                        <SubtitleText>{t(TranslationKeys.Recipe.DESCRIPTION)}</SubtitleText>
-                        <View style={styles.inputContainer}>
-                            <MaterialIcons name="description" style={styles.icon} />
-                            <BottomSheetTextInput
-                                style={styles.textInput}
-                                multiline={true}
-                                placeholder={t(TranslationKeys.Recipe.DESCRIPTION)}
-                                placeholderTextColor={COLORS.lightDark}
-                                value={food?.description}
-                                autoComplete='off'
-                                editable={false}
-                            />
-                        </View>
+                        {food?.description &&
+                            <>
+                                <SubtitleText>{t(TranslationKeys.Recipe.DESCRIPTION)}</SubtitleText>
+                                <View style={styles.inputContainer}>
+                                    <MaterialIcons name="description" style={styles.icon} />
+                                    <BottomSheetTextInput
+                                        style={styles.textInput}
+                                        multiline={true}
+                                        placeholder={t(TranslationKeys.Recipe.DESCRIPTION)}
+                                        placeholderTextColor={COLORS.lightDark}
+                                        value={food.description}
+                                        autoComplete='off'
+                                        editable={false}
+                                    />
+                                </View>
+                            </>}
 
                         <SubtitleText>{t(TranslationKeys.Recipe.SERVING_SIZE)}</SubtitleText>
                         <View style={styles.inputContainer}>
@@ -330,7 +350,7 @@ export default function FoodRecipesItemScreen() {
 
                         <SubtitleText>{t(TranslationKeys.Recipe.TIME_TO_PREPARE)}</SubtitleText>
                         <View style={styles.inputContainer}>
-                            <MaterialIcons name="people" style={styles.icon} />
+                            <MaterialIcons name="timelapse" style={styles.icon} />
                             <BottomSheetTextInput
                                 style={styles.textInput}
                                 placeholder={t(TranslationKeys.Recipe.TIME_TO_PREPARE)}
@@ -341,9 +361,19 @@ export default function FoodRecipesItemScreen() {
                         </View>
 
                         <SubtitleText>{t(TranslationKeys.Recipe.INGREDIENTS)}</SubtitleText>
-                        {food?.ingredients?.map((ingredient, index) => (
+                        {ungroupedIngredients.map((ingredient, index) => (
                             <View key={index} style={styles.ingredientItem}>
                                 <Text style={[styles.textInput, { width: "auto" }]}>   {t(TranslationKeys.IngredientItem[ingredient.name as keyof typeof TranslationKeys.IngredientItem]) || ingredient.name}   -   {ingredient.amount}  {t(TranslationKeys.UnitItem[ingredient.unit as keyof typeof TranslationKeys.UnitItem]).toLowerCase() || ingredient.unit}</Text>
+                            </View>
+                        ))}
+                        {groupedIngredients.map(({ section, ingredients }) => (
+                            <View key={section} style={styles.ingredientGroup}>
+                                <GroupHeaderChip label={section} />
+                                {ingredients.map((ingredient, index) => (
+                                    <View key={index} style={styles.ingredientItem}>
+                                        <Text style={[styles.textInput, { width: "auto" }]}>   {t(TranslationKeys.IngredientItem[ingredient.name as keyof typeof TranslationKeys.IngredientItem]) || ingredient.name}   -   {ingredient.amount}  {t(TranslationKeys.UnitItem[ingredient.unit as keyof typeof TranslationKeys.UnitItem]).toLowerCase() || ingredient.unit}</Text>
+                                    </View>
+                                ))}
                             </View>
                         ))}
 
@@ -440,7 +470,7 @@ const styles = StyleSheet.create({
     icon: {
         marginRight: 10,
         color: COLORS.lightDark,
-        fontSize: SIZES.extraLarge,
+        fontSize: SIZES.tabIcon,
     },
     ingredientItem: {
         flexDirection: 'row',
@@ -455,6 +485,10 @@ const styles = StyleSheet.create({
         paddingStart: SIZES.medium,
         color: COLORS.tint,
         fontSize: SIZES.large,
+    },
+    ingredientGroup: {
+        width: '100%',
+        alignItems: 'center',
     },
     bookmarkContainer: {
         flexDirection: 'row',

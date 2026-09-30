@@ -4,6 +4,7 @@ import { Ingredient } from '../../model/model'
 import { COLORS, SIZES } from '../../constants/Colors'
 import { UserContext } from '../../app/_layout'
 import { AddIngredientsModal } from '../RecipeControls/AddIngredientsModal'
+import { SelectIngredientOrUnitList } from '../RecipeControls/SelectIngredientOrUnitList'
 import { AddToMyFridge, GetMyFridge } from '../../service/FridgeService'
 import { DeleteIconButton } from '../Common/DeleteIconButton'
 import { LoadingScreen } from '../Common/LoadingScreen'
@@ -15,11 +16,13 @@ import { ALERT_TYPE, Toast } from 'react-native-alert-notification'
 
 export const MyFridge = () => {
     const { user } = useContext(UserContext)
-    const {t} = useTranslation()
+    const { t } = useTranslation()
     const [loading, setLoading] = useState(true)
     const [ingredientsModalVisible, setIngredientsModalVisible] = useState(false)
     const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([])
     const [ingredientEdit, setIngredientEdit] = useState<Ingredient>()
+    const [ingredientNamePickerVisible, setIngredientNamePickerVisible] = useState(false)
+    const [presetIngredientName, setPresetIngredientName] = useState<string>()
 
     const handleAddIngredient = (newIngredient: Ingredient) => {
         const updatedIngredients = selectedIngredients.map(ingredient =>
@@ -45,6 +48,17 @@ export const MyFridge = () => {
     const handleOnClose = () => {
         setIngredientsModalVisible(false)
         setIngredientEdit(undefined)
+        setPresetIngredientName(undefined)
+    }
+
+    const handleOpenAddIngredient = () => {
+        setIngredientNamePickerVisible(true)
+    }
+
+    const handleIngredientNameSelected = (name: string) => {
+        setIngredientNamePickerVisible(false)
+        setPresetIngredientName(name)
+        setIngredientsModalVisible(true)
     }
 
     const fetchData = useCallback(async () => {
@@ -62,36 +76,43 @@ export const MyFridge = () => {
     }, [t])
 
     useEffect(() => {
-        if(user){
+        if (user) {
             setLoading(true)
             fetchData()
-        }else{
+        } else {
             setSelectedIngredients([])
             setLoading(false)
         }
-    },[user, fetchData])
+    }, [user, fetchData])
 
     if (loading) return <LoadingScreen />
 
     return (
         <View style={styles.container}>
-            <PillButton onPress={() => setIngredientsModalVisible(true)}>{t(TranslationKeys.Recipe.ADD_INGREDIENT)}</PillButton>
+            <PillButton onPress={handleOpenAddIngredient}>{t(TranslationKeys.Recipe.ADD_INGREDIENT)}</PillButton>
             <ScrollView style={styles.flex} horizontal={false} showsVerticalScrollIndicator={false}>
-            {selectedIngredients?.map((ingredient, index) => (
-                <Pressable key={index} style={styles.ingredientItem} onPress={() => handlePressToEdit(ingredient)}>
-                    <Text style={[styles.textInput, { width: "auto" }]}>   {t(TranslationKeys.IngredientItem[ingredient.name as keyof typeof TranslationKeys.IngredientItem]) || ingredient.name}   -   {ingredient.amount}  {t(TranslationKeys.UnitItem[ingredient.unit as keyof typeof TranslationKeys.UnitItem] || ingredient.unit).toLowerCase()}</Text>
-                    <DeleteIconButton style={styles.icon} onPress={() => handleDeleteIngredient(index)} />
-                </Pressable>
-            ))}
+                {selectedIngredients?.map((ingredient, index) => (
+                    <Pressable key={index} style={styles.ingredientItem} onPress={() => handlePressToEdit(ingredient)}>
+                        <Text style={[styles.textInput, { width: "auto" }]}>   {t(TranslationKeys.IngredientItem[ingredient.name as keyof typeof TranslationKeys.IngredientItem]) || ingredient.name}   -   {ingredient.amount}  {t(TranslationKeys.UnitItem[ingredient.unit as keyof typeof TranslationKeys.UnitItem] || ingredient.unit).toLowerCase()}</Text>
+                        <DeleteIconButton style={styles.icon} onPress={() => handleDeleteIngredient(index)} />
+                    </Pressable>
+                ))}
             </ScrollView>
-            
+
             <AddIngredientsModal
                 visible={ingredientsModalVisible}
                 dataEdit={ingredientEdit}
+                presetName={presetIngredientName}
                 onAdd={handleAddIngredient}
                 onClose={handleOnClose} />
+
+            <SelectIngredientOrUnitList
+                modalDataType="ingredient"
+                visible={ingredientNamePickerVisible}
+                onAdd={(item) => handleIngredientNameSelected(item.name)}
+                onClose={() => setIngredientNamePickerVisible(false)} />
         </View>
-        
+
     )
 }
 

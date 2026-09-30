@@ -1,8 +1,9 @@
-import { StyleSheet, View, Pressable, TextInput } from 'react-native'
+import { Keyboard, StyleSheet, View, Pressable, TextInput, ScrollView } from 'react-native'
 import { useEffect, useState } from 'react'
 import { Ingredient } from '../../model/model'
 import { MaterialIcons } from '@expo/vector-icons'
 import { COLORS, SIZES } from '../../constants/Colors'
+import { GroupHeaderChip } from '../Common/GroupHeaderChip'
 import { ModalBackdrop } from '../Common/ModalBackdrop'
 import { PillButton } from '../Common/PillButton'
 import { TranslationKeys } from '../../locales/_translationKeys'
@@ -12,18 +13,21 @@ import { SelectIngredientOrUnitList } from './SelectIngredientOrUnitList'
 interface AddIngredientsModalProps {
     visible: boolean
     dataEdit: Ingredient | undefined
+    presetName?: string
+    groups?: string[]
     onAdd: (ingredient: Ingredient) => void
     onClose: () => void
 }
 
-export const AddIngredientsModal = ({ visible, dataEdit, onAdd, onClose }: AddIngredientsModalProps) => {
-    const {t} = useTranslation()
+export const AddIngredientsModal = ({ visible, dataEdit, presetName, groups, onAdd, onClose }: AddIngredientsModalProps) => {
+    const { t } = useTranslation()
     const [modalVisible, setModalVisible] = useState(false)
     const [modalDataType, setModalDataType] = useState('')
 
     const [name, setName] = useState('')
     const [amount, setAmount] = useState('')
     const [unit, setUnit] = useState('')
+    const [group, setGroup] = useState<string | undefined>(undefined)
 
     const openModal = (dataType: 'ingredient' | 'unit') => {
         setModalDataType(dataType)
@@ -36,32 +40,37 @@ export const AddIngredientsModal = ({ visible, dataEdit, onAdd, onClose }: AddIn
     }
 
     useEffect(() => {
-        setName(dataEdit?.name ?? '')
+        setName(dataEdit?.name ?? presetName ?? '')
         setAmount(dataEdit?.amount ?? '')
         setUnit(dataEdit?.unit ?? '')
-    },[dataEdit])
+        setGroup(dataEdit?.group)
+    }, [dataEdit, presetName])
 
     const handleOnClose = () => {
+        Keyboard.dismiss()
         onClose()
     }
 
     const handleOnAdd = () => {
-        const ingredient : Ingredient = {
+        const ingredient: Ingredient = {
             name: name,
             amount: amount,
-            unit: unit
+            unit: unit,
+            ...(group && { group })
         }
+        Keyboard.dismiss()
         onAdd(ingredient)
         setName('')
         setAmount('')
         setUnit('')
+        setGroup(undefined)
         onClose()
     }
 
     return (
         <>
             <ModalBackdrop visible={visible} onClose={handleOnClose} cardStyle={styles.card}>
-                <Pressable style={styles.nameInput} onPress={() => {if(!dataEdit?.name) openModal('ingredient')}}>
+                <Pressable style={styles.nameInput} onPress={() => { if (!dataEdit?.name) openModal('ingredient') }}>
                     <MaterialIcons name="search" style={styles.icon} />
                     <TextInput value={t(TranslationKeys.IngredientItem[name as keyof typeof TranslationKeys.IngredientItem]) || name} placeholder={t(TranslationKeys.Ingredient.NAME)} placeholderTextColor={COLORS.lightDark} editable={false} style={styles.textInput} />
                 </Pressable>
@@ -73,13 +82,20 @@ export const AddIngredientsModal = ({ visible, dataEdit, onAdd, onClose }: AddIn
                         <TextInput value={t(TranslationKeys.UnitItem[unit as keyof typeof TranslationKeys.UnitItem]) || unit} placeholder={t(TranslationKeys.Ingredient.UNIT)} placeholderTextColor={COLORS.lightDark} editable={false} style={styles.textInput} onChangeText={text => setUnit(text)} />
                     </Pressable>
                 </View>
-                <PillButton onPress={ handleOnAdd } style={styles.addButton}>{t(dataEdit ? TranslationKeys.Button.EDIT : TranslationKeys.Button.ADD)}</PillButton>
+                {groups && groups.length > 0 &&
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="always" style={styles.groupScroll} contentContainerStyle={styles.groupContainer}>
+                        <GroupHeaderChip label={t(TranslationKeys.Ingredient.NO_GROUP)} selected={!group} onPress={() => setGroup(undefined)} inline />
+                        {groups.map((sectionName) => (
+                            <GroupHeaderChip key={sectionName} label={sectionName} selected={group === sectionName} onPress={() => setGroup(sectionName)} inline />
+                        ))}
+                    </ScrollView>}
+                <PillButton onPress={handleOnAdd} style={styles.addButton}>{t(dataEdit ? TranslationKeys.Button.EDIT : TranslationKeys.Button.ADD)}</PillButton>
             </ModalBackdrop>
 
             <SelectIngredientOrUnitList
-                modalDataType={ modalDataType }
-                visible={ modalVisible } 
-                onAdd={ (item: { name: string }) => { if(modalDataType === 'ingredient'){setName(item.name)} else if(modalDataType === 'unit'){setUnit(item.name)} }}
+                modalDataType={modalDataType}
+                visible={modalVisible}
+                onAdd={(item: { name: string }) => { if (modalDataType === 'ingredient') { setName(item.name) } else if (modalDataType === 'unit') { setUnit(item.name) } }}
                 onClose={() => closeModal()} />
         </>
     )
@@ -144,5 +160,13 @@ const styles = StyleSheet.create({
     addButton: {
         marginVertical: 0,
         marginTop: SIZES.base,
+    },
+    groupScroll: {
+        width: '95%',
+        marginBottom: SIZES.small,
+    },
+    groupContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
     },
 })

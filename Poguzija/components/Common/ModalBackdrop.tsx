@@ -6,10 +6,11 @@ interface ModalBackdropProps {
     children: ReactNode
     visible: boolean
     onClose: () => void
+    onShow?: () => void
     cardStyle?: StyleProp<ViewStyle>
 }
 
-export const ModalBackdrop = ({ children, visible, onClose, cardStyle }: ModalBackdropProps) => {
+export const ModalBackdrop = ({ children, visible, onClose, onShow, cardStyle }: ModalBackdropProps) => {
     const handleOnClose = () => {
         onClose()
     }
@@ -19,7 +20,8 @@ export const ModalBackdrop = ({ children, visible, onClose, cardStyle }: ModalBa
             animationType="fade"
             transparent={true}
             visible={visible}
-            onRequestClose={handleOnClose}>
+            onRequestClose={handleOnClose}
+            onShow={onShow}>
             <Pressable style={styles.centeredView} onPress={handleOnClose}>
                 <Pressable style={[styles.modalView, cardStyle]}>
                     {children}

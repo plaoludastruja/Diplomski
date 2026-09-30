@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from 'react'
 import { View, Pressable, Text, StyleSheet, Dimensions, Animated, useAnimatedValue, ActivityIndicator, Keyboard } from 'react-native'
 import { Image } from 'expo-image'
-import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons'
+import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
 import * as ImagePicker from 'expo-image-picker'
 import { Carousel } from 'react-native-reanimated-carousel'
@@ -13,8 +13,11 @@ import { useTranslation } from 'react-i18next'
 import { router, useLocalSearchParams } from 'expo-router'
 import { UserContext } from '../app/_layout'
 import { AddIngredientsModal } from '../components/RecipeControls/AddIngredientsModal'
+import { SelectIngredientOrUnitList } from '../components/RecipeControls/SelectIngredientOrUnitList'
+import { AddSectionModal } from '../components/RecipeControls/AddSectionModal'
 import { BackgroundSafeAreaView } from '../components/Common/BackgroundSafeAreaView'
 import { CarouselPagination } from '../components/Common/CarouselPagination'
+import { GroupHeaderChip } from '../components/Common/GroupHeaderChip'
 import { ConfirmBottomSheet, ConfirmBottomSheetRef } from '../components/Common/ConfirmBottomSheet'
 import { DeleteIconButton } from '../components/Common/DeleteIconButton'
 import { ImagePreviewModal } from '../components/Common/ImagePreviewModal'
@@ -22,12 +25,13 @@ import { PillButton } from '../components/Common/PillButton'
 import { SelectCategoryList } from '../components/RecipeControls/SelectCategoryList'
 import { SubtitleText } from '../components/Common/SubtitleText'
 import { TimeInput } from '../components/RecipeControls/TimeInput'
-import { COLORS, SIZES } from '../constants/Colors'
+import { ALERT_COLORS, COLORS, SIZES } from '../constants/Colors'
 import { TranslationKeys } from '../locales/_translationKeys'
 import { Ingredient, Step, FoodRecipes } from '../model/model'
 import { CheckImageContentResult, ValidateRecipeImage } from '../service/ImageClassificationService'
 import { UploadFoodRecipesImages } from '../service/ImageService'
 import { GetFoodRecipe, EditFoodRecipe, AddFoodRecipe } from '../service/RecipesService'
+import { GetIngredientSections, GroupIngredientsBySections } from '../service/IngredientService'
 import { EnsureAnonymousSession, GetCurrentAuthUid } from '../service/AuthService'
 import { Timestamp } from 'firebase/firestore/lite'
 
@@ -46,6 +50,7 @@ export default function AddRecipeTab() {
     const [isEdit] = useState(addEditRecipeId !== undefined)
     const [submitting, setSubmitting] = useState(false)
     const [classifyingImages, setClassifyingImages] = useState(false)
+    const [missingFieldKeys, setMissingFieldKeys] = useState<string[]>([])
 
     const [categoryModalVisible, setCategoryModalVisible] = useState(false)
     const [categoryNumber, setCategoryNumber] = useState<number>(0)
@@ -54,6 +59,11 @@ export default function AddRecipeTab() {
     const [ingredientsModalVisible, setIngredientsModalVisible] = useState(false)
     const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([])
     const [ingredientEdit, setIngredientEdit] = useState<Ingredient>()
+    const [ingredientNamePickerVisible, setIngredientNamePickerVisible] = useState(false)
+    const [presetIngredientName, setPresetIngredientName] = useState<string>()
+    const [sections, setSections] = useState<string[]>([])
+    const [sectionModalVisible, setSectionModalVisible] = useState(false)
+    const [sectionEdit, setSectionEdit] = useState<string>()
 
     const [selectedImageArray, setSelectedImageArray] = useState<string[]>([PlaceholderImage])
     const [selectedImageToUpload, setSelectedImageToUpload] = useState<string[]>([])
@@ -73,6 +83,7 @@ export default function AddRecipeTab() {
     const [stepList, setStepList] = useState<Step[]>([])
     const [step, setStep] = useState('')
     const [stepsPlaceholder, setStepsPlaceholder] = useState('ADD_FIRST_STEP')
+    const stepRef = useRef('')
 
     const addPhotoScale = useAnimatedValue(1)
 
@@ -95,13 +106,14 @@ export default function AddRecipeTab() {
             return
         }
         setTitle(recipe.title)
-        setDescription(recipe.description)
-        setServingSize(recipe.servingSize)
-        setCookingTime(recipe.cookingTime)
-        setCookingTimeAll(`${recipe.cookingTime.hours}${recipe.cookingTime.minutes}`)
+        setDescription(recipe.description ?? '')
+        setServingSize(recipe.servingSize ?? '')
+        setCookingTime(recipe.cookingTime ?? { hours: '', minutes: '' })
+        setCookingTimeAll(`${recipe.cookingTime?.hours ?? ''}${recipe.cookingTime?.minutes ?? ''}`)
         setRefreshTime(true)
         setStepList(recipe.steps ?? [])
         setSelectedIngredients(recipe.ingredients ?? [])
+        setSections(GetIngredientSections(recipe.ingredients ?? []))
         setCategoryFields(recipe.categories ?? [])
         setCategoryNumber(recipe.categories?.length ?? 0)
         setSelectedImageArray([...(recipe.images ?? []), PlaceholderImage])
@@ -160,13 +172,24 @@ export default function AddRecipeTab() {
 
     const handleCreateOrEditRecipe = async () => {
         if (submitting) return
-        if (!title || !servingSize || !(/\d/.test(cookingTimeAll) && Number(cookingTimeAll) !== 0) || stepList.length === 0 || selectedIngredients.length === 0 || (selectedImageToUpload.length === 0 && selectedImageArray.length === 1)) {
+        const missingFields = [
+            !title && { key: 'name', label: t(TranslationKeys.Recipe.NAME) },
+            !servingSize && { key: 'servingSize', label: t(TranslationKeys.Recipe.SERVING_SIZE) },
+            !(/\d/.test(cookingTimeAll) && Number(cookingTimeAll) !== 0) && { key: 'time', label: t(TranslationKeys.Recipe.TIME_TO_PREPARE) },
+            selectedIngredients.length === 0 && { key: 'ingredients', label: t(TranslationKeys.Recipe.INGREDIENTS) },
+            stepList.length === 0 && { key: 'steps', label: t(TranslationKeys.Recipe.INSTRUCTIONS) },
+        ].filter((field): field is { key: string, label: string } => Boolean(field))
+
+        if (missingFields.length > 0) {
+            setMissingFieldKeys(missingFields.map(field => field.key))
             Toast.show({
                 type: ALERT_TYPE.WARNING,
-                title: t(TranslationKeys.Recipe.FILL_ALL_FIELDS)
+                title: t(TranslationKeys.Recipe.FILL_ALL_FIELDS),
+                textBody: missingFields.map(field => field.label).join(', ')
             })
             return
         }
+        setMissingFieldKeys([])
         const updatedStepList = step !== '' ? [...stepList, { number: stepList.length + 1, description: step }] : stepList
         setSubmitting(true)
         try {
@@ -215,7 +238,7 @@ export default function AddRecipeTab() {
         } catch {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
-                title: t(TranslationKeys.Recipe.RECIPE_NOT_CREATED)
+                title: t(isEdit ? TranslationKeys.Recipe.RECIPE_NOT_EDITED : TranslationKeys.Recipe.RECIPE_NOT_CREATED)
             })
         } finally {
             setSubmitting(false)
@@ -234,9 +257,8 @@ export default function AddRecipeTab() {
         })
     }
 
-    const handleDeleteIngredient = (newIngredient: Ingredient) => {
-        const updatedIngredients = selectedIngredients.filter((ingredient) => ingredient.name !== newIngredient.name)
-        setSelectedIngredients(updatedIngredients)
+    const handleDeleteIngredient = (ingredientToDelete: Ingredient) => {
+        setSelectedIngredients(selectedIngredients.filter((ingredient) => ingredient !== ingredientToDelete))
     }
 
     const handleDeleteStep = (index: number) => {
@@ -251,13 +273,39 @@ export default function AddRecipeTab() {
     }
 
     const handleAddIngredient = (newIngredient: Ingredient) => {
-        const updatedIngredients = selectedIngredients.map(ingredient =>
-            ingredient.name === newIngredient.name ? newIngredient : ingredient
-        )
-        if (!updatedIngredients.some(ingredient => ingredient.name === newIngredient.name)) {
-            updatedIngredients.push(newIngredient)
+        if (ingredientEdit) {
+            setSelectedIngredients(selectedIngredients.map(ingredient => ingredient === ingredientEdit ? newIngredient : ingredient))
+        } else {
+            setSelectedIngredients([...selectedIngredients, newIngredient])
         }
-        setSelectedIngredients(updatedIngredients)
+    }
+
+    const handleSaveSection = (sectionName: string) => {
+        if (sectionEdit) {
+            if (sectionName !== sectionEdit && sections.includes(sectionName)) return
+            setSections(sections.map((section) => section === sectionEdit ? sectionName : section))
+            setSelectedIngredients(selectedIngredients.map((ingredient) => ingredient.group === sectionEdit ? { ...ingredient, group: sectionName } : ingredient))
+        } else {
+            if (sections.includes(sectionName)) return
+            setSections([...sections, sectionName])
+        }
+    }
+
+    const handlePressToEditSection = (section: string) => {
+        setSectionEdit(section)
+        setSectionModalVisible(true)
+    }
+
+    const handleCloseSectionModal = () => {
+        setSectionModalVisible(false)
+        setSectionEdit(undefined)
+    }
+
+    const handleDeleteSection = (section: string) => {
+        setSections(sections.filter((existingSection) => existingSection !== section))
+        setSelectedIngredients(selectedIngredients.map((ingredient) =>
+            ingredient.group === section ? { name: ingredient.name, unit: ingredient.unit, ...(ingredient.amount !== undefined && { amount: ingredient.amount }) } : ingredient
+        ))
     }
 
     const handleOpenCategoryModal = () => {
@@ -278,15 +326,32 @@ export default function AddRecipeTab() {
     const handleCloseIngredientModal = () => {
         setIngredientsModalVisible(false)
         setIngredientEdit(undefined)
+        setPresetIngredientName(undefined)
     }
 
-    const handleNextStep = (text: string) => {
+    const handleOpenAddIngredient = () => {
+        setIngredientNamePickerVisible(true)
+    }
+
+    const handleIngredientNameSelected = (name: string) => {
+        setIngredientNamePickerVisible(false)
+        setPresetIngredientName(name)
+        setIngredientsModalVisible(true)
+    }
+
+    const handleNextStep = () => {
+        const text = stepRef.current
         if (text === '') return
-        let numberOfSteps = stepList.length
-        setStepList([...stepList, { number: ++numberOfSteps, description: text }])
+        setStepList(prevStepList => [...prevStepList, { number: prevStepList.length + 1, description: text }])
         setStep('')
+        stepRef.current = ''
         setStepsPlaceholder('ADD_NEXT_STEP')
     }
+
+    useEffect(() => {
+        const subscription = Keyboard.addListener('keyboardDidHide', handleNextStep)
+        return () => subscription.remove()
+    }, [])
 
     const handleChangeText = (text: string, index: number) => {
         setStepList(prevStepList => {
@@ -339,6 +404,8 @@ export default function AddRecipeTab() {
         )
     }
 
+    const { ungrouped: ungroupedIngredients, grouped: groupedIngredients } = GroupIngredientsBySections(selectedIngredients, sections)
+
     return (
         <BackgroundSafeAreaView>
             <View style={[styles.scrollViewContent, styles.flex]}>
@@ -369,9 +436,9 @@ export default function AddRecipeTab() {
                         contentContainerStyle={styles.scrollViewContent}
                         keyboardShouldPersistTaps={'handled'}>
 
-                        <SubtitleText>{t(TranslationKeys.Recipe.NAME)}</SubtitleText>
+                        <SubtitleText style={missingFieldKeys.includes('name') ? styles.errorLabel : undefined}>{t(TranslationKeys.Recipe.NAME)}*</SubtitleText>
                         <View style={styles.inputContainer}>
-                            <FontAwesome6 name="bread-slice" style={styles.icon} />
+                            <MaterialCommunityIcons name="food-fork-drink" style={styles.icon} />
                             <BottomSheetTextInput
                                 style={styles.textInput}
                                 placeholder={t(TranslationKeys.Recipe.NAME)}
@@ -399,7 +466,7 @@ export default function AddRecipeTab() {
                             />
                         </View>
 
-                        <SubtitleText>{t(TranslationKeys.Recipe.SERVING_SIZE)}</SubtitleText>
+                        <SubtitleText style={missingFieldKeys.includes('servingSize') ? styles.errorLabel : undefined}>{t(TranslationKeys.Recipe.SERVING_SIZE)}*</SubtitleText>
                         <View style={styles.inputContainer}>
                             <MaterialIcons name="people" style={styles.icon} />
                             <BottomSheetTextInput
@@ -414,22 +481,42 @@ export default function AddRecipeTab() {
                             />
                         </View>
 
-                        <SubtitleText>{t(TranslationKeys.Recipe.TIME_TO_PREPARE)}</SubtitleText>
+                        <SubtitleText style={missingFieldKeys.includes('time') ? styles.errorLabel : undefined}>{t(TranslationKeys.Recipe.TIME_TO_PREPARE)}*</SubtitleText>
                         <TimeInput time={cookingTime} onTimeChange={handleTimeChange} refresh={refreshTime} />
 
                         <SubtitleText>{t(TranslationKeys.Recipe.SELECTED_CATEGORIES)}: {categoryNumber}</SubtitleText>
                         <PillButton onPress={() => handleOpenCategoryModal()}>{t(TranslationKeys.Recipe.ADD_CATEGORIES)}</PillButton>
 
-                        <SubtitleText>{t(TranslationKeys.Recipe.INGREDIENTS)}</SubtitleText>
-                        {selectedIngredients?.map((ingredient, index) => (
+                        <SubtitleText>{t(TranslationKeys.Recipe.SECTIONS)}</SubtitleText>
+                        {sections.map((section) => (
+                            <Pressable key={section} style={styles.ingredientItem} onPress={() => handlePressToEditSection(section)}>
+                                <Text style={[styles.textInput, { width: "85%" }]}>   {section}</Text>
+                                <DeleteIconButton style={styles.icon} onPress={() => handleDeleteSection(section)} />
+                            </Pressable>
+                        ))}
+                        <PillButton onPress={() => setSectionModalVisible(true)}>{t(TranslationKeys.Recipe.ADD_SECTION)}</PillButton>
+
+                        <SubtitleText style={missingFieldKeys.includes('ingredients') ? styles.errorLabel : undefined}>{t(TranslationKeys.Recipe.INGREDIENTS)}*</SubtitleText>
+                        {ungroupedIngredients.map((ingredient, index) => (
                             <Pressable key={index} style={styles.ingredientItem} onPress={() => handlePressToEdit(ingredient)}>
                                 <Text style={[styles.textInput, { width: "85%" }]}>   {t(TranslationKeys.IngredientItem[ingredient.name as keyof typeof TranslationKeys.IngredientItem]) || ingredient.name}   -   {ingredient.amount}  {t(TranslationKeys.UnitItem[ingredient.unit as keyof typeof TranslationKeys.UnitItem]).toLowerCase() || ingredient.unit}</Text>
                                 <DeleteIconButton style={styles.icon} onPress={() => handleDeleteIngredient(ingredient)} />
                             </Pressable>
                         ))}
-                        <PillButton onPress={() => setIngredientsModalVisible(true)}>{t(TranslationKeys.Recipe.ADD_INGREDIENT)}</PillButton>
+                        {groupedIngredients.map(({ section, ingredients }) => (
+                            <View key={section} style={styles.ingredientGroup}>
+                                <GroupHeaderChip label={section} />
+                                {ingredients.map((ingredient, index) => (
+                                    <Pressable key={index} style={styles.ingredientItem} onPress={() => handlePressToEdit(ingredient)}>
+                                        <Text style={[styles.textInput, { width: "85%" }]}>   {t(TranslationKeys.IngredientItem[ingredient.name as keyof typeof TranslationKeys.IngredientItem]) || ingredient.name}   -   {ingredient.amount}  {t(TranslationKeys.UnitItem[ingredient.unit as keyof typeof TranslationKeys.UnitItem]).toLowerCase() || ingredient.unit}</Text>
+                                        <DeleteIconButton style={styles.icon} onPress={() => handleDeleteIngredient(ingredient)} />
+                                    </Pressable>
+                                ))}
+                            </View>
+                        ))}
+                        <PillButton onPress={handleOpenAddIngredient}>{t(TranslationKeys.Recipe.ADD_INGREDIENT)}</PillButton>
 
-                        <SubtitleText>{t(TranslationKeys.Recipe.INSTRUCTIONS)}</SubtitleText>
+                        <SubtitleText style={missingFieldKeys.includes('steps') ? styles.errorLabel : undefined}>{t(TranslationKeys.Recipe.INSTRUCTIONS)}*</SubtitleText>
                         {stepList?.map((step, index) => (
                             <Pressable key={index} style={styles.ingredientItem} >
                                 <BottomSheetTextInput
@@ -450,9 +537,8 @@ export default function AddRecipeTab() {
                                 placeholderTextColor={COLORS.lightDark}
                                 value={step}
                                 autoComplete='off'
-                                onChangeText={(text) => setStep(text)}
-                                onEndEditing={() => handleNextStep(step)}
-                                onSubmitEditing={() => handleNextStep(step)}
+                                onChangeText={(text) => { setStep(text); stepRef.current = text }}
+                                onSubmitEditing={handleNextStep}
                                 submitBehavior="submit"
                             />
                         </View>
@@ -463,8 +549,23 @@ export default function AddRecipeTab() {
                 <AddIngredientsModal
                     visible={ingredientsModalVisible}
                     dataEdit={ingredientEdit}
+                    presetName={presetIngredientName}
+                    groups={sections}
                     onAdd={handleAddIngredient}
                     onClose={handleCloseIngredientModal} />
+
+                <SelectIngredientOrUnitList
+                    modalDataType="ingredient"
+                    visible={ingredientNamePickerVisible}
+                    onAdd={(item) => handleIngredientNameSelected(item.name)}
+                    onClose={() => setIngredientNamePickerVisible(false)} />
+
+                <AddSectionModal
+                    key={sectionEdit ?? 'new-section'}
+                    visible={sectionModalVisible}
+                    dataEdit={sectionEdit}
+                    onSave={handleSaveSection}
+                    onClose={handleCloseSectionModal} />
 
                 <SelectCategoryList
                     alreadySelected={categoryFields}
@@ -579,5 +680,12 @@ const styles = StyleSheet.create({
         paddingStart: SIZES.medium,
         color: COLORS.tint,
         fontSize: SIZES.large,
+    },
+    ingredientGroup: {
+        width: '100%',
+        alignItems: 'center',
+    },
+    errorLabel: {
+        color: ALERT_COLORS.danger,
     },
 })

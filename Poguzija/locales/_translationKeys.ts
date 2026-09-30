@@ -6,6 +6,7 @@ export namespace TranslationKeys {
         SERVING_SIZE = 'recipe.servingSize',
         INGREDIENTS = 'recipe.ingredients',
         INSTRUCTIONS = 'recipe.instructions',
+        IMAGES = 'recipe.images',
         FILL_ALL_FIELDS = 'recipe.fillAllFields',
         RECIPE_CREATED = 'recipe.recipeCreated',
         RECIPE_NOT_CREATED = 'recipe.recipeNotCreated',
@@ -18,9 +19,13 @@ export namespace TranslationKeys {
         SELECTED_CATEGORIES = 'recipe.selectedCategories',
         ADD_CATEGORIES = 'recipe.addCategories',
         ADD_INGREDIENT = 'recipe.addIngredient',
+        SECTIONS = 'recipe.sections',
+        ADD_SECTION = 'recipe.addSection',
+        SECTION_NAME_PLACEHOLDER = 'recipe.sectionNamePlaceholder',
         CREATE_RECIPE = 'recipe.createRecipe',
         EDIT_RECIPE = 'recipe.editRecipe',
         RECIPE_EDITED = 'recipe.recipeEdited',
+        RECIPE_NOT_EDITED = 'recipe.recipeNotEdited',
         DELETE_RECIPE = 'recipe.deleteRecipe',
         DELETE_RECIPE_CONFIRMATION = 'recipe.deleteRecipeConfirmation',
         RECIPE_DELETED = 'recipe.recipeDeleted',
@@ -32,6 +37,7 @@ export namespace TranslationKeys {
         NAME = 'ingredient.name',
         AMOUNT = 'ingredient.amount',
         UNIT = 'ingredient.unit',
+        NO_GROUP = 'ingredient.noGroup',
     }
 
     export enum Review {
@@ -142,6 +148,10 @@ export namespace TranslationKeys {
         AMERICAN = 'categoryItem.american',
         ITALIAN = 'categoryItem.italian',
         LATIN = 'categoryItem.latin',
+        MEDITERRANEAN = 'categoryItem.mediterranean',
+        MEXICAN = 'categoryItem.mexican',
+        FRENCH = 'categoryItem.french',
+        INDIAN = 'categoryItem.indian',
         BUDGET_FRIENDLY = 'categoryItem.budgetFriendly',
         QUICK = 'categoryItem.quick',
         EASY = 'categoryItem.easy',
@@ -161,7 +171,16 @@ export namespace TranslationKeys {
         FRUITY = 'categoryItem.fruity',
         VEGETABLE = 'categoryItem.vegetable',
         DRINK = 'categoryItem.drink',
-        DOUGH = 'categoryItem.dough'
+        DOUGH = 'categoryItem.dough',
+        SOUP = 'categoryItem.soup',
+        APPETIZER = 'categoryItem.appetizer',
+        SPICY = 'categoryItem.spicy',
+        KIDS = 'categoryItem.kids',
+        PIZZA = 'categoryItem.pizza',
+        BURGER = 'categoryItem.burger',
+        PROTEIN = 'categoryItem.protein',
+        COOKIES = 'categoryItem.cookies',
+        CAKES = 'categoryItem.cakes'
     }
 
     export enum UnitType {
@@ -197,6 +216,10 @@ export namespace TranslationKeys {
         HEAD = 'unitItem.head',
         LEAF = 'unitItem.leaf',
         CLOVE = 'unitItem.clove',
+        BOWL = 'unitItem.bowl',
+        BOX = 'unitItem.box',
+        JAR = 'unitItem.jar',
+        CUBE = 'unitItem.cube',
     }
 
     export enum IngredientType {
@@ -238,7 +261,7 @@ export namespace TranslationKeys {
         MUSHROOMS = 'ingredientType.mushrooms',
         GRAINS = 'ingredientType.grains'
     }
-    
+
     export enum IngredientItem {
         // Spices
         SALT = 'ingredientItem.salt',

@@ -14,7 +14,7 @@ export interface FoodRecipes {
     title: string
     description: string
     author: string
-    cookingTime: {hours: string, minutes: string}
+    cookingTime: { hours: string, minutes: string }
     servingSize: string
     ingredients: Ingredient[]
     steps: Step[]
@@ -32,6 +32,7 @@ export interface Ingredient {
     name: string
     amount?: string
     unit: string
+    group?: string
 }
 
 export interface Step {
@@ -85,16 +86,16 @@ export interface Comment {
 
 export interface Category {
     type: string
-    data: { name: string, isSelected: boolean}[]
+    data: { name: string, isSelected: boolean }[]
 }
 
 export interface IngredientNameUnit {
     type: string
-    data: { name: string, isSelected: boolean}[]
+    data: { name: string, isSelected: boolean }[]
 }
 
 export interface SelectedIngredient {
-    name: string, 
+    name: string,
     isSelected: boolean
 }
 
