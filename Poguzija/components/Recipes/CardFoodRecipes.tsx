@@ -7,7 +7,7 @@ import { useRouter } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient'
 import { AddToMyScheduler, RemoveFromScheduler } from '../../service/SchedulerService'
 import { SchedulerContext, UserContext } from '../../app/_layout'
-import { StarRatingShow } from './StarRating'
+import { StarRatingShow } from '../RecipeControls/StarRating'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 const PlaceholderImage = require('../../assets/images/icon.png')
