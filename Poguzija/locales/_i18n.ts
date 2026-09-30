@@ -16,7 +16,9 @@ function GetInitialLanguage(): string {
     const storedLanguage = SecureStore.getItem('currentLanguage')
     if (storedLanguage) return storedLanguage
     const deviceLanguageCode = Localization.getLocales()[0]?.languageCode
-    return deviceLanguageCode && SR_LANGUAGE_CODES.includes(deviceLanguageCode) ? 'SR' : 'EN'
+    const detectedLanguage = deviceLanguageCode && SR_LANGUAGE_CODES.includes(deviceLanguageCode) ? 'SR' : 'EN'
+    SecureStore.setItem('currentLanguage', detectedLanguage)
+    return detectedLanguage
 }
 
 i18n.use(initReactI18next).init({

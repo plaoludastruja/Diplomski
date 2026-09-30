@@ -1,10 +1,10 @@
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useContext, useEffect, useRef, useState } from 'react'
-import { View, Text, StyleSheet, Dimensions, Pressable } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, Pressable, Share } from 'react-native'
 import { Image } from 'expo-image'
 import { Carousel } from 'react-native-reanimated-carousel'
 import { useSharedValue } from 'react-native-reanimated'
-import { FontAwesome, FontAwesome6, Ionicons, MaterialIcons } from '@expo/vector-icons'
+import { FontAwesome, FontAwesome6, Ionicons, MaterialIcons, AntDesign } from '@expo/vector-icons'
 import BottomSheet, { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -154,6 +154,40 @@ export default function FoodRecipesItemScreen() {
         router.push(`/authorRecipes/${author.id}`)
     }
 
+    const handleShareRecipe = async () => {
+        if (!food) return
+        try {
+            const time = timeDisplay()
+            const detailsText = [
+                food.servingSize && `${t(TranslationKeys.Recipe.SERVING_SIZE)}: ${food.servingSize}`,
+                time && `${t(TranslationKeys.Recipe.TIME_TO_PREPARE)}: ${time}`,
+                food.description && `${t(TranslationKeys.Recipe.DESCRIPTION)}: ${food.description}`,
+            ].filter(Boolean).join('\n')
+
+            const ingredientsText = (food.ingredients ?? []).map(ingredient => {
+                const name = t(TranslationKeys.IngredientItem[ingredient.name as keyof typeof TranslationKeys.IngredientItem]) || ingredient.name
+                const unit = t(TranslationKeys.UnitItem[ingredient.unit as keyof typeof TranslationKeys.UnitItem])?.toLowerCase() || ingredient.unit
+                return `- ${name} - ${ingredient.amount} ${unit}`
+            }).join('\n')
+
+            const stepsText = (food.steps ?? []).map(step => `${step.number}. ${step.description}`).join('\n')
+
+            const message = [
+                `${t(TranslationKeys.Recipe.NAME)}: ${food.title}`,
+                detailsText,
+                ingredientsText && `${t(TranslationKeys.Recipe.INGREDIENTS)}:\n${ingredientsText}`,
+                stepsText && `${t(TranslationKeys.Recipe.INSTRUCTIONS)}:\n${stepsText}`,
+            ].filter(Boolean).join('\n\n')
+
+            await Share.share({ message })
+        } catch {
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: t(TranslationKeys.Error.LOADING_FAILED)
+            })
+        }
+    }
+
     const renderItem = ({ item, index }: { item: string, index: number }) => {
         return (
             <Pressable style={[styles.images, { width: screenWidth, height: 2 / 3 * screenHeight }]} onPress={() => { setPreviewIndex(index); setPreviewVisible(true) }}>
@@ -169,20 +203,21 @@ export default function FoodRecipesItemScreen() {
                     end={{ x: 0.5, y: 1.1 }}
                     style={[styles.gradientBottom, StyleSheet.absoluteFill]} />
                 <View style={styles.bookmarkContainer}>
-                    {author &&
-                        <Pressable onPress={handleOpenAuthor}>
-                            <Image source={{ uri: author.profilePhoto }} style={styles.authorAvatar} contentFit="cover" transition={300} />
-                        </Pressable>}
                     {user &&
                         <>
                             <Text style={styles.savedCount}>{savedCount}</Text>
                             <FontAwesome name={bookmarkIconType} color={COLORS.white} size={1.2 * SIZES.tabIcon} onPress={handleAddToBookmarks} />
                             <Ionicons name='calendar-outline' color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base }} onPress={handleAddToScheduler} />
-                            {user.id === food?.author &&
-                                <Pressable onPress={() => optionsSheetRef.current?.present()}>
-                                    <Ionicons name="options" color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base / 2, }} />
-                                </Pressable>}
                         </>}
+                    <AntDesign name="share-alt" color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base / 2}} onPress={handleShareRecipe} />
+                    {user?.id === food?.author &&
+                        <Pressable onPress={() => optionsSheetRef.current?.present()}>
+                            <Ionicons name="options" color={COLORS.white} size={1.2 * SIZES.tabIcon} style={{ marginStart: SIZES.base / 2, }} />
+                        </Pressable>}
+                    {author &&
+                        <Pressable onPress={handleOpenAuthor}>
+                            <Image source={{ uri: author.profilePhoto }} style={styles.authorAvatar} contentFit="cover" transition={300} />
+                        </Pressable>}
                 </View>
             </Pressable>
         )
@@ -435,7 +470,7 @@ const styles = StyleSheet.create({
         width: 1.2 * SIZES.tabIcon,
         height: 1.2 * SIZES.tabIcon,
         borderRadius: SIZES.small,
-        marginEnd: SIZES.base,
+        marginStart: SIZES.base,
     },
     savedCount: {
         color: COLORS.white,

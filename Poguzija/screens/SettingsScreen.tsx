@@ -18,9 +18,9 @@ import { TranslationKeys } from "../locales/_translationKeys"
 import { DeleteAccount } from "../service/AuthService"
 
 export default function SettingsScreen() {
-    const [selectedLanguage, setSelectedLanguage] = useState('EN')
+    const { t, i18n } = useTranslation()
+    const [selectedLanguage, setSelectedLanguage] = useState(i18n.language)
     const [selectedTheme, setSelectedTheme] = useState('DARK_THEME')
-    const { t } = useTranslation()
     const { user, signOutFn } = useContext(UserContext)
     const router = useRouter()
     const confirmDeleteProfileSheetRef = useRef<ConfirmBottomSheetRef>(null)
