@@ -1,5 +1,6 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useFonts } from 'expo-font'
+import { StatusBar } from 'expo-status-bar'
 import { DefaultTheme, SplashScreen, Stack, ThemeProvider } from 'expo-router'
 import { createContext, useEffect, useState } from 'react'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
@@ -102,6 +103,7 @@ function RootLayoutNav() {
             <SchedulerContext.Provider value={{ refreshSchedulerTick, triggerSchedulerRefresh }}>
             <AlertNotificationRoot colors={[ALERT_COLORS, ALERT_COLORS]}>
             <I18nextProvider i18n={i18n}>
+                <StatusBar style="dark" />
                 <Stack >
                     <Stack.Screen name="(tabs)" options={{ headerShown: false, }} />
                     <Stack.Screen name="(foodRecipesItem)/foodRecipesItem/[foodRecipesItemId]" options={{ headerShown: false, }}/>

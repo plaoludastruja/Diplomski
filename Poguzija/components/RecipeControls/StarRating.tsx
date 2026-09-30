@@ -7,7 +7,7 @@ interface StarRatingProps {
     onRatingChange?: (rating: number) => void
 }
 
-export const StarRating = ({ ratingValue, onRatingChange }: StarRatingProps) => {
+export const StarRatingControl = ({ ratingValue, onRatingChange }: StarRatingProps) => {
     const handleStarPress = (newRating: number) => {
         if (onRatingChange) {
             onRatingChange(newRating)

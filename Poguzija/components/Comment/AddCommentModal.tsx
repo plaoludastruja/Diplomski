@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { COLORS, SIZES } from '../../constants/Colors'
 import { ModalBackdrop } from '../Common/ModalBackdrop'
 import { PillButton } from '../Common/PillButton'
-import { StarRating } from '../RecipeControls/StarRating'
+import { StarRatingControl } from '../RecipeControls/StarRating'
 import { FontAwesome } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
 import { TranslationKeys } from '../../locales/_translationKeys'
@@ -44,7 +44,7 @@ export const AddCommentModal = ({ visible, onAdd, onClose }: AddCommentModalProp
                         onChangeText={text => setText(text)}
                     />
                 </View>
-                <StarRating ratingValue={rating} onRatingChange={setRating} />
+                <StarRatingControl ratingValue={rating} onRatingChange={setRating} />
                 <View style={styles.bottomContainer}>
                     <PillButton onPress={ handleOnAdd }>{t(TranslationKeys.Review.CREATE_REVIEW)}</PillButton>
                 </View>

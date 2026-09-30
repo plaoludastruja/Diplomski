@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
         borderRadius: SIZES.extraLarge,
         padding: SIZES.base,
         marginVertical: SIZES.base,
+        minHeight: SIZES.tabIcon + SIZES.small,
         elevation: 2,
         shadowColor: COLORS.dark,
     },
